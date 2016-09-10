@@ -6,7 +6,7 @@ This application allows to visualize binary files created with analog digital co
 
 ADC files examples are included in the "resources/sampledata/" subfolder.
 Check "resources/jpg/" subfolder with screenshots.
-Executabel Jar file is located in "resources/jar/" subfolder.
+Executable Jar file is located in "resources/jar/" subfolder.
 
 An information about every signal will be extracted from an appropriate
 binary *.par file  in correspondence with a chosen binary *.dat file
