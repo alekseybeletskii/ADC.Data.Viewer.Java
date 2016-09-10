@@ -4,9 +4,9 @@ This application allows to visualize binary files created with analog digital co
 2. L-Card e20-10, http://www.lcard.ru/products/external/e20-10
 3. SATURN SDI-AD12-128H, http://www.saturn-data.com
 
-ADC files examples are included in the "sampledata" subfolder.
-Check "jpg" subfolder with screenshots.
-Executabel Jar file is located in "out/artifacts/ADCDataViewer/" subfolder.
+ADC files examples are included in the "resources/sampledata/" subfolder.
+Check "resources/jpg/" subfolder with screenshots.
+Executabel Jar file is located in "resources/jar/" subfolder.
 
 An information about every signal will be extracted from an appropriate
 binary *.par file  in correspondence with a chosen binary *.dat file
