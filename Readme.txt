@@ -14,7 +14,7 @@ binary *.par file  in correspondence with a chosen binary *.dat file
 This information will be shown in the right part of the program's main window,
 according to a selected  table row.
 
-In addition it is possible to open data presented in the Text file.
+In addition it is possible to open data presented in a text file.
 For now it should be a single file per signal - with a single data column inside.
 You will be prompted to enter some data manually in this case (date, channel number, ADC rate...).
 
