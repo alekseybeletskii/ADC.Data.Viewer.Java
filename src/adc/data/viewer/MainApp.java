@@ -139,7 +139,7 @@ public class MainApp extends Application {
         }
     }
 
-    public void setTextFileParams(int fnum, DataParams dataParams) {
+    public void setTextFileParams(int fnum, DataData dataData) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("ui/textFileParams.fxml"));
@@ -149,7 +149,7 @@ public class MainApp extends Application {
             textFileParamsStage.initStyle(StageStyle.UNDECORATED);
             textFileParamsStage.setResizable(false);
             controller.setTextFileParamsStage(textFileParamsStage);
-            controller.setDataParams(dataParams);
+            controller.setAllData(dataData);
             controller.setFileNumber(fnum);
             textFileParamsStage.setTitle("Set siganl parameters");
             Scene scene = new Scene(textFileParams);

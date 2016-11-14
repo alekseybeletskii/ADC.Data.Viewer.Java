@@ -13,9 +13,15 @@ import java.nio.file.InvalidPathException;
  * This is the class that defines ADC binary data format used in the freeware program L-Graph I after 2008 year
  * This format is named here "LGraph1_2008"
  */
-class LGraph1_2008 {
+class LGraph1_2008 implements  DataFormat{
+    private DataData dataData;
 
-    static void setParam(MappedByteBuffer parBuf, int fnum, DataParams dataParams) {
+    public void setDataData(DataData dataData) {
+        this.dataData = dataData;
+    }
+
+
+    public static void setParam(MappedByteBuffer parBuf, int fnum, DataParams dataParams) {
 
         byte[] deviceNameByte = new byte[17];
         byte[] creatDateTimeByte = new byte[26];
@@ -53,10 +59,10 @@ class LGraph1_2008 {
         dataParams.setIsSignalArray(arrayByte, fnum);
     }
 
-
-    static void setData(int fnum, int sigCount, DataData allData, DataParams dataParams) {
+    public  void setData(int fnum, int sigCount, DataData dataData) {
 
         MappedByteBuffer dataBuf;
+        DataParams dataParams = dataData.getDataParams();
 
         double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
 
@@ -90,7 +96,7 @@ class LGraph1_2008 {
 
 
 
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(DataPaths.getDataFilePath()[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fnum])) {
 
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
@@ -105,7 +111,7 @@ class LGraph1_2008 {
                     i++;
                 }
                 sigCount++;
-                allData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
+                dataData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
                 jj++;
             }
 

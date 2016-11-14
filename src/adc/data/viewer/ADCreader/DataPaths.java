@@ -16,29 +16,37 @@ import java.util.List;
  */
 class DataPaths {
 
-    private DataPaths(){}
+    DataPaths (File[] filesListToProcess){
+        makePaths(filesListToProcess);
+    }
+    DataPaths (String[] filesListToProcess){
+        makePaths(filesListToProcess);
+    }
+    DataPaths (String filesListToProcess){
+        makePaths(filesListToProcess);
+    }
 
-    private static Path[] dataFilePath;
-    private static Path[] parFilePath;
-    private static String[] fileName;
-    private static String[] dataFileString;
+    private  Path[] dataFilePath;
+    private  Path[] parFilePath;
+    private  String[] fileName;
 
-    static  Path[] getParFilePath() {
+
+      Path[] getParFilePath() {
         return parFilePath;
     }
-    static  Path[] getDataFilePath() {
+      Path[] getDataFilePath() {
         return dataFilePath;
     }
-    static String[] getFileName() {
+      String[] getFileName() {
         return fileName;
     }
 
     /**
      *
      * @param dataFileStr
-     * load a list of files from String[] array
+     * load the list of files from String[] array
      */
-    static void makePaths(String[] dataFileStr) {
+     void makePaths(String[] dataFileStr) {
         int count = 0;
         dataFilePath = new Path[dataFileStr.length];
         parFilePath = new Path[dataFileStr.length];
@@ -63,7 +71,7 @@ class DataPaths {
      * @param filesListToProcess
      * load the list from external text file
      */
-    static void makePaths(String filesListToProcess) {
+     void makePaths(String filesListToProcess) {
 
         List<String> stringList = new ArrayList<>();
 
@@ -75,12 +83,7 @@ class DataPaths {
                 stringList.add(line.trim());
                 i++;
             }
-            dataFileString = stringList.toArray(new String[stringList.size()]);
-
-        } catch (IOException x) {
-            System.err.format("IOException: %s%n", x);
-        }
-
+            String[] dataFileString = stringList.toArray(new String[stringList.size()]);
 
 
         dataFilePath = new Path[dataFileString.length];
@@ -101,6 +104,10 @@ class DataPaths {
             count++;
         }
 
+        } catch (IOException x) {
+            System.err.format("IOException: %s%n", x);
+        }
+
     }
 
     /**
@@ -109,7 +116,7 @@ class DataPaths {
      * load the list from File[] array
      */
 
-    static void makePaths(File[] dataFileStr) {
+     void makePaths(File[] dataFileStr) {
         int count = 0;
         dataFilePath = new Path[dataFileStr.length];
         parFilePath = new Path[dataFileStr.length];

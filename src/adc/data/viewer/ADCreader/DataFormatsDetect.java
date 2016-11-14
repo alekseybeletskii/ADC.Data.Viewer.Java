@@ -12,9 +12,18 @@ import java.nio.file.*;
 /**
  * A helper class that infers data format of a current file
  */
-class DataFormats {
+class DataFormatsDetect {
 
-    static void dataFormats(Path[] dataFilePath, Path[] parFilePath, DataParams dataParams, MainApp mainApp) {
+    DataFormatsDetect(DataData dataData, MainApp mainApp){
+        dataFormats(dataData,mainApp);
+    }
+
+
+
+     private void dataFormats(DataData dataData, MainApp mainApp) {
+        Path[] dataFilePath = dataData.getDataPaths().getDataFilePath();
+        Path[] parFilePath = dataData.getDataPaths().getParFilePath();
+        DataParams dataParams = dataData.getDataParams();
 
         int fnum = 0;
         while (fnum < dataFilePath.length) {
@@ -30,7 +39,7 @@ class DataFormats {
             if(dataFilePath[fnum].getFileName().toString().substring(dataFilePath[fnum].getFileName().toString().lastIndexOf('.')+1).toLowerCase().equals("txt"))
             {
                 dataParams.setDataFormatStr("TextFile", fnum);
-                mainApp.setTextFileParams(fnum, dataParams);
+                mainApp.setTextFileParams(fnum, dataData);
                 fnum++;
                 continue;
             }
@@ -53,13 +62,13 @@ class DataFormats {
 
                 if (dataFormat.equals("2571090,1618190")) {
                     dataParams.setDataFormatStr("LGraph1", fnum);
-                    LGraph1.setParams(parBuf, fnum, dataParams);
+                    LGraph1.setParam(parBuf, fnum, dataParams);
                 } else if (dataFormat.equals("2571090,1618190 A")) {
                     dataParams.setDataFormatStr("LGraph1_2008", fnum);
                     LGraph1_2008.setParam(parBuf, fnum, dataParams);
                 } else if (dataFormat.charAt(2) == '/' & dataFormat.charAt(5) == '/') {
-                    dataParams.setDataFormatStr("SATURN", fnum);
-                    SATURN.setParam(parBuf, fnum, dataParams);
+                    dataParams.setDataFormatStr("Saturn", fnum);
+                    Saturn.setParam(parBuf, fnum, dataParams);
                 } else if (dataFormat.equals("3571090,7859525")) {
                     dataParams.setDataFormatStr("LGraph2", fnum);
                     LGraph2.setParam(parBuf, fnum, dataParams);

@@ -59,9 +59,6 @@ public class DataParams  {
     public boolean isDataParamsValid() {
         return dataParamsValid;
     }
-    public void setDataParamsValid(boolean dataParamsValid) {
-        this.dataParamsValid = dataParamsValid;
-    }
     public String[] getDataFormatStr() {
         return dataFormatStr;
     }
@@ -129,6 +126,9 @@ public class DataParams  {
         return Segments;
     }
 
+    public void setDataParamsValid(boolean dataParamsValid) {
+        this.dataParamsValid = dataParamsValid;
+    }
     void setDataFormatStr(String dataFormatSt, int fnum) {
         dataFormatStr[fnum] = dataFormatSt;
     }

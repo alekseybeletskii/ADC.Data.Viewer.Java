@@ -24,7 +24,9 @@ import java.util.stream.IntStream;
 
 
 public class DataData {
+    private DataPaths dataPaths;
     private DataParams dataParams;
+    private DataFormatsDetect dataFormats;
     private double[] [] signals;
     private int sigCount=-1;
     private String [] signalLabels;
@@ -39,44 +41,44 @@ public class DataData {
      */
 
     public DataData(List<File> filesList, MainApp mainApp) {
+        DataFormatsList dfl[] = DataFormatsList.values();
+
+
+//        for (DataFormatsList d : dfl)   d.getParser().setDataData(this);
+
 
         File[] filesListToProcess = filesList.toArray(new File[filesList.size()]);
-        DataPaths.makePaths(filesListToProcess); //produce Paths from an input list of files
-        dataParams =new DataParams(filesListToProcess.length); //This object will contain parameters from all files that have been opened
-        DataFormats.dataFormats(DataPaths.getDataFilePath(), DataPaths.getParFilePath(), dataParams, mainApp); //infers data format of a current file
+
+        dataPaths = new DataPaths(filesListToProcess);  //produce Paths from an input list of files
+        dataParams = new DataParams(filesListToProcess.length); //This object will contain parameters from all files that have been opened
+        dataFormats = new DataFormatsDetect(this, mainApp); //infers data format of a current file
         signals = new double[IntStream.of(dataParams.getRealChannelsQuantity()).sum()] [];
         signalLabels = new String[signals.length];
         signalFullPath = new Path[signals.length];
         fileNumbers = new int[signals.length];
-        int i=0;
-        String formatName;
 
-        if(dataParams.isDataParamsValid())
-        {
-            while (i < DataPaths.getFileName().length)
 
-            {
-                formatName = dataParams.getDataFormatStr()[i];
+        if(dataParams.isDataParamsValid())     setData();
 
-                 // call the "setData" method from corresponding class using data format identifier
-                try {
-                    Class[] methArg = new Class[]{int.class, int.class, DataData.class, DataParams.class};
-                    Object[] methodArg = new Object[]{i, sigCount, this, dataParams};
-                    Class<?> classAdcType = Class.forName(this.getClass().getPackage().getName() + '.' + formatName);
-                    classAdcType.getDeclaredMethod("setData", methArg).invoke(classAdcType, methodArg);
-                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
 
-                i++;
+    }
 
-            }
-        }
 
+
+    public void setDataParams(DataParams dataParams) {
+        this.dataParams = dataParams;
     }
 
     public DataParams getDataParams() {
         return dataParams;
+    }
+
+    public void setDataPaths(DataPaths dataPaths) {
+        this.dataPaths = dataPaths;
+    }
+
+    public DataPaths getDataPaths() {
+        return dataPaths;
     }
 
     /**
@@ -114,6 +116,48 @@ public class DataData {
         return signalFullPath;
     }
 
+
+
+
+//    private void setData() {
+//        String formatName;
+//        int i=0;
+//        while (i < dataPaths.getFileName().length)
+//
+//        {
+//            formatName = dataParams.getDataFormatStr()[i];
+//
+//            // call the "setData" method from corresponding class using data format identifier
+//            try {
+//                Class[] methArg = new Class[]{int.class, int.class, DataData.class};
+//                Object[] methodArg = new Object[]{i, sigCount, this};
+//                Class<?> classAdcType = Class.forName(this.getClass().getPackage().getName() + '.' + formatName);
+//                classAdcType.getDeclaredMethod("setData", methArg).invoke(classAdcType, methodArg);
+//            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
+//
+//            i++;
+//
+//        }
+//    }
+
+
+    private  void setData (){
+        String formatName;
+        int i=0;
+        while (i < dataPaths.getFileName().length)
+
+        {
+            formatName = dataParams.getDataFormatStr()[i].toUpperCase();
+
+            DataFormatsList.valueOf(formatName).getParser().setData(i,sigCount, this);
+
+            i++;
+
+        }
+    }
+
     /**
      * This method fills all the output arrays and will be invoked by a corresponding ADC-type class
      *
@@ -129,8 +173,8 @@ public class DataData {
 
     void setSignals(double [] signal, int sigCount, int fNum, int sigAdcNum) {
         this.signals[sigCount] = signal.clone();
-        this.signalLabels[sigCount] = DataPaths.getFileName()[fNum]+ "_#"+sigAdcNum;
-        this.signalFullPath[sigCount] = Paths.get(DataPaths.getDataFilePath()[fNum].getParent() +System.getProperty("file.separator")+ DataPaths.getFileName()[fNum] + "_#" + sigAdcNum);
+        this.signalLabels[sigCount] = dataPaths.getFileName()[fNum]+ "_#"+sigAdcNum;
+        this.signalFullPath[sigCount] = Paths.get(dataPaths.getDataFilePath()[fNum].getParent() +System.getProperty("file.separator")+ dataPaths.getFileName()[fNum] + "_#" + sigAdcNum);
         this.sigCount = sigCount;
         this.fileNumbers[sigCount] = fNum;
     }

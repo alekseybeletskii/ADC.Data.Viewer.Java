@@ -1,5 +1,6 @@
 package adc.data.viewer.controllers;
 
+import adc.data.viewer.ADCreader.DataData;
 import adc.data.viewer.ADCreader.TextFile;
 import adc.data.viewer.ADCreader.DataParams;
 import javafx.event.ActionEvent;
@@ -16,8 +17,7 @@ public class TextFileParamsController {
 
     private Alert alertInvalidParam;
     private Stage textFileParamsStage;
-    private DataParams dataParams;
-
+    private DataData dataData;
     private static String creationDate;
     private static String deviceName;
     private static int channelNum;
@@ -35,8 +35,8 @@ public class TextFileParamsController {
         this.fnum = fnum;
     }
 
-    public void setDataParams(DataParams dataParams) {
-        this.dataParams = dataParams;
+    public void setAllData(DataData dataData) {
+        this.dataData = dataData;
     }
 
     @FXML
@@ -79,8 +79,8 @@ public class TextFileParamsController {
 
             TextFile.setParam(txtCreationDate.getText(),txtDeviceName.getText(),
                     Integer.parseInt(txtChannelNum.getText()),
-                    Double.parseDouble(txtChannelRate.getText()), fnum, dataParams);
-            dataParams.setDataParamsValid(true);
+                    Double.parseDouble(txtChannelRate.getText()), fnum, dataData.getDataParams());
+            dataData.getDataParams().setDataParamsValid(true);
             textFileParamsStage.close();
         }
         else{
@@ -91,7 +91,7 @@ public class TextFileParamsController {
 
     @FXML
     private void handleCancel(ActionEvent actionEvent) {
-        dataParams.setDataParamsValid(false);
+        dataData.getDataParams().setDataParamsValid(false);
         textFileParamsStage.close();
     }
 

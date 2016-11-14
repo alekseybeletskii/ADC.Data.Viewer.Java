@@ -13,10 +13,14 @@ import java.nio.file.InvalidPathException;
  * This is the class that defines ADC binary data format used in the freeware program L-Graph II
  * This format is named here "LGraph2"
  */
-class LGraph2 {
+class LGraph2  implements  DataFormat {
+    private DataData dataData;
 
+    public void setDataData(DataData dataData) {
+        this.dataData = dataData;
+    }
 
-    static void setParam(MappedByteBuffer parBuf, int fnum, DataParams dataParams){
+    public static void setParam(MappedByteBuffer parBuf, int fnum, DataParams dataParams){
 
         byte[] deviceNameByte = new byte[17];
         byte[] creatDateTimeByte = new byte[26];
@@ -68,10 +72,10 @@ class LGraph2 {
 
 
     }
-    static void setData(int fnum, int sigCount, DataData allData, DataParams dataParams) {
+    public  void setData(int fnum, int sigCount, DataData dataData) {
 
         MappedByteBuffer dataBuf;
-
+        DataParams dataParams = dataData.getDataParams();
         double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
 
         int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fnum]];
@@ -101,7 +105,7 @@ class LGraph2 {
         }
 
 
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(DataPaths.getDataFilePath()[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fnum])) {
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);
@@ -124,7 +128,7 @@ class LGraph2 {
                     i++;
                 }
                 sigCount++;
-                allData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
+                dataData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
                 jj++;
             }
 

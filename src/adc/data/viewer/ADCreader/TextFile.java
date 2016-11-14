@@ -17,11 +17,18 @@ import static javafx.scene.control.Alert.AlertType.WARNING;
  * Text files with only one column of data from only one ADC channel are supported now.
  * User will be asked to provide ADC rate peer channel
  */
-public class TextFile {
+public class TextFile implements  DataFormat {
+    private DataData dataData;
+
+    public void setDataData(DataData dataData) {
+        this.dataData = dataData;
+    }
 
     private static int channelNumber;
 
-    public static void setParam(String recordCreationDate, String deviceName, int channelNumber, double channelRate, int fnum, DataParams dataParams ){
+
+
+    public static void setParam(String recordCreationDate, String deviceName, int channelNumber, double channelRate, int fnum, DataParams dataParams){
         TextFile.channelNumber=channelNumber;
         byte[] arrayByte = {(byte) 1};
 
@@ -44,11 +51,12 @@ public class TextFile {
 
     }
 
-    static void setData( int fnum, int sigCount, DataData allData, DataParams dataParams) {
+    public void setData( int fnum, int sigCount, DataData dataData) {
         String line;
         List<Double> allLines = new ArrayList<>();
+        DataParams dataParams = dataData.getDataParams();
 
-        try (BufferedReader signalDataFromText = Files.newBufferedReader(DataPaths.getDataFilePath()[fnum], Charset.forName("US-ASCII"))) {
+        try (BufferedReader signalDataFromText = Files.newBufferedReader(dataData.getDataPaths().getDataFilePath()[fnum], Charset.forName("US-ASCII"))) {
             try {
                 while ((line = signalDataFromText.readLine()) != null) {
                     allLines.add(Double.parseDouble(line));
@@ -65,7 +73,7 @@ public class TextFile {
                 }
 
                 sigCount++;
-                allData.setSignals(oneSignal, sigCount, fnum, channelNumber);
+                dataData.setSignals(oneSignal, sigCount, fnum, channelNumber);
             }
             catch (NumberFormatException e){
                 Alert alert = new Alert(WARNING);
