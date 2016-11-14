@@ -6,6 +6,11 @@ This application allows to visualize binary files created with analog digital co
 
 ADC files examples are included in the "resources/sampledata/" subfolder.
 Check "resources/jpg/" subfolder with screenshots.
+
+![controlwindow](ADC.Data.Viewer/blob/master/resources/jpg/main1000000points.jpg)
+
+![plot](https://github.com/alekseybeletskii/ADC.Data.Viewer/blob/master/resources/jpg/plot1000000pointsZoom2.jpg)
+
 Executable Jar file is located in "resources/jar/" subfolder.
 
 An information about every signal will be extracted from an appropriate
