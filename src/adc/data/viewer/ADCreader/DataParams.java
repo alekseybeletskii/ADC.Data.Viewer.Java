@@ -129,70 +129,70 @@ public class DataParams  {
     public void setDataParamsValid(boolean dataParamsValid) {
         this.dataParamsValid = dataParamsValid;
     }
-    void setDataFormatStr(String dataFormatSt, int fnum) {
+    public void setDataFormatStr(String dataFormatSt, int fnum) {
         dataFormatStr[fnum] = dataFormatSt;
     }
-    void setDeviceName(String deviceName, int fnum) {
+    public void setDeviceName(String deviceName, int fnum) {
         this.deviceName[fnum] = deviceName;
     }
-    void setCreateDateTime(String CreateDateTime, int fnum) {
+    public void setCreateDateTime(String CreateDateTime, int fnum) {
         this.CreateDateTime[fnum] = CreateDateTime;
     }
-    void setChannelsMax(int channelsMax, int fnum) {
+    public void setChannelsMax(int channelsMax, int fnum) {
         ChannelsMax[fnum] = channelsMax;
     }
-    void setRealChannelsQuantity(int realChannelsQuantity, int fnum) {
+    public void setRealChannelsQuantity(int realChannelsQuantity, int fnum) {
         RealChannelsQuantity[fnum] = realChannelsQuantity;
     }
-    void setRealCadresQuantity(long realCadresQuantity, int fnum) {
+    public void setRealCadresQuantity(long realCadresQuantity, int fnum) {
         RealCadresQuantity[fnum] = realCadresQuantity;
     }
-    void setRealSamplesQuantity(long realSamplesQuantity, int fnum) {
+    public void setRealSamplesQuantity(long realSamplesQuantity, int fnum) {
         RealSamplesQuantity[fnum] = realSamplesQuantity;
     }
-    void setTotalTime(double totalTime, int fnum) {
+    public void setTotalTime(double totalTime, int fnum) {
         TotalTime[fnum] = totalTime;
     }
-    void setAdcRate(double adcRate, int fnum) {
+    public void setAdcRate(double adcRate, int fnum) {
         AdcRate[fnum] = adcRate;
     }
-    void setInterCadreDelay(double interCadreDelay, int fnum) {
+    public void setInterCadreDelay(double interCadreDelay, int fnum) {
         InterCadreDelay[fnum] = interCadreDelay;
     }
-    void setChannelRate(double channelRate, int fnum) {
+    public void setChannelRate(double channelRate, int fnum) {
         ChannelRate[fnum] = channelRate;
     }
-    void setActiveAdcChannelArray(byte[] activeAdcChannelArray, int fnum) {
+    public void setActiveAdcChannelArray(byte[] activeAdcChannelArray, int fnum) {
         ActiveAdcChannelArray[fnum] = activeAdcChannelArray.clone();
     }
-    void setAdcChannelArray(byte[] adcChannelArray, int fnum) {
+    public void setAdcChannelArray(byte[] adcChannelArray, int fnum) {
         AdcChannelArray[fnum] = adcChannelArray.clone();
     }
-    void setAdcGainArray(byte[] adcGainArray, int fnum) {
+    public void setAdcGainArray(byte[] adcGainArray, int fnum) {
         AdcGainArray[fnum] = adcGainArray.clone();
     }
-    void setIsSignalArray(byte[] isSignalArray, int fnum) {
+    public void setIsSignalArray(byte[] isSignalArray, int fnum) {
         IsSignalArray[fnum] = isSignalArray.clone();
     }
-    void setDataFormat(int dataFormat, int fnum) {
+    public void setDataFormat(int dataFormat, int fnum) {
         DataFormat[fnum] = dataFormat;
     }
-    void setRealCadres64(long realCadres64, int fnum) {
+    public void setRealCadres64(long realCadres64, int fnum) {
         RealCadres64[fnum] = realCadres64;
     }
-    void setAdcOffset(double[] adcOffset, int fnum) {
+    public void setAdcOffset(double[] adcOffset, int fnum) {
         AdcOffset[fnum] = adcOffset.clone();
     }
-    void setAdcScale(double[] adcScale, int fnum) {
+    public void setAdcScale(double[] adcScale, int fnum) {
         AdcScale[fnum] = adcScale.clone();
     }
-    void setCalibrScale(double[] calibrScale, int fnum) {
+    public void setCalibrScale(double[] calibrScale, int fnum) {
         CalibrScale[fnum] = calibrScale.clone();
     }
-    void setCalibrOffset(double[] calibrOffset, int fnum) {
+    public void setCalibrOffset(double[] calibrOffset, int fnum) {
         CalibrOffset[fnum] = calibrOffset.clone();
     }
-    void setSegments(int segments, int fnum) {
+    public void setSegments(int segments, int fnum) {
         Segments[fnum] = segments;
     }
 

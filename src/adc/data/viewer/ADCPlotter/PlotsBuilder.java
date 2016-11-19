@@ -81,13 +81,13 @@ public class PlotsBuilder extends AnchorPane {
 
             if (signalMarker.getSignalSelected())
             {
-                dt = 1.0/(mainApp.getAllSignals().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
-                samples = mainApp.getAllSignals().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
+                dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
+                samples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
                 selectedSignals.add(signalMarker.getSignalIndex());
                 if (samples*dt > longestTime) {
                     longestTime = samples*dt;
                 }
-                double[] testSignal = mainApp.getAllSignals().getSignals()[signalMarker.getSignalIndex()];
+                double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
                 OptionalDouble sigMax = Arrays.stream(testSignal).max();
                 OptionalDouble sigMin = Arrays.stream(testSignal).min();
 
@@ -96,7 +96,7 @@ public class PlotsBuilder extends AnchorPane {
 
                 if(sigMin.isPresent()&&sigMin.getAsDouble()<minYValue)
                     minYValue = sigMin.getAsDouble();
-//                for (double nextPoint : mainApp.getAllSignals().getSignals()[signalMarker.getSignalIndex()]) {
+//                for (double nextPoint : mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()]) {
 //                    if (nextPoint > maxYValue) maxYValue = nextPoint;
 //                    if (nextPoint < minYValue) minYValue = nextPoint;
 //                }

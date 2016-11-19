@@ -1,8 +1,7 @@
 package adc.data.viewer;
 
+import adc.data.viewer.ADCreader.DataParser;
 import adc.data.viewer.controllers.*;
-import adc.data.viewer.ADCreader.DataParams;
-import adc.data.viewer.ADCreader.DataData;
 import adc.data.viewer.model.SignalMarker;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -34,22 +33,26 @@ public class MainApp extends Application {
     }
 
     private Stage primaryStage;
-    public Stage getPlotsStage() {
-        return plotsStage;
-    }
     private Stage plotsStage;
     private BorderPane mainLayout;
-    private DataData allSignals;
+    private DataParser dataParser;
     private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
+    private TextFileDataController textFileDataController;
 
+    public TextFileDataController getTextFileDataController() {
+        return textFileDataController;
+    }
     public ObservableList<SignalMarker> getSignalList() {
         return signalList;
     }
     public Stage getPrimaryStage() {
         return primaryStage;
     }
-    public DataData getAllSignals() {
-        return allSignals;
+    public DataParser getDataParser() {
+        return dataParser;
+    }
+    public Stage getPlotsStage() {
+        return plotsStage;
     }
 
     @Override
@@ -85,29 +88,33 @@ public class MainApp extends Application {
             mainLayout.setCenter(signalsOverview);
             SignalsOverviewController controller = loader.getController();
             controller.setMainApp(this);
+            controller.setTableItems();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setAllSignals(DataData allSignals) {
+    public  void setDataPars(DataParser dataParser) {
+        this.dataParser = dataParser;
+    }
+
+     public void fillSignalList() {
         signalList.clear();
-        this.allSignals = allSignals;
         int i=0;
-        float []  hueArray = new float[allSignals.getSignalLabels().length];
-        for (int jj=0;jj<allSignals.getSignalLabels().length;jj++) {
+        float []  hueArray = new float[dataParser.getSignalLabels().length];
+        for (int jj = 0; jj< dataParser.getSignalLabels().length; jj++) {
             hueArray[jj]=i;
             i+=40;
             if(i>360) {i=30;}
         }
         int ii =0;
-        for (String siglabel : allSignals.getSignalLabels()){
+        for (String siglabel : dataParser.getSignalLabels()){
             final float hue = hueArray[ii];
             final float saturation = 1f;//1.0 for brilliant, 0.0 for dull
             final float brightness = 1f; //1.0 for brighter, 0.0 for black
             Color color = Color.hsb(hue, saturation, brightness);
             if(siglabel!=null&&!siglabel.isEmpty()) {
-                signalList.add(new SignalMarker(ii, false, color, siglabel, allSignals.getFileNumbers()[ii]));
+                signalList.add(new SignalMarker(ii, false, color, siglabel, dataParser.getFileNumbers()[ii]));
             }
             ii++;
         }
@@ -139,18 +146,19 @@ public class MainApp extends Application {
         }
     }
 
-    public void setTextFileParams(int fnum, DataData dataData) {
+    public void setTextFileParams(int fnum) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("ui/textFileParams.fxml"));
             BorderPane textFileParams = loader.load();
-            TextFileParamsController controller = loader.getController();
+            textFileDataController = loader.getController();
             Stage textFileParamsStage = new Stage();
             textFileParamsStage.initStyle(StageStyle.UNDECORATED);
             textFileParamsStage.setResizable(false);
-            controller.setTextFileParamsStage(textFileParamsStage);
-            controller.setAllData(dataData);
-            controller.setFileNumber(fnum);
+            textFileDataController.setMainApp(this);
+            textFileDataController.setDataParser(dataParser);
+            textFileDataController.setTextFileParamsStage(textFileParamsStage);
+            textFileDataController.setFileNumber(fnum);
             textFileParamsStage.setTitle("Set siganl parameters");
             Scene scene = new Scene(textFileParams);
             textFileParamsStage.setScene(scene);

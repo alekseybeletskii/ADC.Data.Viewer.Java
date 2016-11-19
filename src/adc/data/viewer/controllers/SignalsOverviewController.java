@@ -66,15 +66,15 @@ public class SignalsOverviewController {
     private void showSignalDetails(SignalMarker signal) {
         if (signal != null){
 
-            deviceNameLabel.setText(mainApp.getAllSignals().getDataParams().getDeviceName()[signal.getFileNumber()]);
-            creationDateLabel.setText(mainApp.getAllSignals().getDataParams().getCreateDateTime()[signal.getFileNumber()]);
-            adcRateLabel.setText(String.format("%.3f",mainApp.getAllSignals().getDataParams().getAdcRate()[signal.getFileNumber()]));
-            channelRateLabel.setText(String.format("%.3f",mainApp.getAllSignals().getDataParams().getChannelRate()[signal.getFileNumber()]));
+            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileNumber()]);
+            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileNumber()]);
+            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileNumber()]));
+            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileNumber()]));
             channelNumberLabel.setText(signal.getSignalLabel().substring(signal.getSignalLabel().lastIndexOf("#")+1));
-            channelSamplesLabel.setText(String.format("%d",mainApp.getAllSignals().getDataParams().getRealCadresQuantity()[signal.getFileNumber()]));
+            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileNumber()]));
             channelDurationLabel.setText(String.format("%.2f",
-                    mainApp.getAllSignals().getDataParams().getRealCadresQuantity()[signal.getFileNumber()]
-                            /mainApp.getAllSignals().getDataParams().getChannelRate()[signal.getFileNumber()]));
+                    mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileNumber()]
+                            /mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileNumber()]));
         }
         else{
             deviceNameLabel.setText("-----");
@@ -89,6 +89,9 @@ public class SignalsOverviewController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+    }
+
+    public void setTableItems() {
         // Add observable list data to the table
         signalsTable.itemsProperty().setValue(mainApp.getSignalList());
         //        .setItems(mainApp.getPersonData());

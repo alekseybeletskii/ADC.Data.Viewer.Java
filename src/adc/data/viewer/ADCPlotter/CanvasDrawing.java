@@ -1,7 +1,7 @@
 package adc.data.viewer.ADCPlotter;
 
+import adc.data.viewer.ADCreader.DataParser;
 import adc.data.viewer.MainApp;
-import adc.data.viewer.ADCreader.DataData;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -20,7 +20,7 @@ import static java.lang.Math.abs;
 public class CanvasDrawing extends Canvas {
 
 
-    private final DataData allSignals;
+    private final DataParser allSignals;
     private final Axes axes;
     private final List<Integer> selectedSignals;
     private final MainApp mainApp;
@@ -39,7 +39,7 @@ public class CanvasDrawing extends Canvas {
     CanvasDrawing(MainApp mainApp, Axes axes, List<Integer> selectedSignals) {
         this.mainApp = mainApp;
         this.axes = axes;
-        this.allSignals = mainApp.getAllSignals();
+        this.allSignals = mainApp.getDataParser();
         this.selectedSignals = selectedSignals;
     }
 
@@ -90,11 +90,11 @@ public class CanvasDrawing extends Canvas {
         double x;
 
         for (int indexOf : selectedSignals) {
-            String label = mainApp.getAllSignals().getSignalLabels()[indexOf];
+            String label = mainApp.getDataParser().getSignalLabels()[indexOf];
             int xshift = Integer.parseInt(label.substring(label.lastIndexOf('\u0023')+1))-1;
 
 //dt, milliseconds
-            double dt = 1.0/(mainApp.getAllSignals().getDataParams().getChannelRate()[mainApp.getSignalList().get(indexOf).getFileNumber()]);
+            double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(indexOf).getFileNumber()]);
 
             gc.setStroke(mainApp.getSignalList().get(indexOf).getSignalColor());
             x=0.0;

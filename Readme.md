@@ -9,7 +9,7 @@ Check "resources/jpg/" subfolder with screenshots.
 
 ![controlwindow](resources/jpg/main1000000points.jpg)
 
-![plot](https://github.com/alekseybeletskii/ADC.Data.Viewer/blob/master/resources/jpg/plot1000000pointsZoom2.jpg)
+![plot](resources/jpg/plot1000000pointsZoom2.jpg)
 
 Executable Jar file is located in "resources/jar/" subfolder.
 

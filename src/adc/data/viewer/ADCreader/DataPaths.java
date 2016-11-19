@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * A helper class to process file paths
  */
-class DataPaths {
+public class DataPaths {
 
     DataPaths (File[] filesListToProcess){
         makePaths(filesListToProcess);
@@ -31,10 +31,10 @@ class DataPaths {
     private  String[] fileName;
 
 
-      Path[] getParFilePath() {
+     Path[] getParFilePath() {
         return parFilePath;
     }
-      Path[] getDataFilePath() {
+      public Path[] getDataFilePath() {
         return dataFilePath;
     }
       String[] getFileName() {

@@ -1,7 +1,7 @@
 package adc.data.viewer.controllers;
 
 import adc.data.viewer.MainApp;
-import adc.data.viewer.ADCreader.DataData;
+import adc.data.viewer.ADCreader.DataParser;
 import adc.data.viewer.model.SignalMarker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -29,7 +29,8 @@ public class MainLayoutController {
         List<File> inpList = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
 
         if (inpList != null) {
-            mainApp.setAllSignals(new DataData(inpList,mainApp));
+            new DataParser(inpList,mainApp);
+            mainApp.fillSignalList();
         }
     }
 
@@ -37,7 +38,7 @@ public class MainLayoutController {
     public void handleSignalsToText() {
 
         if (mainApp.getSignalList().size() != 0) {
-            mainApp.getAllSignals().saveToFile();
+            mainApp.getDataParser().saveToFile();
         }
     }
 

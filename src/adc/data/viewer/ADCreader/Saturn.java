@@ -7,6 +7,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 /**
@@ -14,17 +15,38 @@ import java.util.Arrays;
  * This format is named here "Saturn"
  */
 
-class Saturn implements  DataFormat {
-    private DataData dataData;
+class Saturn implements DataTypes {
 
-    public void setDataData(DataData dataData) {
+//    Saturn (DataParser dataData){}
+
+    private DataParser dataData;
+    private DataParams dataParams;
+    private Path[] dataFilePath;
+    private Path[] parFilePath;
+
+    public void setDataParser(DataParser dataData) {
+
         this.dataData = dataData;
+        this.dataParams = dataData.getDataParams();
+        this.dataFilePath = dataData.getDataPaths().getDataFilePath();
+        this.parFilePath = dataData.getDataPaths().getParFilePath();
     }
 
-    public static void setParam(MappedByteBuffer parBuf, int fnum, DataParams dataParams){
+    public void setParam(int fnum) {
+
+        if (!Files.exists(parFilePath[fnum])) {
+            parFilePath[fnum] = dataFilePath[fnum];
+        }
+
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fnum])) {
+
+            long fSize = fChan.size();
+            MappedByteBuffer parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
+            parBuf.order(ByteOrder.LITTLE_ENDIAN);
 
 
-        byte[] creatDateTimeByte = new byte[18];
+
+            byte[] creatDateTimeByte = new byte[18];
         byte[] array5Byte = new byte[5];
         byte[] array15Byte = new byte[15];
         byte[] array11Byte = new byte[11];
@@ -55,12 +77,20 @@ class Saturn implements  DataFormat {
         Arrays.fill(array32Byte, (byte) 0);
         dataParams.setIsSignalArray(array32Byte,fnum) ;
         dataParams.setAdcGainArray(array32Byte,fnum) ;
+
+        } catch (InvalidPathException e) {
+            System.out.println("Path Error " + e);
+            dataParams.setDataParamsValid(false);
+        } catch (IOException e) {
+            System.out.println("I/O Error " + e);
+            dataParams.setDataParamsValid(false);
+        }
     }
 
-    public  void setData(int fnum, int sigCount, DataData dataData) {
+    public  void setData(int fnum, int sigCount) {
 
         MappedByteBuffer dataBuf;
-        DataParams dataParams = dataData.getDataParams();
+//        DataParams dataParams = dataData.getDataParams();
         double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
         int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fnum]];
         int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fnum]];

@@ -14,24 +14,23 @@ import java.nio.file.*;
  */
 class DataFormatsDetect {
 
-    DataFormatsDetect(DataData dataData, MainApp mainApp){
-        dataFormats(dataData,mainApp);
-    }
+    DataFormatsDetect(DataParser dataData, MainApp mainApp)
 
+//     private void dataFormats(DataParser dataData, MainApp mainApp)
 
-
-     private void dataFormats(DataData dataData, MainApp mainApp) {
+    {
         Path[] dataFilePath = dataData.getDataPaths().getDataFilePath();
         Path[] parFilePath = dataData.getDataPaths().getParFilePath();
         DataParams dataParams = dataData.getDataParams();
 
         int fnum = 0;
-        while (fnum < dataFilePath.length) {
 
-            int adcTypeLen = 20;
-            byte[] adcTypeByte;
-            String dataFormat;
-            MappedByteBuffer parBuf;
+        int adcTypeLen = 20;
+        byte[] adcTypeByte;
+        String dataFormat;
+        MappedByteBuffer parBuf;
+
+        while (fnum < dataFilePath.length) {
 
             if (!Files.exists(parFilePath[fnum])) {
                 parFilePath[fnum] = dataFilePath[fnum];
@@ -39,7 +38,7 @@ class DataFormatsDetect {
             if(dataFilePath[fnum].getFileName().toString().substring(dataFilePath[fnum].getFileName().toString().lastIndexOf('.')+1).toLowerCase().equals("txt"))
             {
                 dataParams.setDataFormatStr("TextFile", fnum);
-                mainApp.setTextFileParams(fnum, dataData);
+                mainApp.setTextFileParams(fnum);
                 fnum++;
                 continue;
             }
@@ -62,16 +61,16 @@ class DataFormatsDetect {
 
                 if (dataFormat.equals("2571090,1618190")) {
                     dataParams.setDataFormatStr("LGraph1", fnum);
-                    LGraph1.setParam(parBuf, fnum, dataParams);
+//                    DataTypesList.LGRAPH1.getDataType().setParam(parBuf, fnum);
                 } else if (dataFormat.equals("2571090,1618190 A")) {
                     dataParams.setDataFormatStr("LGraph1_2008", fnum);
-                    LGraph1_2008.setParam(parBuf, fnum, dataParams);
+//                    DataTypesList.LGRAPH1_2008.getDataType().setParam(parBuf, fnum);
                 } else if (dataFormat.charAt(2) == '/' & dataFormat.charAt(5) == '/') {
                     dataParams.setDataFormatStr("Saturn", fnum);
-                    Saturn.setParam(parBuf, fnum, dataParams);
+//                    DataTypesList.SATURN.getDataType().setParam(parBuf, fnum);
                 } else if (dataFormat.equals("3571090,7859525")) {
                     dataParams.setDataFormatStr("LGraph2", fnum);
-                    LGraph2.setParam(parBuf, fnum, dataParams);
+//                    DataTypesList.LGRAPH2.getDataType().setParam(parBuf, fnum);
                 }
 
                 dataParams.setDataParamsValid(true);

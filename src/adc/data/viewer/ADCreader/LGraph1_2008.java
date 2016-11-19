@@ -7,23 +7,45 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 
 
 /**
  * This is the class that defines ADC binary data format used in the freeware program L-Graph I after 2008 year
  * This format is named here "LGraph1_2008"
  */
-class LGraph1_2008 implements  DataFormat{
-    private DataData dataData;
+class LGraph1_2008 implements DataTypes {
 
-    public void setDataData(DataData dataData) {
+//    LGraph1_2008 (DataParser dataData){}
+
+
+    private DataParser dataData;
+    private DataParams dataParams;
+    private Path[] dataFilePath;
+    private Path[] parFilePath;
+
+    public void setDataParser(DataParser dataData) {
+
         this.dataData = dataData;
+        this.dataParams = dataData.getDataParams();
+        this.dataFilePath = dataData.getDataPaths().getDataFilePath();
+        this.parFilePath = dataData.getDataPaths().getParFilePath();
     }
 
+    public void setParam(int fnum) {
 
-    public static void setParam(MappedByteBuffer parBuf, int fnum, DataParams dataParams) {
+        if (!Files.exists(parFilePath[fnum])) {
+            parFilePath[fnum] = dataFilePath[fnum];
+        }
 
-        byte[] deviceNameByte = new byte[17];
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fnum])) {
+
+            long fSize = fChan.size();
+            MappedByteBuffer parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
+            parBuf.order(ByteOrder.LITTLE_ENDIAN);
+
+
+            byte[] deviceNameByte = new byte[17];
         byte[] creatDateTimeByte = new byte[26];
         byte[] arrayByte = new byte[32];
 
@@ -57,12 +79,21 @@ class LGraph1_2008 implements  DataFormat{
         dataParams.setAdcGainArray(arrayByte, fnum);
         parBuf.get(arrayByte);
         dataParams.setIsSignalArray(arrayByte, fnum);
+
+
+        } catch (InvalidPathException e) {
+            System.out.println("Path Error " + e);
+            dataParams.setDataParamsValid(false);
+        } catch (IOException e) {
+            System.out.println("I/O Error " + e);
+            dataParams.setDataParamsValid(false);
+        }
     }
 
-    public  void setData(int fnum, int sigCount, DataData dataData) {
+    public  void setData(int fnum, int sigCount) {
 
         MappedByteBuffer dataBuf;
-        DataParams dataParams = dataData.getDataParams();
+//        DataParams dataParams = dataData.getDataParams();
 
         double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
 
