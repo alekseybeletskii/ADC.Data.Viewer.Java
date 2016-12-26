@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.round;
 
 
 /*
@@ -61,9 +62,9 @@ public class CanvasDrawing extends Canvas {
 
     public void draw() {
         this.dx = widthProperty().get()/
-                (axes.getXAxis().getUpperBound() - axes.getXAxis().getLowerBound());
+               abs((axes.getXAxis().getUpperBound() - axes.getXAxis().getLowerBound()));
         this.dy = heightProperty().get()/
-                (axes.getYAxis().getUpperBound() - axes.getYAxis().getLowerBound());
+                abs((axes.getYAxis().getUpperBound() - axes.getYAxis().getLowerBound()));
 
         this.shiftZero = axes.getYAxis().getUpperBound()/abs((axes.getYAxis().getUpperBound()
                 - axes.getYAxis().getLowerBound())/getHeight())
@@ -89,23 +90,29 @@ public class CanvasDrawing extends Canvas {
         gc.setLineDashes(0);
         double x;
 
-        for (int indexOf : selectedSignals) {
-            String label = mainApp.getDataParser().getSignalLabels()[indexOf];
+        for (int nextSignal : selectedSignals) {
+            String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
+
             int xshift = Integer.parseInt(label.substring(label.lastIndexOf('\u0023')+1))-1;
 
-//dt, milliseconds
-            double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(indexOf).getFileNumber()]);
 
-            gc.setStroke(mainApp.getSignalList().get(indexOf).getSignalColor());
+//dt,dtCadre in milliseconds
+            double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
+            double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
+
+            gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
             x=0.0;
             gc.beginPath();
 
-            double [] sigSubarry = Arrays.copyOfRange(allSignals.getSignals()[indexOf],
-                    (int)(axes.getXAxis().getLowerBound()/dt),
-                    (int)(axes.getXAxis().getUpperBound()/dt));
+            double [] sigSubarry = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
+                    (int)round(axes.getXAxis().getLowerBound()/dt),
+                    (int)round(axes.getXAxis().getUpperBound()/dt));
             for (double y : sigSubarry) {
-                if (x==0.0)gc.moveTo(mapX(x+xshift, dt), mapY(y));
-                gc.lineTo(mapX(x+xshift, dt),mapY(y));
+                if (x==0.0){
+
+                    gc.moveTo(mapX(x, dt)+xshift*dx*dtCadre, mapY(y));
+                }
+                gc.lineTo(mapX(x, dt)+xshift*dx*dtCadre,mapY(y));
                 x++;
             }
             gc.stroke();
