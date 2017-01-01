@@ -2,6 +2,7 @@ package adc.data.viewer.ADCPlotter;
 
 import adc.data.viewer.MainApp;
 import adc.data.viewer.controllers.PlotterController;
+import adc.data.viewer.dataProcessing.SimpleMath;
 import adc.data.viewer.model.SignalMarker;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -87,19 +88,11 @@ public class PlotsBuilder extends AnchorPane {
                 if (samples*dt > longestTime) {
                     longestTime = samples*dt;
                 }
+
                 double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
-                OptionalDouble sigMax = Arrays.stream(testSignal).max();
-                OptionalDouble sigMin = Arrays.stream(testSignal).min();
-
-                if (sigMax.isPresent()&&sigMax.getAsDouble()>maxYValue)
-                    maxYValue = sigMax.getAsDouble();
-
-                if(sigMin.isPresent()&&sigMin.getAsDouble()<minYValue)
-                    minYValue = sigMin.getAsDouble();
-//                for (double nextPoint : mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()]) {
-//                    if (nextPoint > maxYValue) maxYValue = nextPoint;
-//                    if (nextPoint < minYValue) minYValue = nextPoint;
-//                }
+                SimpleMath.findMaxMin(testSignal);
+                if (SimpleMath.getMax()>maxYValue) maxYValue=SimpleMath.getMax();
+                if (SimpleMath.getMin()<minYValue) minYValue=SimpleMath.getMin();
             }
 
         }

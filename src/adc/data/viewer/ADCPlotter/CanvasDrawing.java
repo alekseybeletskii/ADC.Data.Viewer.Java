@@ -2,6 +2,7 @@ package adc.data.viewer.ADCPlotter;
 
 import adc.data.viewer.ADCreader.DataParser;
 import adc.data.viewer.MainApp;
+import adc.data.viewer.dataProcessing.SimpleMath;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -59,10 +60,13 @@ public class CanvasDrawing extends Canvas {
         return getHeight();
     }
 
-
+    /**
+     * Canvas drawing now successfully copes with millions of data points
+     * due to simple point-per-pixel approach
+     */
     public void draw() {
         this.dx = widthProperty().get()/
-               abs((axes.getXAxis().getUpperBound() - axes.getXAxis().getLowerBound()));
+                abs((axes.getXAxis().getUpperBound() - axes.getXAxis().getLowerBound()));
         this.dy = heightProperty().get()/
                 abs((axes.getYAxis().getUpperBound() - axes.getYAxis().getLowerBound()));
 
@@ -88,8 +92,6 @@ public class CanvasDrawing extends Canvas {
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(1);
         gc.setLineDashes(0);
-        double x;
-
         for (int nextSignal : selectedSignals) {
             String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
 
@@ -101,21 +103,45 @@ public class CanvasDrawing extends Canvas {
             double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
 
             gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-            x=0.0;
+
             gc.beginPath();
 
-            double [] sigSubarry = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
+            double [] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
                     (int)round(axes.getXAxis().getLowerBound()/dt),
                     (int)round(axes.getXAxis().getUpperBound()/dt));
-            for (double y : sigSubarry) {
-                if (x==0.0){
 
-                    gc.moveTo(mapX(x, dt)+xshift*dx*dtCadre, mapY(y));
+            int step = (int)(sigSubarray.length/widthProperty().get());
+
+            if (step > 1) {
+
+                for (int i=0;i<sigSubarray.length;i=i+step)
+                {
+                    double [] sigSegment = Arrays.copyOfRange(sigSubarray,
+                            i,i+step);
+                    SimpleMath.findMaxMin(sigSegment);
+
+                    if (i == 0) {
+                        gc.moveTo(mapX(i, dt) + xshift * dx * dtCadre, mapY(sigSegment[i]));
+                    }
+                    gc.lineTo(mapX(i+step/2, dt) + xshift * dx * dtCadre, mapY(SimpleMath.getMax()));
+                    gc.lineTo(mapX(i+step/2, dt) + xshift * dx * dtCadre, mapY(SimpleMath.getMin()));
+
                 }
-                gc.lineTo(mapX(x, dt)+xshift*dx*dtCadre,mapY(y));
-                x++;
+                gc.stroke();
+
             }
-            gc.stroke();
+            else {
+                int x=0;
+                for (double y : sigSubarray) {
+                    if (x == 0) {
+                        gc.moveTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
+                    }
+                    gc.lineTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
+                    x++;
+                }
+                gc.stroke();
+
+            };
         }
     }
     private void drawmesh() {
