@@ -135,11 +135,11 @@ public class MainApp extends Application {
             plotsStage.getIcons().add(new Image("images/IPP-logo.png"));
             Scene scene = new Scene(plotsLayout);
             plotsStage.setScene(scene);
+            plotsStage.show();
 
             controller.getPlots().getCanvas().draw();
             controller.getPlots().getCanvas().widthProperty().addListener(it -> controller.getPlots().getCanvas().draw());
             controller.getPlots().getCanvas().heightProperty().addListener(it -> controller.getPlots().getCanvas().draw());
-            plotsStage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
