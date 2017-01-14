@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="axesAnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.controllers.PlotterController">
+<AnchorPane fx:id="axesAnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.controllers.PlotterController">
    <children>
       <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <Label text="x=...; y=..." BorderPane.alignment="CENTER" fx:id="xyLabel">
+            <Label text="x=...; y=..." BorderPane.alignment="TOP_LEFT" fx:id="xyLabel">
                <font>
                   <Font name="System Italic" size="14.0" />
                </font>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-               <padding>
-                  <Insets bottom="10.0" left="5.0" top="5.0" />
-               </padding>
+               <BorderPane.margin>
+                  <Insets left="50.0" />
+               </BorderPane.margin>
             </Label>
          </center>
+         <left>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                <Button mnemonicParsing="false" onAction="#handleRaw" text="raw">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleRawAndSGFilter" text="&amp;SGfilter">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleSGFilter" text="SGfilter">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleSGFiltered" text="- SGfilter">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </left>
       </BorderPane>
    </children>
 </AnchorPane>

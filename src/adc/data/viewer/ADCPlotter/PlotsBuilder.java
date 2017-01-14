@@ -13,9 +13,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalDouble;
 
 import static java.lang.Math.abs;
 
@@ -40,7 +38,7 @@ public class PlotsBuilder extends AnchorPane {
         this.selectedSignals = new ArrayList<>();
         this.zoomRectangle =null;
         buildAxes(mainApp);
-        canvas = new CanvasDrawing(mainApp, axes, selectedSignals);
+        canvas = new CanvasDrawing(mainApp, axes, selectedSignals, "Raw");
         canvas.widthProperty().bind(axes.getXAxis().widthProperty());
         canvas.heightProperty().bind(axes.getYAxis().heightProperty());
 

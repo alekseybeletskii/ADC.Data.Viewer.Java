@@ -29,6 +29,7 @@ How to use:
    - "Plot->Export all to txt " converts all signals shown in the main table
        to the text format and save it to a subfolder named "<source>/txt"
    - "Plot->Draw Plots" plots checked signals in a separate window.
+   -  When plots are shown, Savitsky-Golay filter can be applied.
    -  double click on table will check/uncheck all signals
    -  individual color can be set for every signal
 
@@ -36,10 +37,10 @@ Zoom plots with mouse:
    - zoom: left click + drag from a top left to a bottom right
    - rescale to a full view: left click + drag back from a bottom right to a top left
 
-NOTE: if there are a lot of points, drowing will take some time.
+NOTE: if there are a lot of points, drawing will take some time.
       Laptop with Intel i5 renders a 1 000 000 of points about 1 minute,
       in case of drawing all data "as is".
       Feature is included that enables  rapid drawing even when there are
       millions of data points. Just use zoom to view all the details.
       Canvas drawing now successfully copes with millions of data points
-      due to simple point-per-pixel approach
+      due to simple "point-per-pixel" approach.
