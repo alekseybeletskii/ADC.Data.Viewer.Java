@@ -2,8 +2,8 @@ package adc.data.viewer.controllers;
 
 import adc.data.viewer.ADCreader.DataParams;
 import adc.data.viewer.ADCreader.DataParser;
-import adc.data.viewer.ADCreader.DataTypesList;
 import adc.data.viewer.MainApp;
+import adc.data.viewer.dataProcessing.TestDataType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
 public class TextFileDataController {
@@ -75,9 +75,7 @@ public class TextFileDataController {
 
     @FXML
     private void handleOk(ActionEvent actionEvent)  {
-
-
-        if(isInteger(txtChannelNum.getText(),10)&&isDouble(txtChannelRate.getText())){
+        if(TestDataType.isInteger(txtChannelNum.getText(),10)&&TestDataType.isDouble(txtChannelRate.getText())){
 
             creationDate = txtCreationDate.getText();
             deviceName = txtDeviceName.getText();
@@ -93,9 +91,9 @@ public class TextFileDataController {
             textFileParamsStage.close();
         }
         else{
+
             alertInvalidParam.showAndWait();
         }
-
     }
 
     @FXML
@@ -104,59 +102,7 @@ public class TextFileDataController {
         textFileParamsStage.close();
     }
     
-    private static boolean isInteger(String s, int radix) {
-        if(s.isEmpty()) return false;
-        for(int i = 0; i < s.length(); i++) {
-            if(i == 0 && s.charAt(i) == '-') {
-                if(s.length() == 1) return false;
-                else continue;
-            }
-            if(Character.digit(s.charAt(i),radix) < 0) return false;
-        }
-        return true;
-    }
-    private  static boolean isDouble(String myString){
-        final String Digits     = "(\\p{Digit}+)";
-        final String HexDigits  = "(\\p{XDigit}+)";
-        // an exponent is 'e' or 'E' followed by an optionally
-        // signed decimal integer.
-        final String Exp        = "[eE][+-]?"+Digits;
-        final String fpRegex    =
-                ("[\\x00-\\x20]*"+  // Optional leading "whitespace"
-                        "[+-]?(" + // Optional sign character
-                        "NaN|" +           // "NaN" string
-                        "Infinity|" +      // "Infinity" string
 
-                        // A decimal floating-point string representing a finite positive
-                        // number without a leading sign has at most five basic pieces:
-                        // Digits . Digits ExponentPart FloatTypeSuffix
-                        //
-                        // Since this method allows integer-only strings as input
-                        // in addition to strings of floating-point literals, the
-                        // two sub-patterns below are simplifications of the grammar
-                        // productions from section 3.10.2 of
-                        // The Java Language Specification.
-
-                        // Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
-                        "((("+Digits+"(\\.)?("+Digits+"?)("+Exp+")?)|"+
-
-                        // . Digits ExponentPart_opt FloatTypeSuffix_opt
-                        "(\\.("+Digits+")("+Exp+")?)|"+
-
-                        // Hexadecimal strings
-                        "((" +
-                        // 0[xX] HexDigits ._opt BinaryExponent FloatTypeSuffix_opt
-                        "(0[xX]" + HexDigits + "(\\.)?)|" +
-
-                        // 0[xX] HexDigits_opt . HexDigits BinaryExponent FloatTypeSuffix_opt
-                        "(0[xX]" + HexDigits + "?(\\.)" + HexDigits + ")" +
-
-                        ")[pP][+-]?" + Digits + "))" +
-                        "[fFdD]?))" +
-                        "[\\x00-\\x20]*");// Optional trailing "whitespace"
-
-        return Pattern.matches(fpRegex, myString);
-    }
 
 
      private void  setParamInteractive(String recordCreationDate, String deviceName, double channelRate,int fnum) {

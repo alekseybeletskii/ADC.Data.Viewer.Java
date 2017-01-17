@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="axesAnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.controllers.PlotterController">
+<AnchorPane fx:id="axesAnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.controllers.PlotterController">
    <children>
       <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -27,7 +27,12 @@
          <left>
             <HBox BorderPane.alignment="CENTER">
                <children>
-                <Button mnemonicParsing="false" onAction="#handleRaw" text="raw">
+                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+                <Button mnemonicParsing="false" onAction="#handleRaw" text="RawData">
                      <font>
                         <Font size="10.0" />
                      </font>

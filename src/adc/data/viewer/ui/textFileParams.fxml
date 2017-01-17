@@ -62,7 +62,7 @@
       <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <buttons>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOk" prefWidth="50.0" styleClass="label" text="Ok" />
-          <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" styleClass="label" text="Cancel" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" styleClass="label" text="Cancel" />
         </buttons>
          <BorderPane.margin>
             <Insets right="10.0" />

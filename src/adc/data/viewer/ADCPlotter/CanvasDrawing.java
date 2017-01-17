@@ -127,7 +127,6 @@ public class CanvasDrawing extends Canvas {
                 case "SGFiltered":
                     gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
                     gc.beginPath();
-//                    double [] sgfilt =
                     int i=0;
                     for (double yy : sgfilter.filterData(sigSubarray)){
                         sigSubarray[i]=sigSubarray[i]-yy;

@@ -9,10 +9,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
+import  static adc.data.viewer.controllers.PlotterSettingController.*;
+
 public class PlotterController {
 
     private MainApp mainApp;
-    private PlotsBuilder plots;
+    private static PlotsBuilder plots;
 
 
 
@@ -22,7 +24,7 @@ public class PlotterController {
     @FXML
     private AnchorPane axesAnchorPane;
 
-    public PlotsBuilder getPlots() {
+    public static PlotsBuilder getPlots() {
         return plots;
     }
     public Label getXyLabel() {
@@ -32,7 +34,7 @@ public class PlotterController {
         this.mainApp = mainApp;
     }
     public void setPlotsOnPane() {
-        this.plots = new PlotsBuilder(mainApp, axesAnchorPane, this);
+        plots = new PlotsBuilder(mainApp, axesAnchorPane, this);
     }
 
     @FXML
@@ -43,20 +45,26 @@ public class PlotterController {
     }
     @FXML
     public void handleRawAndSGFilter(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(200,200,2));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft.intValue(),sgright.intValue(),sgorder.intValue()));
         plots.getCanvas().setPlotType("RawAndSGFilter");
         plots.getCanvas().draw();
     }
     @FXML
     public void handleSGFiltered(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(200,200,2));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft.intValue(),sgright.intValue(),sgorder.intValue()));
         plots.getCanvas().setPlotType("SGFiltered");
         plots.getCanvas().draw();
     }
     @FXML
     public void handleSGFilter(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(200,200,2));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft.intValue(),sgright.intValue(),sgorder.intValue()));
         plots.getCanvas().setPlotType("SGFilter");
         plots.getCanvas().draw();
     }
+    @FXML
+    public void handlePlotterSettings(ActionEvent actionEvent) {
+        mainApp.setPlotterSetting();
+    }
+
+
 }

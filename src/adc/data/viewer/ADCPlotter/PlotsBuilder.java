@@ -2,6 +2,7 @@ package adc.data.viewer.ADCPlotter;
 
 import adc.data.viewer.MainApp;
 import adc.data.viewer.controllers.PlotterController;
+import adc.data.viewer.controllers.PlotterSettingController;
 import adc.data.viewer.dataProcessing.SimpleMath;
 import adc.data.viewer.model.SignalMarker;
 import javafx.beans.property.DoubleProperty;
@@ -20,21 +21,25 @@ import static java.lang.Math.abs;
 public class PlotsBuilder extends AnchorPane {
 
     private  List<Integer>  selectedSignals;
-    private  Axes axes;
-    private  CanvasDrawing canvas;
-    private double xMinBasic;
-    private double xMaxBasic;
-    private double yMinBasic;
-    private double yMaxBasic;
-    private Rectangle zoomRectangle;
 
+    private  Axes axes;
+
+    private  CanvasDrawing canvas;
+    private PlotterController plotterController;
+    private Rectangle zoomRectangle;
 
     public CanvasDrawing getCanvas() {
         return canvas;
     }
 
+
+    public Axes getAxes() {
+        return axes;
+    }
+
     public PlotsBuilder(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController)
     {
+        this.plotterController=plotterController;
         this.selectedSignals = new ArrayList<>();
         this.zoomRectangle =null;
         buildAxes(mainApp);
@@ -60,18 +65,18 @@ public class PlotsBuilder extends AnchorPane {
         AnchorPane.setBottomAnchor(axes, 0.0);
         AnchorPane.setTopAnchor(axes, 0.0);
 
-        showMouseXY(plotterController);
+        showMouseXY();
         zoom();
     }
 
     private void buildAxes(MainApp mainApp) {
 
+        PlotterSettingController.setSGFilterSettingsDefault(50.0,50.0,1.0);
+        PlotterSettingController.setSpectrogramSettingsDefault(256.0,"Hanning",0.5);
+
         double longestTime =0; // longest signal, ms
         double minYValue =0;
         double maxYValue =0;
-        double xTicksStepBasic = 0.01;
-        double yTicksStepBasic = 0.01;
-
         long samples;
         double dt; // time scale of longest amongst selected signal, ms
 
@@ -92,36 +97,18 @@ public class PlotsBuilder extends AnchorPane {
                 if (SimpleMath.getMax()>maxYValue) maxYValue=SimpleMath.getMax();
                 if (SimpleMath.getMin()<minYValue) minYValue=SimpleMath.getMin();
             }
-
         }
-        xMinBasic = 0.0;
-        xMaxBasic = longestTime; // milliseconds
-        yMinBasic = minYValue;
-        yMaxBasic = maxYValue;
 
-        this.axes = new Axes(xMinBasic, xMaxBasic, xTicksStepBasic,yMinBasic, yMaxBasic, yTicksStepBasic);
+        double absMaxYValue = abs(maxYValue)>abs(minYValue)?abs(maxYValue):abs(minYValue);
+        double xMinBasic = 0.0;
+        double xMaxBasic = longestTime; // milliseconds
+        double xAxisTicksAmount =10;
+        double yAxisTicksAmount =10;
 
-        setAxesTicksSteps(10,10); // can be realized as option to set by user
+        this.axes = new Axes(xMinBasic, xMaxBasic, -absMaxYValue, absMaxYValue, xAxisTicksAmount,yAxisTicksAmount);
+
     }
 
-    private void setAxesTicksSteps(double xTicksAmount, double yTicksAmount){
-        axes.getXAxis().setTickUnit(abs((axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /xTicksAmount));
-        if((axes.getYAxis().getLowerBound()<0.0&axes.getYAxis().getUpperBound()<0.0)|(axes.getYAxis().getLowerBound()>0.0&axes.getYAxis().getUpperBound()>0.0))
-        {
-            axes.getYAxis().setTickUnit(abs(axes.getYAxis().getLowerBound()-axes.getYAxis().getUpperBound())/yTicksAmount);
-        }
-        else if(axes.getYAxis().getLowerBound()==0.0)
-        {
-            axes.getYAxis().setTickUnit(abs(axes.getYAxis().getUpperBound())/yTicksAmount);
-        }
-        else if(abs(axes.getYAxis().getLowerBound()/axes.getYAxis().getUpperBound())<0.2)
-        {
-            axes.getYAxis().setTickUnit(abs(axes.getYAxis().getLowerBound()));
-        }
-        else {
-            axes.getYAxis().setTickUnit(abs(axes.getYAxis().getLowerBound()) /yTicksAmount);
-        }
-    }
 
     private void zoom() {
         DoubleProperty zoomTopLeftX = new SimpleDoubleProperty();
@@ -145,6 +132,15 @@ public class PlotsBuilder extends AnchorPane {
 
 
         canvas.setOnMouseDragged(mdragged -> {
+
+            double xScale = (axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /axes.getXAxis().getWidth();
+            double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
+            String coordinatesAxes = String.format("x= %.4f ; y= %.4f",
+                    mdragged.getX()* xScale+axes.getXAxisOffset(),
+                    -(mdragged.getY()-canvas.getShiftZero()-1)* yScale);
+            plotterController.getXyLabel().setText(coordinatesAxes);
+
+
             if(zoomRectangle!=null){
                 zoomBottomRightX.set(mdragged.getX());
                 zoomBottomRightY.set(mdragged.getY());
@@ -169,30 +165,14 @@ public class PlotsBuilder extends AnchorPane {
 
             if(zoomRectangle.getWidth()==0.0&zoomRectangle.getHeight()==0.0)
             {
-                axes.getXAxis().setLowerBound(xMinBasic);
-                axes.getXAxis().setUpperBound(xMaxBasic);
-                axes.getYAxis().setLowerBound(yMinBasic);
-                axes.getYAxis().setUpperBound(yMaxBasic);
-                setAxesTicksSteps(10,10);
-                axes.setXAxisOffset(0.0);
-
+                axes.setAxesBasicSetup();
                 this.getChildren().remove(zoomRectangle);
                 zoomRectangle = null;
                 canvas.draw();
             }
             else if(zoomRectangle.getWidth()!=0.0&zoomRectangle.getHeight()!=0.0){
 
-                double xScale = (axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /axes.getXAxis().getWidth();
-                double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
-                axes.getXAxis().setLowerBound(axes.getXAxis().getLowerBound()+ zoomTopLeftX.get()*xScale);
-                axes.getXAxis().setUpperBound(axes.getXAxis().getLowerBound()+ zoomRectangle.getWidth()*xScale);
-                axes.setXAxisOffset(axes.getXAxis().getLowerBound());
-                double yOffset = (zoomBottomRightY.get()-axes.getYAxis().getHeight())*yScale;
-                axes.getYAxis().setLowerBound(axes.getYAxis().getLowerBound()-yOffset);
-                axes.getYAxis().setUpperBound(axes.getYAxis().getLowerBound()+zoomRectangle.getHeight()*yScale);
-
-                setAxesTicksSteps(10,10);
-
+                axes.axesZoomRescale(zoomTopLeftX,zoomTopLeftY, zoomBottomRightX,zoomBottomRightY);
                 this.getChildren().remove(zoomRectangle);
                 zoomRectangle = null;
                 canvas.draw();
@@ -200,7 +180,9 @@ public class PlotsBuilder extends AnchorPane {
         });
     }
 
-    private void showMouseXY(PlotterController plotterController) {
+
+
+    private void showMouseXY() {
         this.setOnMouseMoved(event -> {
             double xScale = (axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /axes.getXAxis().getWidth();
             double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();

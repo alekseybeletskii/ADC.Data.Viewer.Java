@@ -38,6 +38,7 @@ public class MainApp extends Application {
     private DataParser dataParser;
     private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
     private TextFileDataController textFileDataController;
+    private PlotterSettingController plotterSettingController;
 
     public TextFileDataController getTextFileDataController() {
         return textFileDataController;
@@ -155,6 +156,7 @@ public class MainApp extends Application {
             Stage textFileParamsStage = new Stage();
             textFileParamsStage.initStyle(StageStyle.UNDECORATED);
             textFileParamsStage.setResizable(false);
+            textFileParamsStage.setAlwaysOnTop(true);
             textFileDataController.setMainApp(this);
             textFileDataController.setDataParser(dataParser);
             textFileDataController.setTextFileParamsStage(textFileParamsStage);
@@ -163,6 +165,27 @@ public class MainApp extends Application {
             Scene scene = new Scene(textFileParams);
             textFileParamsStage.setScene(scene);
             textFileParamsStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setPlotterSetting() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("ui/PlotterSetting.fxml"));
+            BorderPane plotterSetting = loader.load();
+            plotterSettingController = loader.getController();
+            Stage plotterSettingStage = new Stage();
+            plotterSettingStage.initStyle(StageStyle.UNDECORATED);
+            plotterSettingStage.setResizable(false);
+            plotterSettingStage.setAlwaysOnTop(true);
+            plotterSettingController.setMainApp(this);
+            plotterSettingController.setPlotterSettingStage(plotterSettingStage);
+            plotterSettingStage.setTitle("Plotter Settings");
+            Scene scene = new Scene(plotterSetting);
+            plotterSettingStage.setScene(scene);
+            plotterSettingStage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
