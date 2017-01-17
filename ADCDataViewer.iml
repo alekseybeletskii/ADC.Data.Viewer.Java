@@ -6,10 +6,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources/jar" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/resources/css" type="java-resource" relativeOutputPath="resources" />
-      <sourceFolder url="file://$MODULE_DIR$/resources/jpg" type="java-resource" relativeOutputPath="resources" />
       <sourceFolder url="file://$MODULE_DIR$/resources/images" type="java-resource" relativeOutputPath="resources" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/resources/jar" />
+      <excludeFolder url="file://$MODULE_DIR$/resources/jpg" />
       <excludeFolder url="file://$MODULE_DIR$/resources/sampledata" />
     </content>
     <orderEntry type="inheritedJdk" />
