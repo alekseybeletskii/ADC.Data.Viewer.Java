@@ -70,12 +70,12 @@ public class PlotterSettingController {
     static Double xmax;
     static Double xstep;
     static Double ystep;
-    static Double sgleft;
-    static Double sgright;
-    static Double sgorder;
-    static Double fftsize;
+    static int sgleft;
+    static int sgright;
+    static int sgorder;
+    static int fftsize;
     static String fftwindow;
-    static Double fftoverlap;
+    static int fftoverlap;
 
     @FXML
     private TextField manualYmax;
@@ -104,38 +104,38 @@ public class PlotterSettingController {
 
 
     public static void setAxesSettingsDefault(
-            Double xminn,
-            Double xmax,
-            Double xstep,
-            Double ymin,
-            Double ymax,
-            Double ystep)
+            Double xmn,
+            Double xmx,
+            Double xstp,
+            Double ymn,
+            Double ymx,
+            Double ystp)
     {
-        PlotterSettingController.xmin=xminn;
-        PlotterSettingController.xmax=xmax;
-        PlotterSettingController.xstep=xstep;
-        PlotterSettingController.ymin=ymin;
-        PlotterSettingController.ymax=ymax;
-        PlotterSettingController.ystep=ystep;
+        xmin=xmn;
+        xmax=xmx;
+        xstep=xstp;
+        ymin=ymn;
+        ymax=ymx;
+        ystep=ystp;
 
     };
     public static void setSGFilterSettingsDefault(
-            Double sgleft,
-            Double sgright,
-            Double order)
+            int sglft,
+            int sgrt,
+            int ord)
     {
-        PlotterSettingController.sgleft=sgleft;
-        PlotterSettingController.sgright=sgright;
-        PlotterSettingController.sgorder=order;
+        sgleft=sglft;
+        sgright=sgrt;
+        sgorder=ord;
     };
     public static void setSpectrogramSettingsDefault(
-            Double fftsize,
-            String fftwindow,
-            Double fftoverlap)
+            int ftsize,
+            String ftwindow,
+            int ftoverlap)
     {
-        PlotterSettingController.fftsize=fftsize;
-        PlotterSettingController.fftwindow=fftwindow;
-        PlotterSettingController.fftoverlap=fftoverlap;
+        fftsize=ftsize;
+        fftwindow=ftwindow;
+        fftoverlap=ftoverlap;
     };
 
 
@@ -156,9 +156,11 @@ public class PlotterSettingController {
         dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
         dialogPane.getStyleClass().add("myDialog");
 //        alertInvalidParam.initStyle(StageStyle.UNDECORATED);
+        alertInvalidParam.setWidth(700);
+        alertInvalidParam.setHeight(700);
         alertInvalidParam.setTitle("Warning");
         alertInvalidParam.setHeaderText("Invalid data format!");
-        alertInvalidParam.setContentText("all fields should be numeric of type float,\n except \"FFTWindowType\" of type String");
+        alertInvalidParam.setContentText("all axes parameters should be of type float,\nother pframeters should be Integer\nand \"FFTWindowType\" of type String\n\n");
         manualYmax.setText(String.valueOf(ymax));
         manualYmin.setText(String.valueOf(ymin));
         manualXmax.setText(String.valueOf(xmax));
@@ -189,11 +191,11 @@ public class PlotterSettingController {
                         TestDataType.isDouble(manualYmin.getText())&&
                         TestDataType.isDouble(manualYmax.getText())&&
                         TestDataType.isDouble(manualYstep.getText())&&
-                        TestDataType.isDouble(manualSGFilterLeft.getText())&&
-                        TestDataType.isDouble(manualSGFilterRight.getText())&&
-                        TestDataType.isDouble(manualSGFilterOrder.getText())&&
-                        TestDataType.isDouble(FFTSize.getText())&&
-                        TestDataType.isDouble(FFTWindowOverlap.getText())
+                        TestDataType.isInteger(manualSGFilterLeft.getText(),10)&&
+                        TestDataType.isInteger(manualSGFilterRight.getText(),10)&&
+                        TestDataType.isInteger(manualSGFilterOrder.getText(),10)&&
+                        TestDataType.isInteger(FFTSize.getText(),10)&&
+                        TestDataType.isInteger(FFTWindowOverlap.getText(),10)
                 )
         {
             xmin=Double.parseDouble(manualXmin.getText());
@@ -202,14 +204,15 @@ public class PlotterSettingController {
             ymin=Double.parseDouble(manualYmin.getText());
             ymax=Double.parseDouble(manualYmax.getText());
             ystep=Double.parseDouble(manualYstep.getText());
-            sgleft=Double.parseDouble(manualSGFilterLeft.getText());
-            sgright=Double.parseDouble(manualSGFilterRight.getText());
-            sgorder=Double.parseDouble(manualSGFilterOrder.getText());
-            fftsize=Double.parseDouble(FFTSize.getText());
-            fftoverlap=Double.parseDouble(FFTWindowOverlap.getText());
+            sgleft=Integer.parseInt(manualSGFilterLeft.getText());
+            sgright=Integer.parseInt(manualSGFilterRight.getText());
+            sgorder=Integer.parseInt(manualSGFilterOrder.getText());
+            fftsize=Integer.parseInt(FFTSize.getText());
+            fftoverlap=Integer.parseInt(FFTWindowOverlap.getText());
             fftwindow=FFTWindowType.getText();
-            PlotterController.getPlots().getAxes().setAxesBounds(xmin, xmax,xstep,ymin,ymax,ystep );
-            PlotterController.getPlots().getCanvas().draw();
+            if ((xmin>xmax)|(ymin>ymax)) mainApp.getPlotterController().getPlots().getAxes().setAxesBasicSetup();
+            else mainApp.getPlotterController().getPlots().getAxes().setAxesBounds(xmin, xmax,xstep,ymin,ymax,ystep );
+            mainApp.getPlotterController().getPlots().getCanvas().draw();
             plotterSettingsStage.close();
         }
 
@@ -218,7 +221,6 @@ public class PlotterSettingController {
             alertInvalidParam.showAndWait();
         }
 
-        plotterSettingsStage.close();
     }
 }
 

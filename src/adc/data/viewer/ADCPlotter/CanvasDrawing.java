@@ -72,20 +72,31 @@ public class CanvasDrawing extends Canvas {
     private final MainApp mainApp;
     private double dx;
     private double dy;
-    private double shiftZero;
+    private double shiftYZero;
+
+    private double shiftXZero;
+
     private String plotType;
+
     private SavitzkyGolayFilter sgfilter;
 
     public void setPlotType(String plotType) {
         this.plotType = plotType;
     }
-
     public void setSGfilter(SavitzkyGolayFilter sgfilter) {
         this.sgfilter = sgfilter;
     }
 
-    public double getShiftZero() {
-        return shiftZero;
+    public double getShiftYZero() {
+        return shiftYZero;
+    }
+
+    public SavitzkyGolayFilter getSgfilter() {
+        return sgfilter;
+    }
+
+    public double getShiftXZero() {
+        return shiftXZero;
     }
 
 
@@ -123,9 +134,9 @@ public class CanvasDrawing extends Canvas {
         this.dy = heightProperty().get()/
                 abs((axes.getYAxis().getUpperBound() - axes.getYAxis().getLowerBound()));
 
-        this.shiftZero = axes.getYAxis().getUpperBound()/abs((axes.getYAxis().getUpperBound()
-                - axes.getYAxis().getLowerBound())/getHeight())
-                +1;
+        this.shiftYZero = axes.getYAxis().getUpperBound()*dy+1;
+
+        this.shiftXZero = axes.getXAxis().getLowerBound()<0?-axes.getXAxis().getLowerBound()*dx:0.0;
 
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, getWidth(), getHeight());
@@ -133,14 +144,20 @@ public class CanvasDrawing extends Canvas {
         gc.fillRect(0,0,getWidth(), getHeight());
 //draw mesh
         drawmesh();
-//draw zero line
+//draw X-Y zero lines
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
-        gc.setLineDashes(3);
+        gc.setLineDashes(5);
         gc.beginPath();
-        gc.moveTo(0,(int)shiftZero+0.5);
-        gc.lineTo(getWidth(),(int)shiftZero+0.5);
+        gc.moveTo(0,(int) shiftYZero +0.5);
+        gc.lineTo(getWidth(),(int) shiftYZero +0.5);
         gc.stroke();
+
+        gc.beginPath();
+        gc.moveTo((int) shiftXZero +0.5,0);
+        gc.lineTo((int) shiftXZero +0.5,getHeight());
+        if (shiftXZero!=0.0)gc.stroke();
+
 //draw data
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(1);
@@ -157,9 +174,14 @@ public class CanvasDrawing extends Canvas {
             double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
             double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
 
+            int nextSignalLength = allSignals.getSignals()[nextSignal].length;
+            int xLeft = (int)round(axes.getXAxis().getLowerBound()/dt);
+            int xRight = (int)round(axes.getXAxis().getUpperBound()/dt);
+
             double [] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
-                    (int)round(axes.getXAxis().getLowerBound()/dt),
-                    (int)round(axes.getXAxis().getUpperBound()/dt));
+                    xLeft<0?0:xLeft,xRight>nextSignalLength?nextSignalLength:xRight);
+//            double [] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
+//                    xLeft,xRight);
 
             switch (plotType){
                 case "Raw":
@@ -204,7 +226,7 @@ public class CanvasDrawing extends Canvas {
         gc.setLineDashes(3);
 
         //draw X axis mesh
-        double ticksXNext =0;
+        double ticksXNext =-shiftXZero/dx;
         double durationX = axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound();
         while (ticksXNext < durationX)
         {
@@ -260,10 +282,10 @@ public class CanvasDrawing extends Canvas {
         gc.stroke();
     }
     private double mapX(double x, double dt) {
-        return x*dx*dt;
+        return x*dx*dt+shiftXZero;
     }
     private double mapY(double y) {
-        return -y * dy+shiftZero;
+        return -y * dy+ shiftYZero;
     }
 
 }

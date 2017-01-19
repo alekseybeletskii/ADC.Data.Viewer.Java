@@ -43,11 +43,6 @@
 
 package adc.data.viewer.dataProcessing;
 
-//import ij.*;
-//import ij.process.*;
-//import ij.gui.*;
-//import ij.plugin.filter.*;
-
 import Jama.*;
 
 /** Class implements the Savitzky-Golay filter.  The algorithm is based on
@@ -67,6 +62,16 @@ import Jama.*;
  **/ 
 public class SavitzkyGolayFilter{
     double[] coefficients;
+
+
+//    public void setLfRtOrd(int left, int right, int order) {
+//        this.LEFT = left;
+//        this.RIGHT = right;
+//        this.ORDER = order;
+//    }
+
+
+
     int LEFT, RIGHT, ORDER;
     /**
      * Prepares the filter coefficients
@@ -77,10 +82,12 @@ public class SavitzkyGolayFilter{
      * */
     public SavitzkyGolayFilter(int left, int right, int order){
         
-        coefficients = SavitzkyGolayCoefficients(left,right,order);
+
         LEFT = left;
         RIGHT = right;
         ORDER = order;
+
+        coefficients = SavitzkyGolayCoefficients(LEFT,RIGHT,ORDER);
     }
 
     /**
@@ -93,10 +100,10 @@ public class SavitzkyGolayFilter{
      * */
     public SavitzkyGolayFilter(int left, int right, int order, int derivative){
 
-        coefficients = SavitzkyGolayCoefficients(left,right,order, derivative);
         LEFT = left;
         RIGHT = right;
         ORDER = order;
+        coefficients = SavitzkyGolayCoefficients(LEFT,RIGHT,ORDER, derivative);
     }
 
 

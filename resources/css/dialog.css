@@ -58,7 +58,7 @@
     -fx-background-color: coral;
 }
 .myDialog > *.label.content{
-    -fx-font-size: 14px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 .myDialog:header *.header-panel{

@@ -55,7 +55,7 @@
    <children>
       <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <Label text="x=...; y=..." BorderPane.alignment="TOP_LEFT" fx:id="xyLabel">
+            <Label text="x=...; y=..." BorderPane.alignment="CENTER_LEFT" fx:id="xyLabel">
                <font>
                   <Font name="System Italic" size="14.0" />
                </font>
@@ -70,7 +70,7 @@
          <left>
             <HBox BorderPane.alignment="CENTER">
                <children>
-                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
+                  <Button defaultButton="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
                      <font>
                         <Font size="10.0" />
                      </font>
@@ -96,6 +96,12 @@
                      </font>
                   </Button>
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <BorderPane.margin>
+                  <Insets left="70.0" />
+               </BorderPane.margin>
             </HBox>
          </left>
       </BorderPane>

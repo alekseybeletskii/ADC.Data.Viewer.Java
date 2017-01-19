@@ -91,7 +91,7 @@ public class PlotsBuilder extends AnchorPane {
         canvas.heightProperty().bind(axes.getYAxis().heightProperty());
 
         axesAnchorPane.getChildren().add(this);
-        AnchorPane.setLeftAnchor(this, 50.0);
+        AnchorPane.setLeftAnchor(this, 70.0);
         AnchorPane.setRightAnchor(this, 50.0);
         AnchorPane.setBottomAnchor(this, 50.0);
         AnchorPane.setTopAnchor(this, 30.0);
@@ -114,8 +114,8 @@ public class PlotsBuilder extends AnchorPane {
 
     private void buildAxes(MainApp mainApp) {
 
-        PlotterSettingController.setSGFilterSettingsDefault(50.0,50.0,1.0);
-        PlotterSettingController.setSpectrogramSettingsDefault(256.0,"Hanning",0.5);
+        PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
+        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
 
         double longestTime =0; // longest signal, ms
         double minYValue =0;
@@ -180,7 +180,7 @@ public class PlotsBuilder extends AnchorPane {
             double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
             String coordinatesAxes = String.format("x= %.4f ; y= %.4f",
                     mdragged.getX()* xScale+axes.getXAxisOffset(),
-                    -(mdragged.getY()-canvas.getShiftZero()-1)* yScale);
+                    -(mdragged.getY()-canvas.getShiftYZero()-1)* yScale);
             plotterController.getXyLabel().setText(coordinatesAxes);
 
 
@@ -231,7 +231,7 @@ public class PlotsBuilder extends AnchorPane {
             double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
             String coordinatesAxes = String.format("x= %.4f ; y= %.4f",
                     event.getX()* xScale+axes.getXAxisOffset(),
-                    -(event.getY()-canvas.getShiftZero()-1)* yScale);
+                    -(event.getY()-canvas.getShiftYZero()-1)* yScale);
             plotterController.getXyLabel().setText(coordinatesAxes);
         });
     }

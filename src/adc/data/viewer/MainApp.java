@@ -61,7 +61,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 /**
- * @author Aleksey Beletskii
+ * @author Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
  *
  * This application serves for a simple signal visualization
  * using binary data recorded with Analog Digital Converters.
@@ -82,6 +82,12 @@ public class MainApp extends Application {
     private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
     private TextFileDataController textFileDataController;
     private PlotterSettingController plotterSettingController;
+
+    public PlotterController getPlotterController() {
+        return plotterController;
+    }
+
+    private PlotterController plotterController;
 
     public TextFileDataController getTextFileDataController() {
         return textFileDataController;
@@ -169,9 +175,10 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("ui/Plotter.fxml"));
             AnchorPane plotsLayout = loader.load();
-            PlotterController controller = loader.getController();
-            controller.setMainApp(this);
-            controller.setPlotsOnPane();
+            plotterController = loader.getController();
+
+            plotterController.setMainApp(this);
+            plotterController.setPlotsOnPane();
 
             if(plotsStage!=null)plotsStage.close();
             plotsStage = new Stage();
@@ -181,9 +188,9 @@ public class MainApp extends Application {
             plotsStage.setScene(scene);
             plotsStage.show();
 
-            controller.getPlots().getCanvas().draw();
-            controller.getPlots().getCanvas().widthProperty().addListener(it -> controller.getPlots().getCanvas().draw());
-            controller.getPlots().getCanvas().heightProperty().addListener(it -> controller.getPlots().getCanvas().draw());
+            plotterController.getPlots().getCanvas().draw();
+            plotterController.getPlots().getCanvas().widthProperty().addListener(it -> plotterController.getPlots().getCanvas().draw());
+            plotterController.getPlots().getCanvas().heightProperty().addListener(it -> plotterController.getPlots().getCanvas().draw());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -220,7 +227,7 @@ public class MainApp extends Application {
             BorderPane plotterSetting = loader.load();
             plotterSettingController = loader.getController();
             Stage plotterSettingStage = new Stage();
-            plotterSettingStage.initStyle(StageStyle.UNDECORATED);
+//            plotterSettingStage.initStyle(StageStyle.UNDECORATED);
             plotterSettingStage.setResizable(false);
             plotterSettingStage.setAlwaysOnTop(true);
             plotterSettingController.setMainApp(this);

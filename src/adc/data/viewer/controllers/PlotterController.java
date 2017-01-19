@@ -57,7 +57,7 @@ import  static adc.data.viewer.controllers.PlotterSettingController.*;
 public class PlotterController {
 
     private MainApp mainApp;
-    private static PlotsBuilder plots;
+    private  PlotsBuilder plots;
 
 
 
@@ -67,7 +67,7 @@ public class PlotterController {
     @FXML
     private AnchorPane axesAnchorPane;
 
-    public static PlotsBuilder getPlots() {
+    public  PlotsBuilder getPlots() {
         return plots;
     }
     public Label getXyLabel() {
@@ -88,19 +88,19 @@ public class PlotterController {
     }
     @FXML
     public void handleRawAndSGFilter(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft.intValue(),sgright.intValue(),sgorder.intValue()));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
         plots.getCanvas().setPlotType("RawAndSGFilter");
         plots.getCanvas().draw();
     }
     @FXML
     public void handleSGFiltered(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft.intValue(),sgright.intValue(),sgorder.intValue()));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
         plots.getCanvas().setPlotType("SGFiltered");
         plots.getCanvas().draw();
     }
     @FXML
     public void handleSGFilter(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft.intValue(),sgright.intValue(),sgorder.intValue()));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
         plots.getCanvas().setPlotType("SGFilter");
         plots.getCanvas().draw();
     }
