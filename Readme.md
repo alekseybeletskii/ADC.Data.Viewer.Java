@@ -4,13 +4,16 @@ This application allows to visualize binary files created with analog digital co
 2. L-Card e20-10, http://www.lcard.ru/products/external/e20-10
 3. SATURN SDI-AD12-128H, http://www.saturn-data.com
 
+![controlwindow](resources/jpg/mainWindow.jpg)
+
+
+Some interactive plotter settings
+and Savitsky-Golay filter are available
+
+![plot](resources/jpg/SavitskyGolayFilterApplied.jpg)
+
 ADC files examples are included in the "resources/sampledata/" subfolder.
 Check "resources/jpg/" subfolder with screenshots.
-
-![controlwindow](resources/jpg/main1000000points.jpg)
-
-![plot](resources/jpg/plot1000000pointsZoom2.jpg)
-
 Executable Jar file is located in "resources/jar/" subfolder.
 
 An information about every signal will be extracted from an appropriate
