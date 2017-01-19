@@ -10,7 +10,7 @@ This application allows to visualize binary files created with analog digital co
 Some interactive plotter settings
 and Savitsky-Golay filter are available
 
-![plot](resources/jpg/SavitskyGolayFilterApplied.jpg)
+![plot](resources/jpg/PlotterSettingsAndSGfilter.jpg)
 
 ADC files examples are included in the "resources/sampledata/" subfolder.
 Check "resources/jpg/" subfolder with screenshots.
