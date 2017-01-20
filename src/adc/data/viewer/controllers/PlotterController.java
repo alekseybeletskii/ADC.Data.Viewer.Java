@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.controllers;
 
@@ -86,24 +86,28 @@ public class PlotterController {
         plots.getCanvas().setPlotType("Raw");
         plots.getCanvas().draw();
     }
+
     @FXML
     public void handleRawAndSGFilter(ActionEvent actionEvent) {
         plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
         plots.getCanvas().setPlotType("RawAndSGFilter");
         plots.getCanvas().draw();
     }
+
     @FXML
     public void handleSGFiltered(ActionEvent actionEvent) {
         plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
         plots.getCanvas().setPlotType("SGFiltered");
         plots.getCanvas().draw();
     }
+
     @FXML
     public void handleSGFilter(ActionEvent actionEvent) {
         plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
         plots.getCanvas().setPlotType("SGFilter");
         plots.getCanvas().draw();
     }
+
     @FXML
     public void handlePlotterSettings(ActionEvent actionEvent) {
         mainApp.setPlotterSetting();

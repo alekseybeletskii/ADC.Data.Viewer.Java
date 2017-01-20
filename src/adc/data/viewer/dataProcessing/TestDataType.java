@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,15 +39,12 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.dataProcessing;
 
 import java.util.regex.Pattern;
 
-/**
- * Created by a on 1/15/17.
- */
 public class TestDataType {
 
     public static boolean isInteger(String s, int radix) {
@@ -61,6 +58,8 @@ public class TestDataType {
         }
         return true;
     }
+
+    //from Double.valueOf(String) JavaDoc
     public static boolean isDouble(String myString){
         final String Digits     = "(\\p{Digit}+)";
         final String HexDigits  = "(\\p{XDigit}+)";

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.controllers;
 
@@ -94,14 +94,10 @@ public class SignalsOverviewController {
         signalSelectedColumn.setCellValueFactory(cellData -> cellData.getValue().signalSelectedProperty());
         signalColorColumn.setCellValueFactory(cellData -> cellData.getValue().signalColorProperty());
         signalLabelColumn.setCellValueFactory(cellData -> cellData.getValue().signalLabelProperty());
-
-//        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn((i)->mainApp.getSignalList().get(i).signalSelectedProperty()));
         signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(signalSelectedColumn));
-//        signalColorColumn.setCellFactory(TableCellColoredView::new);
         signalColorColumn.setCellFactory(c->new TableCellColoredView<>(signalColorColumn));
         showSignalDetails(null);
-        // Listen for selection changes and show the signal details when changed.
-//        signalsTable.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> showSignalDetails(newValue.intValue()));//;addListener((observable, oldValue, newValue) -> showSignalDetails(newValue));
+// Listen for selection changes and show the signal details when changed.
         signalsTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showSignalDetails(newValue));
     }
@@ -137,20 +133,16 @@ public class SignalsOverviewController {
     public void setTableItems() {
         // Add observable list data to the table
         signalsTable.itemsProperty().setValue(mainApp.getSignalList());
-        //        .setItems(mainApp.getPersonData());
     }
 
     @FXML
     private void handleClickedOnTable(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount()==2){
-
             for(SignalMarker sigM : mainApp.getSignalList())
             {
                 sigM.setSignalSelected(checkedFlag);
-//                sigM.setSignalSelected(sigM.isSignalSelected()^true);//revert current value
             }
             checkedFlag=!checkedFlag;
         }
-
     }
 }

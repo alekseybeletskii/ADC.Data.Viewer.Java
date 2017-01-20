@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.controllers;
 
@@ -53,6 +53,7 @@ public class ReadmeController {
     private Stage stageReadme;
 
     public void setStageReadme(Stage stageReadme) { this.stageReadme = stageReadme; }
+
     @FXML
     private void handleOnMouseClick(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount()>1){

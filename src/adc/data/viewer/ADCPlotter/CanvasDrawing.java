@@ -1,4 +1,4 @@
-/*******************************************************************************
+ /*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCPlotter;
 
@@ -73,32 +73,31 @@ public class CanvasDrawing extends Canvas {
     private double dx;
     private double dy;
     private double shiftYZero;
-
     private double shiftXZero;
-
     private String plotType;
+    private String lineOrScatter;
+    private int pointSize;
 
     private SavitzkyGolayFilter sgfilter;
 
+    public void setLineOrScatter(String lineOrScatter) {
+        this.lineOrScatter = lineOrScatter;
+    }
     public void setPlotType(String plotType) {
         this.plotType = plotType;
     }
     public void setSGfilter(SavitzkyGolayFilter sgfilter) {
         this.sgfilter = sgfilter;
     }
-
     public double getShiftYZero() {
         return shiftYZero;
     }
-
     public SavitzkyGolayFilter getSgfilter() {
         return sgfilter;
     }
-
     public double getShiftXZero() {
         return shiftXZero;
     }
-
 
 
     CanvasDrawing(MainApp mainApp, Axes axes, List<Integer> selectedSignals, String plotType) {
@@ -107,6 +106,8 @@ public class CanvasDrawing extends Canvas {
         this.axes = axes;
         this.allSignals = mainApp.getDataParser();
         this.selectedSignals = selectedSignals;
+        this.lineOrScatter = "line";
+        this.pointSize =6;
     }
 
     @Override
@@ -157,40 +158,35 @@ public class CanvasDrawing extends Canvas {
         gc.moveTo((int) shiftXZero +0.5,0);
         gc.lineTo((int) shiftXZero +0.5,getHeight());
         if (shiftXZero!=0.0)gc.stroke();
-
 //draw data
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(1);
         gc.setLineDashes(0);
 
-
         for (int nextSignal : selectedSignals) {
             String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
-
             int xshift = Integer.parseInt(label.substring(label.lastIndexOf('\u0023')+1))-1;
-
 
 //dt,dtCadre in milliseconds
             double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
             double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
-
             int nextSignalLength = allSignals.getSignals()[nextSignal].length;
             int xLeft = (int)round(axes.getXAxis().getLowerBound()/dt);
             int xRight = (int)round(axes.getXAxis().getUpperBound()/dt);
 
             double [] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
                     xLeft<0?0:xLeft,xRight>nextSignalLength?nextSignalLength:xRight);
-//            double [] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
-//                    xLeft,xRight);
 
             switch (plotType){
                 case "Raw":
                     gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
                     gc.beginPath();
                     decimator(gc, xshift, dt, dtCadre, sigSubarray);
                     break;
                 case "SGFiltered":
                     gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
                     gc.beginPath();
                     int i=0;
                     for (double yy : sgfilter.filterData(sigSubarray)){
@@ -201,16 +197,19 @@ public class CanvasDrawing extends Canvas {
                     break;
                 case "RawAndSGFilter":
                     gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
                     gc.beginPath();
                     decimator(gc, xshift, dt, dtCadre, sigSubarray);
                     sigSubarray = sgfilter.filterData(sigSubarray);
                     gc.setStroke(Color.BLACK);
+                    gc.setFill(Color.TRANSPARENT);
                     gc.beginPath();
                     decimator(gc, xshift, dt, dtCadre, sigSubarray);
                     break;
                 case "SGFilter":
                     sigSubarray = sgfilter.filterData(sigSubarray);
                     gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
                     gc.beginPath();
                     decimator(gc, xshift, dt, dtCadre, sigSubarray);
                     break;
@@ -266,7 +265,6 @@ public class CanvasDrawing extends Canvas {
                 }
                 gc.lineTo(mapX(i+step/2, dt) + xshift * dx * dtCadre, mapY(SimpleMath.getMax()));
                 gc.lineTo(mapX(i+step/2, dt) + xshift * dx * dtCadre, mapY(SimpleMath.getMin()));
-
             }
         }
         else {
@@ -275,7 +273,18 @@ public class CanvasDrawing extends Canvas {
                 if (x == 0) {
                     gc.moveTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
                 }
-                gc.lineTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
+                switch (lineOrScatter){
+                    case "line":
+                        gc.lineTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
+                        break;
+                    case "line+scatter":
+                        gc.lineTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
+                        gc.fillOval(mapX(x, dt) + xshift * dx * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
+                        break;
+                    case "scatter":
+                        gc.fillOval(mapX(x, dt) + xshift * dx * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
+                        break;
+                }
                 x++;
             }
         }

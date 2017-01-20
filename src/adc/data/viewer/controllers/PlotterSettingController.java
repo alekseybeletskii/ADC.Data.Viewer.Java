@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,24 +39,25 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.controllers;
 
 import adc.data.viewer.MainApp;
 import adc.data.viewer.dataProcessing.TestDataType;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
-/**
- * Created by a on 1/15/17.
- */
+
 public class PlotterSettingController {
 
 
@@ -76,7 +77,12 @@ public class PlotterSettingController {
     static int fftsize;
     static String fftwindow;
     static int fftoverlap;
+    static String chosenLineOrScatter;
 
+    private ObservableList<String> lineOrScatter = FXCollections.observableArrayList();
+
+    @FXML
+    private ChoiceBox<String> chooseLineOrScatter;
     @FXML
     private TextField manualYmax;
     @FXML
@@ -102,15 +108,7 @@ public class PlotterSettingController {
     @FXML
     private TextField FFTWindowOverlap;
 
-
-    public static void setAxesSettingsDefault(
-            Double xmn,
-            Double xmx,
-            Double xstp,
-            Double ymn,
-            Double ymx,
-            Double ystp)
-    {
+    public static void setAxesSettingsDefault(Double xmn,Double xmx,Double xstp,Double ymn,Double ymx,Double ystp){
         xmin=xmn;
         xmax=xmx;
         xstep=xstp;
@@ -118,27 +116,19 @@ public class PlotterSettingController {
         ymax=ymx;
         ystep=ystp;
 
-    };
-    public static void setSGFilterSettingsDefault(
-            int sglft,
-            int sgrt,
-            int ord)
-    {
+    }
+
+    public static void setSGFilterSettingsDefault(int sglft,int sgrt,int ord){
         sgleft=sglft;
         sgright=sgrt;
         sgorder=ord;
-    };
-    public static void setSpectrogramSettingsDefault(
-            int ftsize,
-            String ftwindow,
-            int ftoverlap)
-    {
+    }
+
+    public static void setSpectrogramSettingsDefault(int ftsize,String ftwindow,int ftoverlap){
         fftsize=ftsize;
         fftwindow=ftwindow;
         fftoverlap=ftoverlap;
-    };
-
-
+    }
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
@@ -174,6 +164,14 @@ public class PlotterSettingController {
         FFTWindowType.setText(fftwindow);
         FFTWindowOverlap.setText(String.valueOf(fftoverlap));
 
+        lineOrScatter.addAll("line","scatter","line+scatter");
+        chooseLineOrScatter.itemsProperty().setValue(lineOrScatter);
+        chooseLineOrScatter.setValue(chosenLineOrScatter);
+
+        chooseLineOrScatter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            mainApp.getPlotterController().getPlots().getCanvas().setLineOrScatter(newValue);
+            chosenLineOrScatter=newValue;
+        });
     }
 
     @FXML

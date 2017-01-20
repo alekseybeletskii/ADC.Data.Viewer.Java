@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCPlotter;
 
@@ -68,43 +68,31 @@ public class Axes extends Pane {
     private double xMaxBasic;
     private double yMinBasic;
     private double yMaxBasic;
+    private double xScale;
+    private double yScale;
 
     public double getxScale() {
         return xScale;
     }
-
     public double getyScale() {
         return yScale;
     }
-
-    private double xScale;
-    private double yScale;
-
-    
-    
     public double getXAxisTicksAmount() {
         return xTicksAmount;
     }
-
     public void setXAxisTicksAmount(double xAxisTicksAmount) {
         this.xTicksAmount = xAxisTicksAmount;
     }
-
     public double getYAxisTicksAmount() {
         return yTicksAmount;
     }
-
     public void setYAxisTicksAmount(double yAxisTicksAmount) {
         this.yTicksAmount = yAxisTicksAmount;
     }
-
-
-
-     double getXAxisOffset() {
+    public double getXAxisOffset() {
         return xOffsetBasic;
     }
-
-     void setXAxisOffset(double XAxisOffset) {
+    private void setXAxisOffset(double XAxisOffset) {
         this.xOffsetBasic = XAxisOffset;
     }
 
@@ -180,32 +168,17 @@ private void setTickStepBasic (){
         this.yTickStepBasic=abs(yMinBasic)/yTicksAmount;
 }
 
-    private void evaluateAxesTicksSteps(double xTicksAmount, double yTicksAmount){
-        
-        
-//        xAxis.setTickUnit(abs((xAxis.getUpperBound()-xAxis.getLowerBound()) /xTicksAmount));
-
-        if((xAxis.getLowerBound()<0.0&xAxis.getUpperBound()<0.0)|(xAxis.getLowerBound()>0.0&xAxis.getUpperBound()>0.0))
-            xAxis.setTickUnit(abs(xAxis.getLowerBound()-xAxis.getUpperBound())/yTicksAmount);
-        else if(xAxis.getLowerBound()==0.0)
-            xAxis.setTickUnit(abs(xAxis.getUpperBound())/yTicksAmount);
-        else if(abs(xAxis.getLowerBound()/xAxis.getUpperBound())<0.2)
-            xAxis.setTickUnit(abs(xAxis.getLowerBound()));
-        else if(abs(xAxis.getUpperBound()/xAxis.getLowerBound())<0.2)
-            xAxis.setTickUnit(abs(xAxis.getUpperBound()));
+    private void evalAxisTickStep(NumberAxis axis, double ticksAmount) {
+        if((axis.getLowerBound()<0.0&axis.getUpperBound()<0.0)|(axis.getLowerBound()>0.0&axis.getUpperBound()>0.0))
+            axis.setTickUnit(abs(axis.getLowerBound()-axis.getUpperBound())/ticksAmount);
+        else if(axis.getLowerBound()==0.0)
+            axis.setTickUnit(abs(axis.getUpperBound())/ticksAmount);
+        else if(abs(axis.getLowerBound()/axis.getUpperBound())<0.2)
+            axis.setTickUnit(abs(axis.getLowerBound()));
+        else if(abs(axis.getUpperBound()/axis.getLowerBound())<0.2)
+            axis.setTickUnit(abs(axis.getUpperBound()));
         else
-            xAxis.setTickUnit(abs(xAxis.getLowerBound()) /yTicksAmount);        
-        
-        if((yAxis.getLowerBound()<0.0&yAxis.getUpperBound()<0.0)|(yAxis.getLowerBound()>0.0&yAxis.getUpperBound()>0.0))
-            yAxis.setTickUnit(abs(yAxis.getLowerBound()-yAxis.getUpperBound())/yTicksAmount);
-        else if(yAxis.getLowerBound()==0.0)
-            yAxis.setTickUnit(abs(yAxis.getUpperBound())/yTicksAmount);
-        else if(abs(yAxis.getLowerBound()/yAxis.getUpperBound())<0.2)
-            yAxis.setTickUnit(abs(yAxis.getLowerBound()));
-        else if(abs(yAxis.getUpperBound()/yAxis.getLowerBound())<0.2)
-            yAxis.setTickUnit(abs(yAxis.getUpperBound()));
-        else
-            yAxis.setTickUnit(abs(yAxis.getLowerBound()) /yTicksAmount);
+            axis.setTickUnit(abs(axis.getLowerBound()) /ticksAmount);
     }
 
     public void setAxesBounds (double xMin, double xMax, double xStep, double yMin, double yMax, double yStep){
@@ -216,7 +189,6 @@ private void setTickStepBasic (){
         yAxis.setUpperBound(yMax);
         yAxis.setTickUnit(yStep);
         setXAxisOffset(xMin);
-//        evaluateAxesTicksSteps(xTicksAmount, yTicksAmount);
     }
 
     public void axesZoomRescale(DoubleProperty zoomTopLeftX, DoubleProperty zoomTopLeftY, DoubleProperty zoomBottomRightX, DoubleProperty zoomBottomRightY)
@@ -230,7 +202,8 @@ private void setTickStepBasic (){
         double yOffset = (zoomBottomRightY.get()-yAxis.getHeight())*yScale;
         yAxis.setLowerBound(yAxis.getLowerBound()-yOffset);
         yAxis.setUpperBound(yAxis.getLowerBound()+(zoomBottomRightY.get()- zoomTopLeftY.get())*yScale);
-        evaluateAxesTicksSteps(xTicksAmount, yTicksAmount);
+        evalAxisTickStep(xAxis,xTicksAmount);
+        evalAxisTickStep(yAxis,yTicksAmount);
     }
 
 

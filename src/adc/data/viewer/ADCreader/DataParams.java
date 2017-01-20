@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCreader;
 
@@ -47,6 +47,7 @@ package adc.data.viewer.ADCreader;
  * This class stores ADC parameters of all extracted signals 
  */
 public class DataParams  {
+
     private boolean dataParamsValid;
     private  String [] dataFormatStr;
     private String [] deviceName;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,13 +39,12 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCreader;
 
 
 import adc.data.viewer.MainApp;
-import adc.data.viewer.controllers.TextFileDataController;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,8 +87,6 @@ public class DataParser {
 
         this.mainApp=mainApp;
         mainApp.setDataPars(this);
-//        TextFileDataController.setDataParser(this);
-
         File[] filesListToProcess = filesList.toArray(new File[filesList.size()]);
 
         dataPaths = new DataPaths(filesListToProcess);  //produce Paths from an input list of files
@@ -206,9 +203,6 @@ public class DataParser {
 
     }
 
-
-
-
     public void setDataParams(DataParams dataParams) {
         this.dataParams = dataParams;
     }
@@ -230,7 +224,6 @@ public class DataParser {
      * @return
      * return array of file numbers
      */
-
     public int[] getFileNumbers() {
         return fileNumbers;
     }
@@ -255,7 +248,6 @@ public class DataParser {
      * @return
      * return an array of signals' full paths as strings to be used when saving as text files
      */
-
     private Path[] getSignalFullPath() {
         return signalFullPath;
     }

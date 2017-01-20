@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.controllers;
 
@@ -57,28 +57,29 @@ import java.util.List;
 public class MainLayoutController {
 
     private MainApp mainApp;
+    private static File initDir;
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
 
     @FXML
-    public void handleOpen() {
+    private void handleOpen() {
         FileChooser fileChooser = new FileChooser();
-
+        fileChooser.setInitialDirectory(initDir);
         // Set extension filter
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
                 "data files (*.dat,*.txt)", "*.dat", "*.DAT","*.txt","*.TXT");
         fileChooser.getExtensionFilters().add(extFilter);
         List<File> inpList = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-
         if (inpList != null) {
+            initDir=inpList.get(0).getParentFile();
             new DataParser(inpList,mainApp);
             mainApp.fillSignalList();
         }
     }
 
     @FXML
-    public void handleSignalsToText() {
+    private void handleSignalsToText() {
 
         if (mainApp.getSignalList().size() != 0) {
             mainApp.getDataParser().saveToFile();
@@ -103,12 +104,12 @@ public class MainLayoutController {
     }
 
     @FXML
-    public void handleClear() {
+    private void handleClear() {
         mainApp.getSignalList().clear();
     }
 
     @FXML
-    public void handleDrawPlots() {
+    private void handleDrawPlots() {
         boolean isAnyChecked =false;
         for (SignalMarker signalMarker : mainApp.getSignalList())
         {
@@ -124,7 +125,12 @@ public class MainLayoutController {
     }
 
     @FXML
-    public void handleReadme() {
+    private void handleReadme() {
         mainApp.showReadme();
+    }
+
+    @FXML
+    public void initialize() {
+        initDir=new File(System.getProperty("user.home"));
     }
 }

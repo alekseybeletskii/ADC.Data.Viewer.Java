@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.controllers;
 
@@ -91,10 +91,13 @@ public class TextFileDataController {
 
     @FXML
     private TextField txtCreationDate;
+
     @FXML
     private TextField txtDeviceName;
+
     @FXML
     private TextField txtChannelRate;
+
     @FXML
     private TextField txtChannelNum;
 
@@ -105,7 +108,6 @@ public class TextFileDataController {
         DialogPane dialogPane = alertInvalidParam.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
         dialogPane.getStyleClass().add("myDialog");
-//        alertInvalidParam.initStyle(StageStyle.UNDECORATED);
         alertInvalidParam.setTitle("Warning");
         alertInvalidParam.setHeaderText("Invalid data format!");
         alertInvalidParam.setContentText("channel number: integer;\nchannel rate: float ");
@@ -119,7 +121,6 @@ public class TextFileDataController {
     @FXML
     private void handleOk(ActionEvent actionEvent)  {
         if(TestDataType.isInteger(txtChannelNum.getText(),10)&&TestDataType.isDouble(txtChannelRate.getText())){
-
             creationDate = txtCreationDate.getText();
             deviceName = txtDeviceName.getText();
             channelNum = Integer.parseInt(txtChannelNum.getText());
@@ -128,13 +129,10 @@ public class TextFileDataController {
             setParamInteractive(txtCreationDate.getText(),txtDeviceName.getText(),
                                Double.parseDouble(txtChannelRate.getText()), fnum);
 
-
             dataParser.getDataParams().setDataParamsValid(true);
-
             textFileParamsStage.close();
         }
         else{
-
             alertInvalidParam.showAndWait();
         }
     }
@@ -144,11 +142,8 @@ public class TextFileDataController {
         dataParser.getDataParams().setDataParamsValid(false);
         textFileParamsStage.close();
     }
-    
 
-
-
-     private void  setParamInteractive(String recordCreationDate, String deviceName, double channelRate,int fnum) {
+    private void  setParamInteractive(String recordCreationDate, String deviceName, double channelRate,int fnum) {
         
         byte[] arrayByte = {(byte) 1};
         dataParser.getDataParams().setChannelsMax(1, fnum) ; //int
@@ -190,7 +185,6 @@ public class TextFileDataController {
                     oneSignal[i] = d;
                     i++;
                 }
-
                 sigCount++;
                 dataParser.setSignals(oneSignal, sigCount, fnum, channelNum);
             }
@@ -204,7 +198,6 @@ public class TextFileDataController {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-
     }
 
 }

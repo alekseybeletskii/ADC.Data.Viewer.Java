@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.dataProcessing;
 
@@ -54,10 +54,10 @@ import Jama.*;
  * a 1-d approach and a symmetric 2-d approach.
  * 
  * 
-  *     @Author: Matthew B. Smith 
-  *     @Url: http://orangepalantir.org
-  *     @Version: 0.8
-  *     @Date: 2/10/2010
+  *     Author: Matthew B. Smith
+  *     Url: http://orangepalantir.org
+  *     Version: 0.8
+  *     Date: 2/10/2010
  * 
  **/ 
 public class SavitzkyGolayFilter{
@@ -135,8 +135,7 @@ public class SavitzkyGolayFilter{
     }
     /**
      * filters the data by assuming the ends are reflected.
-     * 
-     * @param data
+     *
      * */    
     public float[] filterData(float[] data){
         int pts = data.length;
@@ -145,7 +144,7 @@ public class SavitzkyGolayFilter{
         int j;
         //reflected
         for(j = 0; j<LEFT; j++)
-            ret_value[j] = (float)rFilter(data, coefficients, j, LEFT);
+            ret_value[j] = rFilter(data, coefficients, j, LEFT);
         
         
         //normal
@@ -155,7 +154,7 @@ public class SavitzkyGolayFilter{
         
         //reflected
         for(j = pts - RIGHT; j<pts; j++)
-            ret_value[j] = (float)rFilter(data, coefficients, j, LEFT);
+            ret_value[j] = rFilter(data, coefficients, j, LEFT);
         
         return ret_value;
     }    

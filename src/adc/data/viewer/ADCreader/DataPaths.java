@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCreader;
 
@@ -73,14 +73,13 @@ public class DataPaths {
     private  Path[] parFilePath;
     private  String[] fileName;
 
-
-     Path[] getParFilePath() {
+    Path[] getParFilePath() {
         return parFilePath;
     }
-      public Path[] getDataFilePath() {
+    public Path[] getDataFilePath() {
         return dataFilePath;
     }
-      String[] getFileName() {
+    String[] getFileName() {
         return fileName;
     }
 
@@ -89,24 +88,13 @@ public class DataPaths {
      * @param dataFileStr
      * load the list of files from String[] array
      */
-     void makePaths(String[] dataFileStr) {
-        int count = 0;
+    private void makePaths(String[] dataFileStr) {
+
         dataFilePath = new Path[dataFileStr.length];
         parFilePath = new Path[dataFileStr.length];
         fileName = new String[dataFileStr.length];
 
-        for (String fileStr : dataFileStr) {
-            try {
-                dataFilePath[count] = Paths.get(fileStr);
-                fileName[count] = dataFilePath[count].getFileName().toString();
-                fileName[count] = fileName[count].substring(0, fileName[count].lastIndexOf('.'));
-                parFilePath[count] = dataFilePath[count].getParent().resolve(fileName[count] + ".par");
-            } catch (InvalidPathException e) {
-                System.out.println("Path Error " + e);
-                return;
-            }
-            count++;
-        }
+        parseFileList(dataFileStr);
     }
 
     /**
@@ -114,7 +102,7 @@ public class DataPaths {
      * @param filesListToProcess
      * load the list from external text file
      */
-     void makePaths(String filesListToProcess) {
+    private void makePaths(String filesListToProcess) {
 
         List<String> stringList = new ArrayList<>();
 
@@ -128,24 +116,11 @@ public class DataPaths {
             }
             String[] dataFileString = stringList.toArray(new String[stringList.size()]);
 
+            dataFilePath = new Path[dataFileString.length];
+            parFilePath = new Path[dataFileString.length];
+            fileName = new String[dataFileString.length];
 
-        dataFilePath = new Path[dataFileString.length];
-        parFilePath = new Path[dataFileString.length];
-        fileName = new String[dataFileString.length];
-        int count = 0;
-        for (String fileStr : dataFileString) {
-
-            try {
-                dataFilePath[count] = Paths.get(fileStr);
-                fileName[count] = dataFilePath[count].getFileName().toString();
-                fileName[count] = fileName[count].substring(0, fileName[count].lastIndexOf('.'));
-                parFilePath[count] = dataFilePath[count].getParent().resolve(fileName[count] + ".par");
-            } catch (InvalidPathException e) {
-                System.out.println("Path Error " + e);
-                return;
-            }
-            count++;
-        }
+            parseFileList(dataFileString);
 
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
@@ -158,8 +133,7 @@ public class DataPaths {
      * @param dataFileStr
      * load the list from File[] array
      */
-
-     void makePaths(File[] dataFileStr) {
+    private void makePaths(File[] dataFileStr) {
         int count = 0;
         dataFilePath = new Path[dataFileStr.length];
         parFilePath = new Path[dataFileStr.length];
@@ -178,6 +152,22 @@ public class DataPaths {
             count++;
         }
 
+    }
+
+    private void parseFileList(String[] dataFileStr) {
+        int count = 0;
+        for (String fileStr : dataFileStr) {
+            try {
+                dataFilePath[count] = Paths.get(fileStr);
+                fileName[count] = dataFilePath[count].getFileName().toString();
+                fileName[count] = fileName[count].substring(0, fileName[count].lastIndexOf('.'));
+                parFilePath[count] = dataFilePath[count].getParent().resolve(fileName[count] + ".par");
+            } catch (InvalidPathException e) {
+                System.out.println("Path Error " + e);
+                return;
+            }
+            count++;
+        }
     }
 
 }

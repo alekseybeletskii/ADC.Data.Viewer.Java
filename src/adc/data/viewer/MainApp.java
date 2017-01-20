@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer;
 
@@ -60,15 +60,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
 
-/**
- * @author Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
- *
- * This application serves for a simple signal visualization
- * using binary data recorded with Analog Digital Converters.
- * In order to achieve a better performance, Canvas was used instead of a standard XYChart
- */
-
-
 public class MainApp extends Application {
 
     public static void main(String[] args) {
@@ -81,14 +72,12 @@ public class MainApp extends Application {
     private DataParser dataParser;
     private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
     private TextFileDataController textFileDataController;
+    private PlotterController plotterController;
     private PlotterSettingController plotterSettingController;
 
     public PlotterController getPlotterController() {
         return plotterController;
     }
-
-    private PlotterController plotterController;
-
     public TextFileDataController getTextFileDataController() {
         return textFileDataController;
     }
@@ -104,12 +93,14 @@ public class MainApp extends Application {
     public Stage getPlotsStage() {
         return plotsStage;
     }
+    public void setDataPars(DataParser dataParser) {
+        this.dataParser = dataParser;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ADC Signal Viewer");
-        this.plotsStage = null;
         this.primaryStage.getIcons().add(new Image("images/IPP-logo.png"));
         initMainLayout();
         showSignalsOverview();
@@ -144,11 +135,7 @@ public class MainApp extends Application {
         }
     }
 
-    public  void setDataPars(DataParser dataParser) {
-        this.dataParser = dataParser;
-    }
-
-     public void fillSignalList() {
+    public void fillSignalList() {
         signalList.clear();
         int i=0;
         float []  hueArray = new float[dataParser.getSignalLabels().length];
@@ -227,7 +214,6 @@ public class MainApp extends Application {
             BorderPane plotterSetting = loader.load();
             plotterSettingController = loader.getController();
             Stage plotterSettingStage = new Stage();
-//            plotterSettingStage.initStyle(StageStyle.UNDECORATED);
             plotterSettingStage.setResizable(false);
             plotterSettingStage.setAlwaysOnTop(true);
             plotterSettingController.setMainApp(this);

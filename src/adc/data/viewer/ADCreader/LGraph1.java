@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCreader;
 
@@ -129,22 +129,15 @@ class LGraph1 implements DataTypes {
     }
 
     public void setData(int fnum, int sigCount) {
-
         MappedByteBuffer dataBuf;
-//        DataParams dataParams = dataData.getDataParams();
-
         double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
-
         int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fnum]];
         int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fnum]];
-
         int activeCh=0, allCh =0;
-
         while (allCh< dataParams.getActiveAdcChannelArray()[fnum].length)
         {
             if(dataParams.getActiveAdcChannelArray()[fnum][allCh]==1){
                 chanAdcNum[activeCh] = allCh+1;
-
                 switch (dataParams.getAdcGainArray()[fnum][allCh]){
                     case 0: chanAdcGain[activeCh]=1;
                         break;
@@ -156,40 +149,23 @@ class LGraph1 implements DataTypes {
                         break;
                     default : chanAdcGain[activeCh]=1;
                 }
-
                 activeCh++;}
             allCh++;
         }
-
-
-
-
-
-
         try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fnum])) {
-
             long fSize = fChan.size();
-
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
-
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);
-
             int jj = 0;
-
             while (jj < dataParams.getRealChannelsQuantity()[fnum])
             {
-
                 int i = 0;
                 while (i < dataParams.getRealCadresQuantity()[fnum]) {
-
-
                     oneSignal[i] = ((double)dataBuf.getShort ( i* dataParams.getRealChannelsQuantity()[fnum]*2+jj*2) * 5d / 2000d)/chanAdcGain[jj];
                     i++;
-
                 }
                 sigCount++;
                 dataData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
-
                 jj++;
             }
         } catch (InvalidPathException e) {

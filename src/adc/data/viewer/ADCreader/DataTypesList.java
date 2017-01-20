@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,13 +39,11 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCreader;
 
-/**
- * Created by a on 11/13/16.
- */
+
  public enum DataTypesList {
     LGRAPH1("LGraph1"), LGRAPH1_2008("LGraph1_2008"), LGRAPH2("LGraph2"), SATURN("Saturn");
 

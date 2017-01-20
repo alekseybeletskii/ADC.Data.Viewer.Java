@@ -100,7 +100,7 @@
                   <Insets />
                </opaqueInsets>
                <BorderPane.margin>
-                  <Insets left="70.0" />
+                  <Insets bottom="3.0" left="70.0" top="3.0" />
                </BorderPane.margin>
             </HBox>
          </left>

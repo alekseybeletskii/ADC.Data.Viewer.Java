@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCreader;
 
@@ -57,11 +57,7 @@ import java.nio.file.*;
  */
 class DataFormatsDetect {
 
-    DataFormatsDetect(DataParser dataData, MainApp mainApp)
-
-//     private void dataFormats(DataParser dataData, MainApp mainApp)
-
-    {
+    DataFormatsDetect(DataParser dataData, MainApp mainApp){
         Path[] dataFilePath = dataData.getDataPaths().getDataFilePath();
         Path[] parFilePath = dataData.getDataPaths().getParFilePath();
         DataParams dataParams = dataData.getDataParams();

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * 	********************* BEGIN LICENSE BLOCK *********************************
  * 	ADCDataViewer
  * 	Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
@@ -39,7 +39,7 @@
  * 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * 	********************* END LICENSE BLOCK ***********************************
- ******************************************************************************/
+ */
 
 package adc.data.viewer.ADCPlotter;
 
@@ -51,37 +51,31 @@ import adc.data.viewer.model.SignalMarker;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static java.lang.Math.abs;
 
-public class PlotsBuilder extends AnchorPane {
+    public class PlotsBuilder extends AnchorPane {
 
     private  List<Integer>  selectedSignals;
-
     private  Axes axes;
-
-    private  CanvasDrawing canvas;
+    private CanvasDrawing canvas;
     private PlotterController plotterController;
     private Rectangle zoomRectangle;
 
     public CanvasDrawing getCanvas() {
         return canvas;
     }
-
-
     public Axes getAxes() {
         return axes;
     }
 
-    public PlotsBuilder(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController)
-    {
+    public PlotsBuilder(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController){
         this.plotterController=plotterController;
         this.selectedSignals = new ArrayList<>();
         this.zoomRectangle =null;
@@ -134,7 +128,6 @@ public class PlotsBuilder extends AnchorPane {
                 if (samples*dt > longestTime) {
                     longestTime = samples*dt;
                 }
-
                 double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
                 SimpleMath.findMaxMin(testSignal);
                 if (SimpleMath.getMax()>maxYValue) maxYValue=SimpleMath.getMax();
@@ -151,7 +144,6 @@ public class PlotsBuilder extends AnchorPane {
         this.axes = new Axes(xMinBasic, xMaxBasic, -absMaxYValue, absMaxYValue, xAxisTicksAmount,yAxisTicksAmount);
 
     }
-
 
     private void zoom() {
         DoubleProperty zoomTopLeftX = new SimpleDoubleProperty();
@@ -176,13 +168,7 @@ public class PlotsBuilder extends AnchorPane {
 
         canvas.setOnMouseDragged(mdragged -> {
 
-            double xScale = (axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /axes.getXAxis().getWidth();
-            double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
-            String coordinatesAxes = String.format("x= %.4f ; y= %.4f",
-                    mdragged.getX()* xScale+axes.getXAxisOffset(),
-                    -(mdragged.getY()-canvas.getShiftYZero()-1)* yScale);
-            plotterController.getXyLabel().setText(coordinatesAxes);
-
+            setMouseXYText(mdragged);
 
             if(zoomRectangle!=null){
                 zoomBottomRightX.set(mdragged.getX());
@@ -223,17 +209,19 @@ public class PlotsBuilder extends AnchorPane {
         });
     }
 
-
-
     private void showMouseXY() {
-        this.setOnMouseMoved(event -> {
-            double xScale = (axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /axes.getXAxis().getWidth();
-            double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
-            String coordinatesAxes = String.format("x= %.4f ; y= %.4f",
-                    event.getX()* xScale+axes.getXAxisOffset(),
-                    -(event.getY()-canvas.getShiftYZero()-1)* yScale);
-            plotterController.getXyLabel().setText(coordinatesAxes);
-        });
+        this.setOnMouseMoved(event ->
+            setMouseXYText(event)
+        );
+    }
+
+    private void setMouseXYText(MouseEvent event) {
+        double xScale = (axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /axes.getXAxis().getWidth();
+        double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
+        String coordinatesAxes = String.format("x= %.4f ; y= %.4f",
+                event.getX()* xScale+axes.getXAxisOffset(),
+                -(event.getY()-canvas.getShiftYZero()-1)* yScale);
+        plotterController.getXyLabel().setText(coordinatesAxes);
     }
 
 }
