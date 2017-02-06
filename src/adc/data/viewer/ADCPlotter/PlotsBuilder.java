@@ -80,7 +80,7 @@ import static java.lang.Math.abs;
         this.selectedSignals = new ArrayList<>();
         this.zoomRectangle =null;
         buildAxes(mainApp);
-        canvas = new CanvasDrawing(mainApp, axes, selectedSignals, "Raw");
+        canvas = new CanvasDrawing(mainApp, axes,  "Raw");
         canvas.widthProperty().bind(axes.getXAxis().widthProperty());
         canvas.heightProperty().bind(axes.getYAxis().heightProperty());
 

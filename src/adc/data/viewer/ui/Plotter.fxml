@@ -63,7 +63,7 @@
                   <Insets />
                </opaqueInsets>
                <BorderPane.margin>
-                  <Insets left="50.0" />
+                  <Insets left="10.0" />
                </BorderPane.margin>
             </Label>
          </center>

@@ -49,19 +49,29 @@ import javafx.scene.paint.Color;
 /**
  * Model class for signals
  */
-public class SignalMarker {
-    private final IntegerProperty signalIndex;
 
+
+public class SignalMarker {
+
+
+
+    private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
     private final ObjectProperty<Color> signalColor;
     private final IntegerProperty fileNumber;
+
+
     public SignalMarker(int signalIndex, Boolean signalSelected, Color signalColor, String  signalLable, int fileNumber) {
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
         this.signalLabel = new SimpleStringProperty(signalLable);
         this.fileNumber = new SimpleIntegerProperty(fileNumber);
+
+
+//        this.signalSelected.addListener((observable, oldValue, newValue) -> System.out.println(newValue.booleanValue()));
+
     }
 
     public int getSignalIndex() {

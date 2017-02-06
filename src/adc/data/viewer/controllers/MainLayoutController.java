@@ -43,15 +43,18 @@
 
 package adc.data.viewer.controllers;
 
-import adc.data.viewer.MainApp;
 import adc.data.viewer.ADCreader.DataParser;
+import adc.data.viewer.MainApp;
 import adc.data.viewer.model.SignalMarker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class MainLayoutController {
@@ -64,18 +67,55 @@ public class MainLayoutController {
 
     @FXML
     private void handleOpen() {
+
+        mainApp.setPlotterController(null);
+
+        List<File> inpList = new ArrayList<>();
+        List<File> chosenFiles;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(initDir);
-        // Set extension filter
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
                 "data files (*.dat,*.txt)", "*.dat", "*.DAT","*.txt","*.TXT");
         fileChooser.getExtensionFilters().add(extFilter);
-        List<File> inpList = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-        if (inpList != null) {
-            initDir=inpList.get(0).getParentFile();
-            new DataParser(inpList,mainApp);
-            mainApp.fillSignalList();
+
+
+        chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
+        if(!(chosenFiles==null)&&!chosenFiles.isEmpty()) {
+            inpList.addAll(chosenFiles);
+            initDir = inpList.get(inpList.size()-1).getParentFile();
+            fileChooser.setInitialDirectory(initDir);
         }
+
+        boolean morefiles = true;
+        while(morefiles) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("");
+            alert.setHeaderText("More files?");
+//            alert.initStyle(StageStyle.UTILITY);
+            alert.initOwner(mainApp.getPrimaryStage());
+            alert.getDialogPane().setPrefSize(250,120);
+            alert.getDialogPane().setMinSize(250,120);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
+                if(!(chosenFiles==null)&&!chosenFiles.isEmpty()) {
+                    inpList.addAll(chosenFiles);
+                    initDir = inpList.get(inpList.size()-1).getParentFile();
+                    fileChooser.setInitialDirectory(initDir);
+                }
+            }
+            else {
+                if (!inpList.isEmpty()) {
+                    initDir = inpList.get(inpList.size()-1).getParentFile();
+                    new DataParser(inpList, mainApp);
+                    mainApp.fillSignalList();
+                }
+                morefiles=false;
+            }
+        }
+
+
+
     }
 
     @FXML
@@ -123,6 +163,13 @@ public class MainLayoutController {
         }
 
     }
+
+    @FXML
+    private void handleHidePlots() {
+        if(mainApp.getPlotsLayout()!=null)
+        if(!mainApp.getPlotsLayout().isVisible())
+        mainApp.getPlotsLayout().setVisible(true);
+        else mainApp.getPlotsLayout().setVisible(false);}
 
     @FXML
     private void handleReadme() {

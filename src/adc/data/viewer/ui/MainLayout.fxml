@@ -48,7 +48,7 @@
   ~ 	********************* END LICENSE BLOCK ***********************************
   -->
 
-<BorderPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.controllers.MainLayoutController">
+<BorderPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.controllers.MainLayoutController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -63,6 +63,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleSignalsToText" text="Export all to txt" />
                   <MenuItem mnemonicParsing="false" onAction="#handleDrawPlots" text="Draw Plots" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleHidePlots" text="Hide/Show Plots" />
                </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

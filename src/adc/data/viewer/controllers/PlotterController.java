@@ -59,13 +59,13 @@ public class PlotterController {
     private MainApp mainApp;
     private  PlotsBuilder plots;
 
-
+    @FXML
+    private AnchorPane axesAnchorPane;
 
     @FXML
     private Label xyLabel;
 
-    @FXML
-    private AnchorPane axesAnchorPane;
+
 
     public  PlotsBuilder getPlots() {
         return plots;
@@ -77,7 +77,9 @@ public class PlotterController {
         this.mainApp = mainApp;
     }
     public void setPlotsOnPane() {
+
         plots = new PlotsBuilder(mainApp, axesAnchorPane, this);
+//        mainApp.getSignalsOverviewController().getSignalsOverviewRightPane().getChildren().add(plots);
     }
 
     @FXML

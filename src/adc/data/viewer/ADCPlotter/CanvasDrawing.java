@@ -47,6 +47,7 @@ import adc.data.viewer.ADCreader.DataParser;
 import adc.data.viewer.MainApp;
 import adc.data.viewer.dataProcessing.SavitzkyGolayFilter;
 import adc.data.viewer.dataProcessing.SimpleMath;
+import adc.data.viewer.model.SignalMarker;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -68,7 +69,6 @@ public class CanvasDrawing extends Canvas {
 
     private final DataParser allSignals;
     private final Axes axes;
-    private final List<Integer> selectedSignals;
     private final MainApp mainApp;
     private double dx;
     private double dy;
@@ -100,12 +100,11 @@ public class CanvasDrawing extends Canvas {
     }
 
 
-    CanvasDrawing(MainApp mainApp, Axes axes, List<Integer> selectedSignals, String plotType) {
+    CanvasDrawing(MainApp mainApp, Axes axes,  String plotType) {
         this.plotType =plotType;
         this.mainApp = mainApp;
         this.axes = axes;
         this.allSignals = mainApp.getDataParser();
-        this.selectedSignals = selectedSignals;
         this.lineOrScatter = "line";
         this.pointSize =6;
     }
@@ -130,6 +129,7 @@ public class CanvasDrawing extends Canvas {
      * due to simple point-per-pixel approach (see "decimator" method)
      */
     public void draw() {
+
         this.dx = widthProperty().get()/
                 abs((axes.getXAxis().getUpperBound() - axes.getXAxis().getLowerBound()));
         this.dy = heightProperty().get()/
@@ -163,56 +163,60 @@ public class CanvasDrawing extends Canvas {
         gc.setLineWidth(1);
         gc.setLineDashes(0);
 
-        for (int nextSignal : selectedSignals) {
-            String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
-            int xshift = Integer.parseInt(label.substring(label.lastIndexOf('\u0023')+1))-1;
+
+        for (SignalMarker signalMarker:mainApp.getSignalList()){
+            if(signalMarker.getSignalSelected()) {
+                int nextSignal = signalMarker.getSignalIndex();
+                String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
+                int xshift = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 
 //dt,dtCadre in milliseconds
-            double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
-            double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
-            int nextSignalLength = allSignals.getSignals()[nextSignal].length;
-            int xLeft = (int)round(axes.getXAxis().getLowerBound()/dt);
-            int xRight = (int)round(axes.getXAxis().getUpperBound()/dt);
+                double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
+                double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
+                int nextSignalLength = allSignals.getSignals()[nextSignal].length;
+                int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
+                int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
 
-            double [] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
-                    xLeft<0?0:xLeft,xRight>nextSignalLength?nextSignalLength:xRight);
+                double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
+                        xLeft < 0 ? 0 : xLeft, xRight > nextSignalLength ? nextSignalLength : xRight);
 
-            switch (plotType){
-                case "Raw":
-                    gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.beginPath();
-                    decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                    break;
-                case "SGFiltered":
-                    gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.beginPath();
-                    int i=0;
-                    for (double yy : sgfilter.filterData(sigSubarray)){
-                        sigSubarray[i]=sigSubarray[i]-yy;
-                        i++;
-                    }
-                    decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                    break;
-                case "RawAndSGFilter":
-                    gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.beginPath();
-                    decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                    sigSubarray = sgfilter.filterData(sigSubarray);
-                    gc.setStroke(Color.BLACK);
-                    gc.setFill(Color.TRANSPARENT);
-                    gc.beginPath();
-                    decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                    break;
-                case "SGFilter":
-                    sigSubarray = sgfilter.filterData(sigSubarray);
-                    gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                    gc.beginPath();
-                    decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                    break;
+                switch (plotType) {
+                    case "Raw":
+                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.beginPath();
+                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
+                        break;
+                    case "SGFiltered":
+                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.beginPath();
+                        int i = 0;
+                        for (double yy : sgfilter.filterData(sigSubarray)) {
+                            sigSubarray[i] = sigSubarray[i] - yy;
+                            i++;
+                        }
+                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
+                        break;
+                    case "RawAndSGFilter":
+                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.beginPath();
+                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
+                        sigSubarray = sgfilter.filterData(sigSubarray);
+                        gc.setStroke(Color.BLACK);
+                        gc.setFill(Color.TRANSPARENT);
+                        gc.beginPath();
+                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
+                        break;
+                    case "SGFilter":
+                        sigSubarray = sgfilter.filterData(sigSubarray);
+                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                        gc.beginPath();
+                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
+                        break;
+                }
             }
         }
     }

@@ -58,6 +58,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import java.io.IOException;
 
 public class MainApp extends Application {
@@ -69,12 +70,26 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private Stage plotsStage;
     private BorderPane mainLayout;
+    private AnchorPane plotsLayout;
     private DataParser dataParser;
     private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
     private TextFileDataController textFileDataController;
+
+
+
     private PlotterController plotterController;
     private PlotterSettingController plotterSettingController;
+    private SignalsOverviewController signalsOverviewController;
 
+    public void setPlotterController(PlotterController plotterController) {
+        this.plotterController = plotterController;
+    }
+    public SignalsOverviewController getSignalsOverviewController() {
+        return signalsOverviewController;
+    }
+    public AnchorPane getPlotsLayout() {
+        return plotsLayout;
+    }
     public PlotterController getPlotterController() {
         return plotterController;
     }
@@ -127,9 +142,9 @@ public class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("ui/SignalsOverview.fxml"));
             AnchorPane signalsOverview = loader.load();
             mainLayout.setCenter(signalsOverview);
-            SignalsOverviewController controller = loader.getController();
-            controller.setMainApp(this);
-            controller.setTableItems();
+            signalsOverviewController  = loader.getController();
+            signalsOverviewController.setMainApp(this);
+            signalsOverviewController.setTableItems();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -137,6 +152,8 @@ public class MainApp extends Application {
 
     public void fillSignalList() {
         signalList.clear();
+        signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
+        plotsLayout = null;
         int i=0;
         float []  hueArray = new float[dataParser.getSignalLabels().length];
         for (int jj = 0; jj< dataParser.getSignalLabels().length; jj++) {
@@ -151,31 +168,59 @@ public class MainApp extends Application {
             final float brightness = 1f; //1.0 for brighter, 0.0 for black
             Color color = Color.hsb(hue, saturation, brightness);
             if(siglabel!=null&&!siglabel.isEmpty()) {
-                signalList.add(new SignalMarker(ii, false, color, siglabel, dataParser.getFileNumbers()[ii]));
+                SignalMarker sigmrk =new SignalMarker(ii, false, color, siglabel, dataParser.getFileNumbers()[ii]);
+                sigmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if(plotterController!=null) {
+                        plotterController.getPlots().getCanvas().draw();
+                    }
+                }
+                );
+
+                sigmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
+                    if(plotterController!=null) {
+                        plotterController.getPlots().getCanvas().draw();
+                    }
+                }
+                );
+
+
+
+                signalList.add(sigmrk);
             }
             ii++;
         }
+
     }
 
     public void drawPlots() {
         try {
+            if(plotsLayout!=null) {
+                signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
+                plotsLayout = null;
+            }
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("ui/Plotter.fxml"));
-            AnchorPane plotsLayout = loader.load();
+            plotsLayout = loader.load();
+
             plotterController = loader.getController();
 
             plotterController.setMainApp(this);
             plotterController.setPlotsOnPane();
 
-            if(plotsStage!=null)plotsStage.close();
-            plotsStage = new Stage();
-            plotsStage.setTitle("selected ADC signals");
-            plotsStage.getIcons().add(new Image("images/IPP-logo.png"));
-            Scene scene = new Scene(plotsLayout);
-            plotsStage.setScene(scene);
-            plotsStage.show();
+//            if(plotsStage!=null)plotsStage.close();
+//            plotsStage = new Stage();
+//            plotsStage.setTitle("selected ADC signals");
+//            plotsStage.getIcons().add(new Image("images/IPP-logo.png"));
+//            Scene scene = new Scene(plotsLayout);
+//            plotsStage.setScene(scene);
+//            plotsStage.show();
 
-            plotterController.getPlots().getCanvas().draw();
+            signalsOverviewController.getSignalsOverviewRightPane().getChildren().addAll(plotsLayout);
+            AnchorPane.setLeftAnchor(plotsLayout, 0.0);
+            AnchorPane.setRightAnchor(plotsLayout, 0.0);
+            AnchorPane.setBottomAnchor(plotsLayout, 0.0);
+            AnchorPane.setTopAnchor(plotsLayout, 0.0);
+
             plotterController.getPlots().getCanvas().widthProperty().addListener(it -> plotterController.getPlots().getCanvas().draw());
             plotterController.getPlots().getCanvas().heightProperty().addListener(it -> plotterController.getPlots().getCanvas().draw());
 
