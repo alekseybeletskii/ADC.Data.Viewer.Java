@@ -41,10 +41,9 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer;
+package adc.data.viewer.ui;
 
-import adc.data.viewer.ADCreader.DataParser;
-import adc.data.viewer.controllers.*;
+import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.model.SignalMarker;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -81,16 +80,16 @@ public class MainApp extends Application {
     private PlotterSettingController plotterSettingController;
     private SignalsOverviewController signalsOverviewController;
 
-    public void setPlotterController(PlotterController plotterController) {
+     void setPlotterController(PlotterController plotterController) {
         this.plotterController = plotterController;
     }
     public SignalsOverviewController getSignalsOverviewController() {
         return signalsOverviewController;
     }
-    public AnchorPane getPlotsLayout() {
+     AnchorPane getPlotsLayout() {
         return plotsLayout;
     }
-    public PlotterController getPlotterController() {
+     PlotterController getPlotterController() {
         return plotterController;
     }
     public TextFileDataController getTextFileDataController() {
@@ -99,13 +98,13 @@ public class MainApp extends Application {
     public ObservableList<SignalMarker> getSignalList() {
         return signalList;
     }
-    public Stage getPrimaryStage() {
+     Stage getPrimaryStage() {
         return primaryStage;
     }
     public DataParser getDataParser() {
         return dataParser;
     }
-    public Stage getPlotsStage() {
+     Stage getPlotsStage() {
         return plotsStage;
     }
     public void setDataPars(DataParser dataParser) {
@@ -124,7 +123,7 @@ public class MainApp extends Application {
     private void initMainLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("ui/MainLayout.fxml"));
+            loader.setLocation(MainApp.class.getResource("MainLayout.fxml"));
             mainLayout =  loader.load();
             Scene scene = new Scene(mainLayout);
             primaryStage.setScene(scene);
@@ -139,7 +138,7 @@ public class MainApp extends Application {
     private void showSignalsOverview() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("ui/SignalsOverview.fxml"));
+            loader.setLocation(MainApp.class.getResource("SignalsOverview.fxml"));
             AnchorPane signalsOverview = loader.load();
             mainLayout.setCenter(signalsOverview);
             signalsOverviewController  = loader.getController();
@@ -150,10 +149,8 @@ public class MainApp extends Application {
         }
     }
 
-    public void fillSignalList() {
-        signalList.clear();
-        signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
-        plotsLayout = null;
+     void fillSignalList() {
+        clearOldListAndPlots();
         int i=0;
         float []  hueArray = new float[dataParser.getSignalLabels().length];
         for (int jj = 0; jj< dataParser.getSignalLabels().length; jj++) {
@@ -192,14 +189,14 @@ public class MainApp extends Application {
 
     }
 
-    public void drawPlots() {
+     void drawPlots() {
         try {
             if(plotsLayout!=null) {
                 signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
                 plotsLayout = null;
             }
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("ui/Plotter.fxml"));
+            loader.setLocation(MainApp.class.getResource("Plotter.fxml"));
             plotsLayout = loader.load();
 
             plotterController = loader.getController();
@@ -232,7 +229,7 @@ public class MainApp extends Application {
     public void setTextFileParams(int fnum) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("ui/textFileParams.fxml"));
+            loader.setLocation(MainApp.class.getResource("textFileParams.fxml"));
             BorderPane textFileParams = loader.load();
             textFileDataController = loader.getController();
             Stage textFileParamsStage = new Stage();
@@ -252,10 +249,10 @@ public class MainApp extends Application {
         }
     }
 
-    public void setPlotterSetting() {
+     void setPlotterSetting() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("ui/PlotterSetting.fxml"));
+            loader.setLocation(MainApp.class.getResource("PlotterSetting.fxml"));
             BorderPane plotterSetting = loader.load();
             plotterSettingController = loader.getController();
             Stage plotterSettingStage = new Stage();
@@ -272,10 +269,10 @@ public class MainApp extends Application {
         }
     }
 
-    public void showReadme(){
+     void showReadme(){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("ui/Readme.fxml"));
+            loader.setLocation(MainApp.class.getResource("Readme.fxml"));
             TextArea aReadme = loader.load();
             ReadmeController controller =loader.getController();
             Stage aReadmeStage = new Stage();
@@ -288,5 +285,11 @@ public class MainApp extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+     void clearOldListAndPlots(){
+        signalList.clear();
+        signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
+        plotsLayout = null;
     }
 }

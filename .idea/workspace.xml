@@ -10,14 +10,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="761bc6f6-e47b-486b-8440-3e8ab610204d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jar/ADCDataViewer.jar" afterPath="$PROJECT_DIR$/resources/jar/ADCDataViewer.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jpg/AllAtOnce.jpg" afterPath="$PROJECT_DIR$/resources/jpg/AllAtOnce.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jpg/LineAndScatterAndSGFilter.jpg" afterPath="$PROJECT_DIR$/resources/jpg/LineAndScatterAndSGFilter.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jpg/PlotterSettingsAndSGfilter.jpg" afterPath="$PROJECT_DIR$/resources/jpg/PlotterSettingsAndSGfilter.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jpg/SavitskyGolayFilterApplied.jpg" afterPath="$PROJECT_DIR$/resources/jpg/SavitskyGolayFilterApplied.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jpg/Zoom.jpg" afterPath="$PROJECT_DIR$/resources/jpg/Zoom.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jpg/mainWindow.jpg" afterPath="$PROJECT_DIR$/resources/jpg/mainWindow.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/jar/ADCDataViewer.jnlp" afterPath="$PROJECT_DIR$/resources/jar/ADCDataViewer.jnlp" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/Axes.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/plotter/Axes.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/CanvasDrawing.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/plotter/CanvasDrawing.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/PlotsBuilder.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/plotter/PlotsBuilder.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataFormatsDetect.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataFormatsDetect.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParams.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataParams.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParser.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataParser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataPaths.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataPaths.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataTypes.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypes.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataTypesList.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypesList.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph1.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph1_2008.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1_2008.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph2.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph2.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/Saturn.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/Saturn.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/MainApp.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainApp.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/controllers/MainLayoutController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayoutController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/controllers/PlotterController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/controllers/PlotterSettingController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSettingController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/controllers/ReadmeController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/ReadmeController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/controllers/SignalsOverviewController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverviewController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/controllers/TextFileDataController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/TextFileDataController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/dataProcessing/SavitzkyGolayFilter.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/processing/SavitzkyGolayFilter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/dataProcessing/SimpleMath.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/processing/SimpleMath.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/dataProcessing/TestDataType.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/processing/TestDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayout.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayout.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/Plotter.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/Plotter.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSetting.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSetting.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/Readme.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/Readme.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverview.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverview.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/TableCellColoredView.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/TableCellColoredView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/textFileParams.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/textFileParams.fxml" />
     </list>
     <ignored path="ADCDataViewer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,38 +67,206 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MainApp.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/MainApp.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1530">
-              <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="PlotsBuilder.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/PlotsBuilder.java">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/plotter/PlotsBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2070">
-              <caret line="198" column="0" selection-start-line="198" selection-start-column="0" selection-end-line="198" selection-end-column="0" />
+            <state relative-caret-position="117">
+              <caret line="205" column="0" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainLayoutController.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/MainLayoutController.java">
+      <file leaf-file-name="DataParams.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataParams.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="96" column="51" selection-start-line="96" selection-start-column="51" selection-end-line="96" selection-end-column="51" />
+            <state relative-caret-position="720">
+              <caret line="89" column="59" selection-start-line="89" selection-start-column="59" selection-end-line="89" selection-end-column="59" />
+              <folding>
+                <element signature="e#0#9149#0" expanded="false" />
+                <element signature="e#4669#4670#0" expanded="false" />
+                <element signature="e#4707#4708#0" expanded="false" />
+                <element signature="e#4748#4749#0" expanded="false" />
+                <element signature="e#4784#4785#0" expanded="false" />
+                <element signature="e#4825#4826#0" expanded="false" />
+                <element signature="e#4858#4859#0" expanded="false" />
+                <element signature="e#4902#4903#0" expanded="false" />
+                <element signature="e#4939#4940#0" expanded="false" />
+                <element signature="e#4978#4979#0" expanded="false" />
+                <element signature="e#5012#5013#0" expanded="false" />
+                <element signature="e#5059#5060#0" expanded="false" />
+                <element signature="e#5102#5103#0" expanded="false" />
+                <element signature="e#5148#5149#0" expanded="false" />
+                <element signature="e#5189#5190#0" expanded="false" />
+                <element signature="e#5237#5238#0" expanded="false" />
+                <element signature="e#5279#5280#0" expanded="false" />
+                <element signature="e#5316#5317#0" expanded="false" />
+                <element signature="e#5348#5349#0" expanded="false" />
+                <element signature="e#5383#5384#0" expanded="false" />
+                <element signature="e#5413#5414#0" expanded="false" />
+                <element signature="e#5456#5457#0" expanded="false" />
+                <element signature="e#5494#5495#0" expanded="false" />
+                <element signature="e#5534#5535#0" expanded="false" />
+                <element signature="e#5568#5569#0" expanded="false" />
+                <element signature="e#5618#5619#0" expanded="false" />
+                <element signature="e#5662#5663#0" expanded="false" />
+                <element signature="e#5705#5706#0" expanded="false" />
+                <element signature="e#5743#5744#0" expanded="false" />
+                <element signature="e#5783#5784#0" expanded="false" />
+                <element signature="e#5818#5819#0" expanded="false" />
+                <element signature="e#5860#5861#0" expanded="false" />
+                <element signature="e#5896#5897#0" expanded="false" />
+                <element signature="e#5932#5933#0" expanded="false" />
+                <element signature="e#5965#5966#0" expanded="false" />
+                <element signature="e#6004#6005#0" expanded="false" />
+                <element signature="e#6039#6040#0" expanded="false" />
+                <element signature="e#6079#6080#0" expanded="false" />
+                <element signature="e#6111#6112#0" expanded="false" />
+                <element signature="e#6150#6151#0" expanded="false" />
+                <element signature="e#6181#6182#0" expanded="false" />
+                <element signature="e#6223#6224#0" expanded="false" />
+                <element signature="e#6257#6258#0" expanded="false" />
+                <element signature="e#6300#6301#0" expanded="false" />
+                <element signature="e#6335#6336#0" expanded="false" />
+                <element signature="e#6368#6369#0" expanded="false" />
+                <element signature="e#6399#6400#0" expanded="false" />
+                <element signature="e#6462#6463#0" expanded="false" />
+                <element signature="e#6516#6517#0" expanded="false" />
+                <element signature="e#6582#6583#0" expanded="false" />
+                <element signature="e#6632#6633#0" expanded="false" />
+                <element signature="e#6693#6694#0" expanded="false" />
+                <element signature="e#6743#6744#0" expanded="false" />
+                <element signature="e#6812#6813#0" expanded="false" />
+                <element signature="e#6870#6871#0" expanded="false" />
+                <element signature="e#6930#6931#0" expanded="false" />
+                <element signature="e#6977#6978#0" expanded="false" />
+                <element signature="method#setRealChannelsQuantity#0;class#DataParams#0" expanded="false" />
+                <element signature="method#setRealCadresQuantity#0;class#DataParams#0" expanded="false" />
+                <element signature="method#setRealSamplesQuantity#0;class#DataParams#0" expanded="false" />
+                <element signature="e#7455#7456#0" expanded="false" />
+                <element signature="e#7498#7499#0" expanded="false" />
+                <element signature="e#7553#7554#0" expanded="false" />
+                <element signature="e#7592#7593#0" expanded="false" />
+                <element signature="e#7663#7664#0" expanded="false" />
+                <element signature="e#7718#7719#0" expanded="false" />
+                <element signature="e#7781#7782#0" expanded="false" />
+                <element signature="e#7828#7829#0" expanded="false" />
+                <element signature="method#setActiveAdcChannelArray#0;class#DataParams#0" expanded="false" />
+                <element signature="method#setAdcChannelArray#0;class#DataParams#0" expanded="false" />
+                <element signature="e#8185#8186#0" expanded="false" />
+                <element signature="e#8242#8243#0" expanded="false" />
+                <element signature="e#8309#8310#0" expanded="false" />
+                <element signature="e#8368#8369#0" expanded="false" />
+                <element signature="e#8426#8427#0" expanded="false" />
+                <element signature="e#8471#8472#0" expanded="false" />
+                <element signature="e#8534#8535#0" expanded="false" />
+                <element signature="e#8583#8584#0" expanded="false" />
+                <element signature="e#8644#8645#0" expanded="false" />
+                <element signature="e#8695#8696#0" expanded="false" />
+                <element signature="e#8754#8755#0" expanded="false" />
+                <element signature="e#8803#8804#0" expanded="false" />
+                <element signature="e#8868#8869#0" expanded="false" />
+                <element signature="e#8923#8924#0" expanded="false" />
+                <element signature="e#8990#8991#0" expanded="false" />
+                <element signature="e#9047#9048#0" expanded="false" />
+                <element signature="e#9101#9102#0" expanded="false" />
+                <element signature="e#9142#9143#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainLayout.fxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayout.fxml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="795">
+              <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="JavaFX-Scene-Builder">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainLayoutController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayoutController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="58" column="3" selection-start-line="58" selection-start-column="3" selection-end-line="58" selection-end-column="3" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#handleSignalsToText#0;class#MainLayoutController#0" expanded="false" />
                 <element signature="method#handleAbout#0;class#MainLayoutController#0" expanded="false" />
                 <element signature="method#handleExit#0;class#MainLayoutController#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SavitzkyGolayFilter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/processing/SavitzkyGolayFilter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1440">
+              <caret line="137" column="6" selection-start-line="137" selection-start-column="6" selection-end-line="137" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleMath.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/processing/SimpleMath.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestDataType.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/processing/TestDataType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Axes.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/plotter/Axes.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlotterSettingController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSettingController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2040">
+              <caret line="210" column="118" selection-start-line="210" selection-start-column="118" selection-end-line="210" selection-end-column="118" />
+              <folding>
+                <element signature="method#setCurrentAxesSettings#0;class#PlotterSettingController#0" expanded="false" />
+                <element signature="method#setSGFilterSettingsDefault#0;class#PlotterSettingController#0" expanded="false" />
+                <element signature="method#setSpectrogramSettingsDefault#0;class#PlotterSettingController#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CanvasDrawing.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/plotter/CanvasDrawing.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="249" column="0" selection-start-line="249" selection-start-column="0" selection-end-line="249" selection-end-column="0" />
+              <folding>
+                <element signature="method#drawData#0;class#CanvasDrawing#0" expanded="false" />
+                <element signature="method#drawZeroLines#0;class#CanvasDrawing#0" expanded="false" />
+                <element signature="method#decimator#0;class#CanvasDrawing#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -104,12 +295,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataFormats.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/SATURN.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataFormat.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataData.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParsers.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataFormatsList.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/controllers/TextFileParamsController.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/TextFile.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/Readme.fxml" />
@@ -124,8 +309,6 @@
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/Axes.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataFormatsDetect.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParser.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParams.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataPaths.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph1.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph1_2008.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph2.java" />
@@ -139,15 +322,30 @@
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataTypesList.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/dataProcessing/TestDataType.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSetting.fxml" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/CanvasDrawing.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/controllers/PlotterSettingController.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverview.fxml" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/controllers/PlotterController.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/MainApp.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/controllers/SignalsOverviewController.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/model/SignalMarker.java" />
-        <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/TableCellColoredView.java" />
         <option value="$PROJECT_DIR$/src/adc/data/viewer/controllers/MainLayoutController.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/CanvasDrawing.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParams.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataPaths.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/TableCellColoredView.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/parser/TextFileDataController.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypesList.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypes.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverviewController.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/TextFileDataController.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/parser/DataPaths.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/MainApp.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayoutController.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/parser/DataParams.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/plotter/CanvasDrawing.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSettingController.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/plotter/PlotsBuilder.java" />
+        <option value="$PROJECT_DIR$/src/adc/data/viewer/plotter/Axes.java" />
       </list>
     </option>
   </component>
@@ -156,6 +354,16 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Bundled (Maven 3)" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState />
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-1" />
@@ -188,6 +396,8 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -246,117 +456,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dataProcessing" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADCreader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADC.Data.Viewer.Java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ADCPlotter" />
+              <option name="myItemId" value="plotter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -376,8 +476,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -400,11 +498,11 @@
     <configuration default="false" name="MainApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
-          <option name="PATTERN" value="adc.data.viewer.*" />
+          <option name="PATTERN" value="adc.data.viewer.ui.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="MAIN_CLASS_NAME" value="adc.data.viewer.MainApp" />
+      <option name="MAIN_CLASS_NAME" value="adc.data.viewer.ui.MainApp" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -945,11 +1043,14 @@
       <workItem from="1486328344316" duration="1686000" />
       <workItem from="1486395992571" duration="4293000" />
       <workItem from="1486404935051" duration="609000" />
+      <workItem from="1486487459184" duration="6949000" />
+      <workItem from="1486539018804" duration="15839000" />
+      <workItem from="1486565073332" duration="11606000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="381646000" />
+    <option name="totallyTimeSpent" value="416040000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
@@ -961,15 +1062,15 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20404722" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31871837" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32868218" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32868218" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32868218" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2931818" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21666667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1032,7 +1133,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="91" />
+      <option name="time" value="92" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1041,48 +1142,52 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParams.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataParams.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/MainApp.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainApp.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3530#3531#0" expanded="true" />
+            <element signature="e#3588#3589#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/SignalsOverviewController.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverviewController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/MainApp.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainApp.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3530#3531#0" expanded="true" />
+            <element signature="e#3588#3589#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/SignalsOverviewController.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverviewController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParser.java" />
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataParser.java" />
     <entry file="uml://JAVA/adc.data.viewer.controllers.TextFileParamsController">
       <provider selected="true" editor-type-id="UmlEditorProvider">
         <state>
@@ -1236,70 +1341,10 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph1.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="74" column="4" selection-start-line="74" selection-start-column="4" selection-end-line="74" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph1_2008.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/LGraph2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="75" column="4" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/Saturn.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/dataProcessing/SimpleMath.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/css/dialog.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
           <caret line="66" column="10" selection-start-line="66" selection-start-column="10" selection-end-line="66" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/dataProcessing/SavitzkyGolayFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1440">
-          <caret line="137" column="6" selection-start-line="137" selection-start-column="6" selection-end-line="137" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayout.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/ReadmeController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1311,60 +1356,6 @@
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/Axes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-324">
-          <caret line="57" column="13" selection-start-line="57" selection-start-column="13" selection-end-line="57" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParams.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="48" column="26" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataFormatsDetect.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="59" column="59" selection-start-line="59" selection-start-column="59" selection-end-line="59" selection-end-column="59" />
-          <folding>
-            <element signature="e#0#5308#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataPaths.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="104" column="0" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#6124#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="docComment;class#DataPaths#0" expanded="false" />
-            <element signature="e#2722#2723#0" expanded="false" />
-            <element signature="e#2767#2768#0" expanded="false" />
-            <element signature="e#2812#2813#0" expanded="false" />
-            <element signature="e#2857#2858#0" expanded="false" />
-            <element signature="e#2900#2901#0" expanded="false" />
-            <element signature="e#2945#2946#0" expanded="false" />
-            <element signature="e#3076#3077#0" expanded="false" />
-            <element signature="e#3110#3111#0" expanded="false" />
-            <element signature="e#3148#3149#0" expanded="false" />
-            <element signature="e#3183#3184#0" expanded="false" />
-            <element signature="e#3212#3213#0" expanded="false" />
-            <element signature="e#3243#3244#0" expanded="false" />
-            <element signature="docComment;method#makePaths#0;class#DataPaths#0" expanded="false" />
-            <element signature="docComment;method#makePaths#1;class#DataPaths#0" expanded="false" />
-            <element signature="docComment;method#makePaths#2;class#DataPaths#0" expanded="false" />
-            <element signature="method#makePaths#2;class#DataPaths#0" expanded="false" />
-            <element signature="method#parseFileList#0;class#DataPaths#0" expanded="false" />
-          </folding>
-        </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/libs/Jama-1.0.3.jar!/Jama/CholeskyDecomposition.class">
@@ -1392,46 +1383,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/PlotterController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="82" column="5" selection-start-line="82" selection-start-column="5" selection-end-line="82" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#4352#0" expanded="false" />
-            <element signature="e#2886#2887#0" expanded="false" />
-            <element signature="e#2914#2915#0" expanded="false" />
-            <element signature="e#2946#2947#0" expanded="false" />
-            <element signature="e#2976#2977#0" expanded="false" />
-            <element signature="e#3022#3023#0" expanded="false" />
-            <element signature="e#3060#3061#0" expanded="false" />
-            <element signature="e#4303#4304#0" expanded="false" />
-            <element signature="e#4346#4347#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/util/Arrays.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-20162">
           <caret line="3735" column="0" selection-start-line="3735" selection-start-column="0" selection-end-line="3735" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
-          <folding>
-            <element signature="method#setData#0;class#DataParser#0" expanded="false" />
-            <element signature="docComment;method#setSignals#0;class#DataParser#0" expanded="false" />
-            <element signature="method#setSignals#0;class#DataParser#0" expanded="false" />
-            <element signature="docComment;method#saveToFile#0;class#DataParser#0" expanded="false" />
-            <element signature="method#saveToFile#0;class#DataParser#0" expanded="false" />
-            <element signature="docComment;method#getFileNumbers#0;class#DataParser#0" expanded="false" />
-            <element signature="docComment;method#getSignals#0;class#DataParser#0" expanded="false" />
-            <element signature="docComment;method#getSignalLabels#0;class#DataParser#0" expanded="false" />
-            <element signature="docComment;method#getSignalFullPath#0;class#DataParser#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1446,16 +1401,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="294">
           <caret line="61" column="16" selection-start-line="61" selection-start-column="16" selection-end-line="61" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/CanvasDrawing.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2220">
-          <caret line="256" column="0" selection-start-line="256" selection-start-column="0" selection-end-line="256" selection-end-column="0" />
-          <folding>
-            <element signature="method#drawmesh#0;class#CanvasDrawing#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1480,100 +1425,317 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/PlotterSettingController.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1_2008.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-16">
-          <caret line="141" column="9" selection-start-line="140" selection-start-column="0" selection-end-line="141" selection-end-column="30" />
-          <folding>
-            <element signature="method#setAxesSettingsDefault#0;class#PlotterSettingController#0" expanded="false" />
-            <element signature="method#setSGFilterSettingsDefault#0;class#PlotterSettingController#0" expanded="false" />
-            <element signature="method#setSpectrogramSettingsDefault#0;class#PlotterSettingController#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="274">
+          <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/SignalsOverviewController.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1065">
-          <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="-1181">
+          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataTypes.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/Saturn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="45" column="18" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="18" />
-          <folding />
+        <state relative-caret-position="-1406">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCreader/DataTypesList.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataFormatsDetect.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="70" column="9" selection-start-line="70" selection-start-column="9" selection-end-line="70" selection-end-column="9" />
-          <folding />
+        <state relative-caret-position="-571">
+          <caret line="59" column="59" selection-start-line="59" selection-start-column="59" selection-end-line="59" selection-end-column="59" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/dataProcessing/TestDataType.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="47" column="13" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/TextFileDataController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-699">
-          <caret line="65" column="13" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="13" />
-          <folding>
-            <element signature="method#handleCancel#0;class#TextFileDataController#0" expanded="false" />
-            <element signature="method#setParamInteractive#0;class#TextFileDataController#0" expanded="false" />
-            <element signature="method#setData#0;class#TextFileDataController#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="-1311">
+          <caret line="58" column="6" selection-start-line="58" selection-start-column="6" selection-end-line="58" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/TableCellColoredView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="66" column="5" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
+        <state relative-caret-position="74">
+          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/MainApp.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypesList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1530">
-          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+        <state relative-caret-position="75">
+          <caret line="46" column="1" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="45" column="1" selection-start-line="45" selection-start-column="1" selection-end-line="45" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="67" column="3" selection-start-line="67" selection-start-column="3" selection-end-line="67" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/TextFileDataController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="172" column="99" selection-start-line="172" selection-start-column="99" selection-end-line="172" selection-end-column="99" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="method#handleCancel#0;class#TextFileDataController#0" expanded="false" />
+            <element signature="method#setParamInteractive#0;class#TextFileDataController#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ADCPlotter/PlotsBuilder.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataPaths.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2070">
-          <caret line="198" column="0" selection-start-line="198" selection-start-column="0" selection-end-line="198" selection-end-column="0" />
+        <state relative-caret-position="105">
+          <caret line="59" column="6" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="6" />
+          <folding>
+            <element signature="docComment;class#DataPaths#0" expanded="false" />
+            <element signature="docComment;method#makePaths#0;class#DataPaths#0" expanded="false" />
+            <element signature="docComment;method#makePaths#1;class#DataPaths#0" expanded="false" />
+            <element signature="docComment;method#makePaths#2;class#DataPaths#0" expanded="false" />
+            <element signature="method#makePaths#2;class#DataPaths#0" expanded="false" />
+            <element signature="method#parseFileList#0;class#DataPaths#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverviewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/ReadmeController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/controllers/MainLayoutController.java">
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="96" column="51" selection-start-line="96" selection-start-column="51" selection-end-line="96" selection-end-column="51" />
+        <state relative-caret-position="120">
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainApp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3530#3531#0" expanded="true" />
+            <element signature="e#3588#3589#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayout.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="795">
+          <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayoutController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="58" column="3" selection-start-line="58" selection-start-column="3" selection-end-line="58" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#handleSignalsToText#0;class#MainLayoutController#0" expanded="false" />
             <element signature="method#handleAbout#0;class#MainLayoutController#0" expanded="false" />
             <element signature="method#handleExit#0;class#MainLayoutController#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/processing/SavitzkyGolayFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1440">
+          <caret line="137" column="6" selection-start-line="137" selection-start-column="6" selection-end-line="137" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/processing/SimpleMath.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/processing/TestDataType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/parser/DataParams.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="89" column="59" selection-start-line="89" selection-start-column="59" selection-end-line="89" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#9149#0" expanded="false" />
+            <element signature="e#4669#4670#0" expanded="false" />
+            <element signature="e#4707#4708#0" expanded="false" />
+            <element signature="e#4748#4749#0" expanded="false" />
+            <element signature="e#4784#4785#0" expanded="false" />
+            <element signature="e#4825#4826#0" expanded="false" />
+            <element signature="e#4858#4859#0" expanded="false" />
+            <element signature="e#4902#4903#0" expanded="false" />
+            <element signature="e#4939#4940#0" expanded="false" />
+            <element signature="e#4978#4979#0" expanded="false" />
+            <element signature="e#5012#5013#0" expanded="false" />
+            <element signature="e#5059#5060#0" expanded="false" />
+            <element signature="e#5102#5103#0" expanded="false" />
+            <element signature="e#5148#5149#0" expanded="false" />
+            <element signature="e#5189#5190#0" expanded="false" />
+            <element signature="e#5237#5238#0" expanded="false" />
+            <element signature="e#5279#5280#0" expanded="false" />
+            <element signature="e#5316#5317#0" expanded="false" />
+            <element signature="e#5348#5349#0" expanded="false" />
+            <element signature="e#5383#5384#0" expanded="false" />
+            <element signature="e#5413#5414#0" expanded="false" />
+            <element signature="e#5456#5457#0" expanded="false" />
+            <element signature="e#5494#5495#0" expanded="false" />
+            <element signature="e#5534#5535#0" expanded="false" />
+            <element signature="e#5568#5569#0" expanded="false" />
+            <element signature="e#5618#5619#0" expanded="false" />
+            <element signature="e#5662#5663#0" expanded="false" />
+            <element signature="e#5705#5706#0" expanded="false" />
+            <element signature="e#5743#5744#0" expanded="false" />
+            <element signature="e#5783#5784#0" expanded="false" />
+            <element signature="e#5818#5819#0" expanded="false" />
+            <element signature="e#5860#5861#0" expanded="false" />
+            <element signature="e#5896#5897#0" expanded="false" />
+            <element signature="e#5932#5933#0" expanded="false" />
+            <element signature="e#5965#5966#0" expanded="false" />
+            <element signature="e#6004#6005#0" expanded="false" />
+            <element signature="e#6039#6040#0" expanded="false" />
+            <element signature="e#6079#6080#0" expanded="false" />
+            <element signature="e#6111#6112#0" expanded="false" />
+            <element signature="e#6150#6151#0" expanded="false" />
+            <element signature="e#6181#6182#0" expanded="false" />
+            <element signature="e#6223#6224#0" expanded="false" />
+            <element signature="e#6257#6258#0" expanded="false" />
+            <element signature="e#6300#6301#0" expanded="false" />
+            <element signature="e#6335#6336#0" expanded="false" />
+            <element signature="e#6368#6369#0" expanded="false" />
+            <element signature="e#6399#6400#0" expanded="false" />
+            <element signature="e#6462#6463#0" expanded="false" />
+            <element signature="e#6516#6517#0" expanded="false" />
+            <element signature="e#6582#6583#0" expanded="false" />
+            <element signature="e#6632#6633#0" expanded="false" />
+            <element signature="e#6693#6694#0" expanded="false" />
+            <element signature="e#6743#6744#0" expanded="false" />
+            <element signature="e#6812#6813#0" expanded="false" />
+            <element signature="e#6870#6871#0" expanded="false" />
+            <element signature="e#6930#6931#0" expanded="false" />
+            <element signature="e#6977#6978#0" expanded="false" />
+            <element signature="method#setRealChannelsQuantity#0;class#DataParams#0" expanded="false" />
+            <element signature="method#setRealCadresQuantity#0;class#DataParams#0" expanded="false" />
+            <element signature="method#setRealSamplesQuantity#0;class#DataParams#0" expanded="false" />
+            <element signature="e#7455#7456#0" expanded="false" />
+            <element signature="e#7498#7499#0" expanded="false" />
+            <element signature="e#7553#7554#0" expanded="false" />
+            <element signature="e#7592#7593#0" expanded="false" />
+            <element signature="e#7663#7664#0" expanded="false" />
+            <element signature="e#7718#7719#0" expanded="false" />
+            <element signature="e#7781#7782#0" expanded="false" />
+            <element signature="e#7828#7829#0" expanded="false" />
+            <element signature="method#setActiveAdcChannelArray#0;class#DataParams#0" expanded="false" />
+            <element signature="method#setAdcChannelArray#0;class#DataParams#0" expanded="false" />
+            <element signature="e#8185#8186#0" expanded="false" />
+            <element signature="e#8242#8243#0" expanded="false" />
+            <element signature="e#8309#8310#0" expanded="false" />
+            <element signature="e#8368#8369#0" expanded="false" />
+            <element signature="e#8426#8427#0" expanded="false" />
+            <element signature="e#8471#8472#0" expanded="false" />
+            <element signature="e#8534#8535#0" expanded="false" />
+            <element signature="e#8583#8584#0" expanded="false" />
+            <element signature="e#8644#8645#0" expanded="false" />
+            <element signature="e#8695#8696#0" expanded="false" />
+            <element signature="e#8754#8755#0" expanded="false" />
+            <element signature="e#8803#8804#0" expanded="false" />
+            <element signature="e#8868#8869#0" expanded="false" />
+            <element signature="e#8923#8924#0" expanded="false" />
+            <element signature="e#8990#8991#0" expanded="false" />
+            <element signature="e#9047#9048#0" expanded="false" />
+            <element signature="e#9101#9102#0" expanded="false" />
+            <element signature="e#9142#9143#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSettingController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2040">
+          <caret line="210" column="118" selection-start-line="210" selection-start-column="118" selection-end-line="210" selection-end-column="118" />
+          <folding>
+            <element signature="method#setCurrentAxesSettings#0;class#PlotterSettingController#0" expanded="false" />
+            <element signature="method#setSGFilterSettingsDefault#0;class#PlotterSettingController#0" expanded="false" />
+            <element signature="method#setSpectrogramSettingsDefault#0;class#PlotterSettingController#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/plotter/PlotsBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="205" column="0" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/plotter/CanvasDrawing.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="249" column="0" selection-start-line="249" selection-start-column="0" selection-end-line="249" selection-end-column="0" />
+          <folding>
+            <element signature="method#drawData#0;class#CanvasDrawing#0" expanded="false" />
+            <element signature="method#drawZeroLines#0;class#CanvasDrawing#0" expanded="false" />
+            <element signature="method#decimator#0;class#CanvasDrawing#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/adc/data/viewer/plotter/Axes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

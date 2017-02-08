@@ -41,7 +41,7 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ADCreader;
+package adc.data.viewer.parser;
 
 /**
  * This class stores ADC parameters of all extracted signals 
@@ -79,14 +79,14 @@ public class DataParams  {
         this.deviceName = new String[amountOfFiles];
         this.CreateDateTime = new String[amountOfFiles];
         this.ChannelsMax = new int[amountOfFiles];
-        this. RealChannelsQuantity= new int[amountOfFiles];
+        this.RealChannelsQuantity= new int[amountOfFiles];
         this.RealCadresQuantity= new long[amountOfFiles];
         this.RealSamplesQuantity= new long[amountOfFiles];
         this.TotalTime= new double[amountOfFiles];
         this.AdcRate= new double[amountOfFiles];
         this.InterCadreDelay= new double[amountOfFiles];
-        this. ChannelRate= new double[amountOfFiles];
-        this. ActiveAdcChannelArray = new byte[amountOfFiles][32];
+        this.ChannelRate= new double[amountOfFiles];
+        this.ActiveAdcChannelArray = new byte[amountOfFiles][32];
         this.AdcChannelArray= new byte[amountOfFiles] [32];
         this.AdcGainArray= new byte[amountOfFiles] [32];
         this.IsSignalArray= new byte[amountOfFiles] [32];

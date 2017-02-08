@@ -41,10 +41,9 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.controllers;
+package adc.data.viewer.ui;
 
-import adc.data.viewer.MainApp;
-import adc.data.viewer.dataProcessing.TestDataType;
+import adc.data.viewer.processing.TestDataType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -108,7 +107,7 @@ public class PlotterSettingController {
     @FXML
     private TextField FFTWindowOverlap;
 
-    public static void setAxesSettingsDefault(Double xmn,Double xmx,Double xstp,Double ymn,Double ymx,Double ystp){
+    public static void setCurrentAxesSettings(Double xmn, Double xmx, Double xstp, Double ymn, Double ymx, Double ystp){
         xmin=xmn;
         xmax=xmx;
         xstep=xstp;

@@ -56,7 +56,7 @@
   ~ 	********************* END LICENSE BLOCK ***********************************
   -->
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.controllers.PlotterSettingController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterSettingController">
    <center>
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>

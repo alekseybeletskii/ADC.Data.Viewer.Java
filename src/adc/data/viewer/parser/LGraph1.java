@@ -41,7 +41,7 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ADCreader;
+package adc.data.viewer.parser;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -52,15 +52,13 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 
-
 /**
- * This is the class that defines ADC binary data format used in the freeware program L-Graph I after 2008 year
- * This format is named here "LGraph1_2008"
+ * This is the class that defines ADC binary data format used in the freeware program L-Graph I before 2008 year
+ * This format is named here "LGraph1"
  */
-class LGraph1_2008 implements DataTypes {
+class LGraph1 implements DataTypes {
 
-//    LGraph1_2008 (DataParser dataData){}
-
+//    LGraph1 (DataParser dataData){}
 
     private DataParser dataData;
     private DataParams dataParams;
@@ -88,10 +86,10 @@ class LGraph1_2008 implements DataTypes {
             parBuf.order(ByteOrder.LITTLE_ENDIAN);
 
 
-            byte[] deviceNameByte = new byte[17];
+
+        byte[] deviceNameByte = new byte[17];
         byte[] creatDateTimeByte = new byte[26];
         byte[] arrayByte = new byte[32];
-
 
         parBuf.position(20);
         parBuf.get(deviceNameByte);
@@ -104,17 +102,14 @@ class LGraph1_2008 implements DataTypes {
         dataParams.setCreateDateTime(new String(creatDateTimeByte, Charset.forName("UTF-8")).trim(), fnum);
         dataParams.setChannelsMax(parBuf.getShort(63), fnum);
         dataParams.setRealChannelsQuantity(parBuf.getShort(65), fnum);
-        dataParams.setRealCadresQuantity(parBuf.getLong(67), fnum);
-        dataParams.setRealSamplesQuantity(parBuf.getLong(75), fnum);
-//            setTotalTime(parBuf.getDouble(83),fnum) ; 10-bytes-number??
-        dataParams.setAdcRate(parBuf.getDouble(93), fnum);
-        dataParams.setInterCadreDelay(parBuf.getDouble(101), fnum);
-        dataParams.setChannelRate(parBuf.getDouble(109), fnum);
-        parBuf.position(117);
-
-        for (int i = 0; i < 32; i++) {
-            arrayByte[i] = (byte) parBuf.getInt();
-        }
+        dataParams.setRealCadresQuantity(parBuf.getInt(67), fnum);
+        dataParams.setRealSamplesQuantity(parBuf.getInt(71), fnum);
+        dataParams.setTotalTime(parBuf.getDouble(75), fnum);
+        dataParams.setAdcRate(parBuf.getFloat(83), fnum);
+        dataParams.setInterCadreDelay(parBuf.getFloat(87), fnum);
+        dataParams.setChannelRate(parBuf.getFloat(91), fnum);
+        parBuf.position(95);
+        parBuf.get(arrayByte);
         dataParams.setActiveAdcChannelArray(arrayByte, fnum);
         parBuf.get(arrayByte);
         dataParams.setAdcChannelArray(arrayByte, fnum);
@@ -123,7 +118,6 @@ class LGraph1_2008 implements DataTypes {
         parBuf.get(arrayByte);
         dataParams.setIsSignalArray(arrayByte, fnum);
 
-
         } catch (InvalidPathException e) {
             System.out.println("Path Error " + e);
             dataParams.setDataParamsValid(false);
@@ -131,6 +125,7 @@ class LGraph1_2008 implements DataTypes {
             System.out.println("I/O Error " + e);
             dataParams.setDataParamsValid(false);
         }
+
     }
 
     public void setData(int fnum, int sigCount) {
@@ -179,4 +174,5 @@ class LGraph1_2008 implements DataTypes {
             System.out.println("I/O Error " + e);
         }
     }
+
 }

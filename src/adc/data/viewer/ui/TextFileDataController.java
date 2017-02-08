@@ -41,12 +41,12 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.controllers;
+package adc.data.viewer.ui;
 
-import adc.data.viewer.ADCreader.DataParams;
-import adc.data.viewer.ADCreader.DataParser;
-import adc.data.viewer.MainApp;
-import adc.data.viewer.dataProcessing.TestDataType;
+import adc.data.viewer.parser.DataParams;
+import adc.data.viewer.parser.DataParser;
+import adc.data.viewer.processing.TestDataType;
+import adc.data.viewer.ui.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

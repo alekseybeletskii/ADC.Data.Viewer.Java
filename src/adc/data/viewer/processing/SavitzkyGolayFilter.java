@@ -41,7 +41,7 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.dataProcessing;
+package adc.data.viewer.processing;
 
 import Jama.*;
 

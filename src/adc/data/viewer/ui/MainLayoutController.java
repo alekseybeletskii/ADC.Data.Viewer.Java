@@ -41,10 +41,9 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.controllers;
+package adc.data.viewer.ui;
 
-import adc.data.viewer.ADCreader.DataParser;
-import adc.data.viewer.MainApp;
+import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.model.SignalMarker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -59,9 +58,13 @@ import java.util.Optional;
 
 public class MainLayoutController {
 
+    static {
+        initDir=new File(System.getProperty("user.home"));
+    }
+
     private MainApp mainApp;
     private static File initDir;
-    public void setMainApp(MainApp mainApp) {
+    void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
 
@@ -79,12 +82,7 @@ public class MainLayoutController {
         fileChooser.getExtensionFilters().add(extFilter);
 
 
-        chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-        if(!(chosenFiles==null)&&!chosenFiles.isEmpty()) {
-            inpList.addAll(chosenFiles);
-            initDir = inpList.get(inpList.size()-1).getParentFile();
-            fileChooser.setInitialDirectory(initDir);
-        }
+        getMoreFiles(inpList, fileChooser);
 
         boolean morefiles = true;
         while(morefiles) {
@@ -97,12 +95,7 @@ public class MainLayoutController {
             alert.getDialogPane().setMinSize(250,120);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-                if(!(chosenFiles==null)&&!chosenFiles.isEmpty()) {
-                    inpList.addAll(chosenFiles);
-                    initDir = inpList.get(inpList.size()-1).getParentFile();
-                    fileChooser.setInitialDirectory(initDir);
-                }
+                getMoreFiles(inpList, fileChooser);
             }
             else {
                 if (!inpList.isEmpty()) {
@@ -116,6 +109,16 @@ public class MainLayoutController {
 
 
 
+    }
+
+    private void getMoreFiles(List<File> inpList, FileChooser fileChooser) {
+        List<File> chosenFiles;
+        chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
+        if(!(chosenFiles==null)&&!chosenFiles.isEmpty()) {
+            inpList.addAll(chosenFiles);
+            initDir = inpList.get(inpList.size()-1).getParentFile();
+            fileChooser.setInitialDirectory(initDir);
+        }
     }
 
     @FXML
@@ -145,7 +148,7 @@ public class MainLayoutController {
 
     @FXML
     private void handleClear() {
-        mainApp.getSignalList().clear();
+        mainApp.clearOldListAndPlots();
     }
 
     @FXML
@@ -176,8 +179,8 @@ public class MainLayoutController {
         mainApp.showReadme();
     }
 
-    @FXML
-    public void initialize() {
-        initDir=new File(System.getProperty("user.home"));
-    }
+//    @FXML
+//    private void initialize() {
+//        initDir=new File(System.getProperty("user.home"));
+//    }
 }

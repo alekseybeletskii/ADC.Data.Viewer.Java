@@ -41,9 +41,9 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ADCreader;
+package adc.data.viewer.parser;
 
-import adc.data.viewer.MainApp;
+import adc.data.viewer.ui.MainApp;
 
 import java.io.*;
 import java.nio.*;

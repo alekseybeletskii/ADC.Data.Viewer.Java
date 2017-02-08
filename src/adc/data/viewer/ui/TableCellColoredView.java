@@ -46,7 +46,7 @@ package adc.data.viewer.ui;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
-public class TableCellColoredView<T> extends TableCell<T, Color> {
+class TableCellColoredView<T> extends TableCell<T, Color> {
     private final ColorPicker colorPicker;
 
     public TableCellColoredView(TableColumn<T, Color> column) {

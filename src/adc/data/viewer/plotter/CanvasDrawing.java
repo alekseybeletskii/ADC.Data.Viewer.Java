@@ -41,19 +41,18 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ADCPlotter;
+package adc.data.viewer.plotter;
 
-import adc.data.viewer.ADCreader.DataParser;
-import adc.data.viewer.MainApp;
-import adc.data.viewer.dataProcessing.SavitzkyGolayFilter;
-import adc.data.viewer.dataProcessing.SimpleMath;
+import adc.data.viewer.parser.DataParser;
+import adc.data.viewer.ui.MainApp;
+import adc.data.viewer.processing.SavitzkyGolayFilter;
+import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.model.SignalMarker;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
@@ -143,9 +142,82 @@ public class CanvasDrawing extends Canvas {
         gc.clearRect(0, 0, getWidth(), getHeight());
         gc.setFill(Color.TRANSPARENT);
         gc.fillRect(0,0,getWidth(), getHeight());
-//draw mesh
-        drawmesh();
-//draw X-Y zero lines
+
+        drawmesh(gc);
+
+        drawData(gc);
+
+        drawZeroLines(gc);
+    }
+
+    private void drawData(GraphicsContext gc) {
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(1);
+        gc.setLineDashes(0);
+        for (SignalMarker signalMarker:mainApp.getSignalList()){
+            if(signalMarker.getSignalSelected()) {
+                int nextSignal = signalMarker.getSignalIndex();
+                String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
+                int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
+
+//dt,dtCadre in milliseconds
+                double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
+                double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
+                int nextSignalLength = allSignals.getSignals()[nextSignal].length;
+                int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
+                int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
+
+
+               if((xRight>0)&&(xLeft<nextSignalLength)) {
+
+
+                   double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
+                           xLeft < 0 ? 0 : xLeft, xRight > nextSignalLength ? nextSignalLength : xRight);
+
+                   switch (plotType) {
+                       case "Raw":
+                           gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.beginPath();
+                           decimator(gc, ADCChannelNum, dt, dtCadre, sigSubarray);
+                           break;
+                       case "SGFiltered":
+                           gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.beginPath();
+                           int i = 0;
+                           for (double yy : sgfilter.filterData(sigSubarray)) {
+                               sigSubarray[i] = sigSubarray[i] - yy;
+                               i++;
+                           }
+                           decimator(gc, ADCChannelNum, dt, dtCadre, sigSubarray);
+                           break;
+                       case "RawAndSGFilter":
+                           gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.beginPath();
+                           decimator(gc, ADCChannelNum, dt, dtCadre, sigSubarray);
+                           sigSubarray = sgfilter.filterData(sigSubarray);
+                           gc.setStroke(Color.BLACK);
+                           gc.setFill(Color.TRANSPARENT);
+                           gc.beginPath();
+                           decimator(gc, ADCChannelNum, dt, dtCadre, sigSubarray);
+                           break;
+                       case "SGFilter":
+                           sigSubarray = sgfilter.filterData(sigSubarray);
+                           gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                           gc.beginPath();
+                           decimator(gc, ADCChannelNum, dt, dtCadre, sigSubarray);
+                           break;
+                   }
+               }
+            }
+        }
+    }
+
+    private void drawZeroLines(GraphicsContext gc) {
+        //draw X-Y zero lines
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
         gc.setLineDashes(5);
@@ -158,71 +230,9 @@ public class CanvasDrawing extends Canvas {
         gc.moveTo((int) shiftXZero +0.5,0);
         gc.lineTo((int) shiftXZero +0.5,getHeight());
         if (shiftXZero!=0.0)gc.stroke();
-//draw data
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(1);
-        gc.setLineDashes(0);
-
-
-        for (SignalMarker signalMarker:mainApp.getSignalList()){
-            if(signalMarker.getSignalSelected()) {
-                int nextSignal = signalMarker.getSignalIndex();
-                String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
-                int xshift = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
-
-//dt,dtCadre in milliseconds
-                double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
-                double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
-                int nextSignalLength = allSignals.getSignals()[nextSignal].length;
-                int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
-                int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
-
-                double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
-                        xLeft < 0 ? 0 : xLeft, xRight > nextSignalLength ? nextSignalLength : xRight);
-
-                switch (plotType) {
-                    case "Raw":
-                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.beginPath();
-                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                        break;
-                    case "SGFiltered":
-                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.beginPath();
-                        int i = 0;
-                        for (double yy : sgfilter.filterData(sigSubarray)) {
-                            sigSubarray[i] = sigSubarray[i] - yy;
-                            i++;
-                        }
-                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                        break;
-                    case "RawAndSGFilter":
-                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.beginPath();
-                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                        sigSubarray = sgfilter.filterData(sigSubarray);
-                        gc.setStroke(Color.BLACK);
-                        gc.setFill(Color.TRANSPARENT);
-                        gc.beginPath();
-                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                        break;
-                    case "SGFilter":
-                        sigSubarray = sgfilter.filterData(sigSubarray);
-                        gc.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                        gc.beginPath();
-                        decimator(gc, xshift, dt, dtCadre, sigSubarray);
-                        break;
-                }
-            }
-        }
     }
 
-    private void drawmesh() {
-        GraphicsContext gc = getGraphicsContext2D();
+    private void drawmesh(GraphicsContext gc) {
 
         gc.setStroke(Color.DARKGRAY);
         gc.setLineWidth(1.0);
@@ -253,7 +263,7 @@ public class CanvasDrawing extends Canvas {
 
     }
 
-    private void decimator(GraphicsContext gc, int xshift, double dt, double dtCadre, double[] sigSubarray) {
+    private void decimator(GraphicsContext gc, int ADCChannelNum, double dt, double dtCadre, double[] sigSubarray) {
         int step = (int)(sigSubarray.length/widthProperty().get());
 
         if (step > 1) {
@@ -265,28 +275,28 @@ public class CanvasDrawing extends Canvas {
                 SimpleMath.findMaxMin(sigSegment);
 
                 if (i == 0) {
-                    gc.moveTo(mapX(i, dt) + xshift * dx * dtCadre, mapY(sigSegment[i]));
+                    gc.moveTo(mapX(i, dt) + ADCChannelNum * dx * dtCadre, mapY(sigSegment[i]));
                 }
-                gc.lineTo(mapX(i+step/2, dt) + xshift * dx * dtCadre, mapY(SimpleMath.getMax()));
-                gc.lineTo(mapX(i+step/2, dt) + xshift * dx * dtCadre, mapY(SimpleMath.getMin()));
+                gc.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx * dtCadre, mapY(SimpleMath.getMax()));
+                gc.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx * dtCadre, mapY(SimpleMath.getMin()));
             }
         }
         else {
             int x=0;
             for (double y : sigSubarray) {
                 if (x == 0) {
-                    gc.moveTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
+                    gc.moveTo(mapX(x, dt) + ADCChannelNum * dx * dtCadre, mapY(y));
                 }
                 switch (lineOrScatter){
                     case "line":
-                        gc.lineTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
+                        gc.lineTo(mapX(x, dt) + ADCChannelNum * dx * dtCadre, mapY(y));
                         break;
                     case "line+scatter":
-                        gc.lineTo(mapX(x, dt) + xshift * dx * dtCadre, mapY(y));
-                        gc.fillOval(mapX(x, dt) + xshift * dx * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
+                        gc.lineTo(mapX(x, dt) + ADCChannelNum * dx * dtCadre, mapY(y));
+                        gc.fillOval(mapX(x, dt) + ADCChannelNum * dx * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
                         break;
                     case "scatter":
-                        gc.fillOval(mapX(x, dt) + xshift * dx * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
+                        gc.fillOval(mapX(x, dt) + ADCChannelNum * dx * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
                         break;
                 }
                 x++;

@@ -41,28 +41,27 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ADCPlotter;
+package adc.data.viewer.plotter;
 
-import adc.data.viewer.MainApp;
-import adc.data.viewer.controllers.PlotterController;
-import adc.data.viewer.controllers.PlotterSettingController;
-import adc.data.viewer.dataProcessing.SimpleMath;
+import adc.data.viewer.ui.MainApp;
+import adc.data.viewer.ui.PlotterController;
+import adc.data.viewer.ui.PlotterSettingController;
+import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.model.SignalMarker;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-import java.util.ArrayList;
-import java.util.List;
+
 import static java.lang.Math.abs;
 
     public class PlotsBuilder extends AnchorPane {
 
-    private  List<Integer>  selectedSignals;
     private  Axes axes;
     private CanvasDrawing canvas;
     private PlotterController plotterController;
@@ -77,7 +76,7 @@ import static java.lang.Math.abs;
 
     public PlotsBuilder(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController){
         this.plotterController=plotterController;
-        this.selectedSignals = new ArrayList<>();
+
         this.zoomRectangle =null;
         buildAxes(mainApp);
         canvas = new CanvasDrawing(mainApp, axes,  "Raw");
@@ -90,7 +89,7 @@ import static java.lang.Math.abs;
         AnchorPane.setBottomAnchor(this, 50.0);
         AnchorPane.setTopAnchor(this, 30.0);
 
-        this.setStyle("-fx-background-color: rgb(255, 255, 255);");
+//        this.setStyle("-fx-background-color: rgb(255, 255, 255);");
 
         getChildren().addAll(axes, canvas);
         AnchorPane.setLeftAnchor(canvas, 0.0);
@@ -124,7 +123,7 @@ import static java.lang.Math.abs;
             {
                 dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
                 samples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
-                selectedSignals.add(signalMarker.getSignalIndex());
+
                 if (samples*dt > longestTime) {
                     longestTime = samples*dt;
                 }
@@ -150,6 +149,8 @@ import static java.lang.Math.abs;
         DoubleProperty zoomTopLeftY = new SimpleDoubleProperty();
         DoubleProperty zoomBottomRightX = new SimpleDoubleProperty();
         DoubleProperty zoomBottomRightY = new SimpleDoubleProperty();
+        DoubleProperty panStartX = new SimpleDoubleProperty();
+        DoubleProperty panStartY = new SimpleDoubleProperty();
 
         canvas.setOnMousePressed(mpressed -> {
             if(mpressed.getButton()== MouseButton.PRIMARY){
@@ -162,6 +163,10 @@ import static java.lang.Math.abs;
                 zoomRectangle.setStrokeWidth(1);
                 zoomRectangle.getStrokeDashArray().addAll(5.0, 5.0);
                 this.getChildren().add(zoomRectangle);
+            }
+            if(mpressed.getButton()== MouseButton.SECONDARY){
+                panStartX.set(mpressed.getX());
+                panStartY.set(mpressed.getY());
             }
         });
 
@@ -188,31 +193,44 @@ import static java.lang.Math.abs;
                     zoomRectangle.setHeight(0.0);
                 }
             }
+
+            if(mdragged.getButton()== MouseButton.SECONDARY){
+
+                double dxPan = mdragged.getX()-panStartX.get();
+                double dyPan = mdragged.getY()-panStartY.get();
+                axes.axesPanRescale(dxPan,dyPan);
+                panStartX.set(mdragged.getX());
+                panStartY.set(mdragged.getY());
+
+                this.getScene().setCursor(Cursor.OPEN_HAND);
+                canvas.draw();
+
+            }
         });
 
         canvas.setOnMouseReleased(mreleased -> {
+            if(mreleased.getButton()== MouseButton.PRIMARY) {
+                if (zoomRectangle.getWidth() == 0.0 & zoomRectangle.getHeight() == 0.0) {
+                    axes.setAxesBasicSetup();
+                    this.getChildren().remove(zoomRectangle);
+                    zoomRectangle = null;
+                    canvas.draw();
+                } else if (zoomRectangle.getWidth() != 0.0 & zoomRectangle.getHeight() != 0.0) {
 
-            if(zoomRectangle.getWidth()==0.0&zoomRectangle.getHeight()==0.0)
-            {
-                axes.setAxesBasicSetup();
-                this.getChildren().remove(zoomRectangle);
-                zoomRectangle = null;
-                canvas.draw();
-            }
-            else if(zoomRectangle.getWidth()!=0.0&zoomRectangle.getHeight()!=0.0){
+                    axes.axesZoomRescale(zoomTopLeftX, zoomTopLeftY, zoomBottomRightX, zoomBottomRightY);
+                    this.getChildren().remove(zoomRectangle);
+                    zoomRectangle = null;
 
-                axes.axesZoomRescale(zoomTopLeftX,zoomTopLeftY, zoomBottomRightX,zoomBottomRightY);
-                this.getChildren().remove(zoomRectangle);
-                zoomRectangle = null;
-                canvas.draw();
+                    canvas.draw();
+                }
             }
+            this.getScene().setCursor(Cursor.DEFAULT);
+
         });
     }
 
     private void showMouseXY() {
-        this.setOnMouseMoved(event ->
-            setMouseXYText(event)
-        );
+        this.setOnMouseMoved(this::setMouseXYText);
     }
 
     private void setMouseXYText(MouseEvent event) {

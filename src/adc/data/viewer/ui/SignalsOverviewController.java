@@ -41,11 +41,9 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.controllers;
+package adc.data.viewer.ui;
 
-import adc.data.viewer.MainApp;
 import adc.data.viewer.model.SignalMarker;
-import adc.data.viewer.ui.TableCellColoredView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;

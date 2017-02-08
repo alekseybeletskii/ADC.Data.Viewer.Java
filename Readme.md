@@ -13,7 +13,7 @@ and Savitsky-Golay filter are available
 ![plot](resources/jpg/PlotterSettingsAndSGfilter.jpg)
 
 ADC files examples are included in the "resources/sampledata/" subfolder.
-Check "resources/jpg/" subfolder with screenshots.
+Check "resources/jpg/" sub-folder with screen-shots.
 Executable Jar file is located in "resources/jar/" subfolder.
 
 An information about every signal will be extracted from an appropriate
@@ -36,8 +36,9 @@ How to use:
    -  double click on table will check/uncheck all signals
    -  individual color can be set for every signal
 
-Zoom plots with mouse:
+Zoom and pan plots with mouse:
    - zoom: left click + drag from a top left to a bottom right
+   - pan: right click + drag 
    - rescale to a full view: left click + drag back from a bottom right to a top left
 
 NOTE: if there are a lot of points, drawing will take some time.

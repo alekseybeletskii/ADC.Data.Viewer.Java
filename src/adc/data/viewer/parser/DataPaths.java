@@ -41,7 +41,7 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ADCreader;
+package adc.data.viewer.parser;
 
 import java.io.BufferedReader;
 import java.io.File;

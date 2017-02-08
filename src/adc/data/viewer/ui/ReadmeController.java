@@ -41,32 +41,23 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.dataProcessing;
-
-import java.util.Arrays;
-import java.util.OptionalDouble;
+package adc.data.viewer.ui;
 
 
-public class SimpleMath {
+import javafx.fxml.FXML;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-    private static double max=0;
-    private static double min=0;
+public class ReadmeController {
 
-    public static double getMax() {
-        return max;
-    }
+    private Stage stageReadme;
 
-    public static double getMin() {
-        return min;
-    }
+    public void setStageReadme(Stage stageReadme) { this.stageReadme = stageReadme; }
 
-    public static void findMaxMin(double [] anArray){
-
-        OptionalDouble arrayMax = Arrays.stream(anArray).max();
-        OptionalDouble arrayMin = Arrays.stream(anArray).min();
-
-        if (arrayMax.isPresent()) max = arrayMax.getAsDouble();
-        if (arrayMin.isPresent()) min = arrayMin.getAsDouble();
-
+    @FXML
+    private void handleOnMouseClick(MouseEvent mouseEvent) {
+        if(mouseEvent.getClickCount()>1){
+            stageReadme.close();
+        }
     }
 }

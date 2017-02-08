@@ -41,18 +41,15 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.controllers;
+package adc.data.viewer.ui;
 
 
-import adc.data.viewer.ADCPlotter.PlotsBuilder;
-import adc.data.viewer.MainApp;
-import adc.data.viewer.dataProcessing.SavitzkyGolayFilter;
+import adc.data.viewer.plotter.PlotsBuilder;
+import adc.data.viewer.processing.SavitzkyGolayFilter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-
-import  static adc.data.viewer.controllers.PlotterSettingController.*;
 
 public class PlotterController {
 
@@ -91,21 +88,21 @@ public class PlotterController {
 
     @FXML
     public void handleRawAndSGFilter(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
         plots.getCanvas().setPlotType("RawAndSGFilter");
         plots.getCanvas().draw();
     }
 
     @FXML
     public void handleSGFiltered(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
         plots.getCanvas().setPlotType("SGFiltered");
         plots.getCanvas().draw();
     }
 
     @FXML
     public void handleSGFilter(ActionEvent actionEvent) {
-        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(sgleft,sgright,sgorder));
+        plots.getCanvas().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
         plots.getCanvas().setPlotType("SGFilter");
         plots.getCanvas().draw();
     }
