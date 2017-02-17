@@ -46,6 +46,12 @@
 }
 
 
-button{
-    -fx-background-color: azure;
+.button{
+
+    /*-fx-background-color: cornflowerblue;*/
+}
+
+.axes{
+    -fx-background-color: transparent;
+
 }

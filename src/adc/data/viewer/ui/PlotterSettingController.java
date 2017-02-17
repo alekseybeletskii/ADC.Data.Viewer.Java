@@ -168,7 +168,7 @@ public class PlotterSettingController {
         chooseLineOrScatter.setValue(chosenLineOrScatter);
 
         chooseLineOrScatter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mainApp.getPlotterController().getPlots().getCanvas().setLineOrScatter(newValue);
+            mainApp.getPlotterController().getPlots().getCanvasData().setLineOrScatter(newValue);
             chosenLineOrScatter=newValue;
         });
     }
@@ -209,7 +209,7 @@ public class PlotterSettingController {
             fftwindow=FFTWindowType.getText();
             if ((xmin>xmax)|(ymin>ymax)) mainApp.getPlotterController().getPlots().getAxes().setAxesBasicSetup();
             else mainApp.getPlotterController().getPlots().getAxes().setAxesBounds(xmin, xmax,xstep,ymin,ymax,ystep );
-            mainApp.getPlotterController().getPlots().getCanvas().draw();
+            mainApp.getPlotterController().getPlots().getCanvasData().drawData();
             plotterSettingsStage.close();
         }
 

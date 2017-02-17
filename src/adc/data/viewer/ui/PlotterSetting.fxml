@@ -73,6 +73,8 @@
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label text="Axes setting" GridPane.columnSpan="2147483647">
@@ -92,6 +94,10 @@
                   <Label text="Ystep" GridPane.rowIndex="6" />
                   <TextField fx:id="manualXstep" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <TextField fx:id="manualYstep" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <Label text="Xticks" GridPane.rowIndex="7" />
+                  <Label text="Yticks" GridPane.rowIndex="8" />
+                  <TextField disable="true" promptText="10" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <TextField disable="true" promptText="10" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                </children>
             </GridPane>
             <GridPane layoutX="168.0" layoutY="10.0">
@@ -107,6 +113,8 @@
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <Label text="Plots setting" GridPane.columnSpan="2147483647">
@@ -136,6 +144,8 @@
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <Label text="SGFilter setting" GridPane.columnSpan="2147483647">
@@ -167,6 +177,8 @@
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <Label text="Spectrogram setting" GridPane.columnSpan="2147483647">

@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/resources/jar</output-path>
     <properties id="javafx-properties">
       <options>
-        <option name="appClass" value="adc.data.viewer.MainApp" />
+        <option name="appClass" value="adc.data.viewer.ui.MainApp" />
         <option name="description" value="" />
         <option name="htmlPlaceholderId" value="" />
         <option name="title" value="ADCDataViewer" />

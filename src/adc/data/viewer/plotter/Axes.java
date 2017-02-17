@@ -58,8 +58,9 @@ import static java.lang.Math.abs;
 public class Axes extends Pane {
     private NumberAxis xAxis;
     private NumberAxis yAxis;
-    private double xOffset;
-    private double yOffset;
+    private NumberAxis yRAxis;
+    private double xAxisOffset;
+    private double yAxisOffset;
     private double xTicksAmount;
     private double yTicksAmount;
     private double xTickStepBasic;
@@ -71,10 +72,10 @@ public class Axes extends Pane {
     private double xScale;
     private double yScale;
 
-    public double getxScale() {
+    public double getXScale() {
         return xScale;
     }
-    public double getyScale() {
+    public double getYScale() {
         return yScale;
     }
     public double getXAxisTicksAmount() {
@@ -90,13 +91,20 @@ public class Axes extends Pane {
         this.yTicksAmount = yAxisTicksAmount;
     }
     public double getXAxisOffset() {
-        return xOffset;
+        return xAxisOffset;
     }
     private void setXAxisOffset(double XAxisOffset) {
-        this.xOffset = XAxisOffset;
+        this.xAxisOffset = XAxisOffset;
+    }
+    public double getYAxisOffset() {
+        return yAxisOffset;
+    }
+    public void setYAxisOffset(double yOffset) {
+        this.yAxisOffset = yOffset;
     }
 
-     Axes(double xMinBasic, double xMaxBasic,  double yMinBasic, double yMaxBasic,  double xTicksAmount, double yTicksAmount) {
+
+    Axes(double xMinBasic, double xMaxBasic,  double yMinBasic, double yMaxBasic,  double xTicksAmount, double yTicksAmount) {
 
          this.xTicksAmount = xTicksAmount;
          this.yTicksAmount = yTicksAmount;
@@ -107,7 +115,11 @@ public class Axes extends Pane {
          setTickStepBasic();
          PlotterSettingController.setCurrentAxesSettings(xMinBasic,xMaxBasic,xTickStepBasic,yMinBasic,yMaxBasic,yTickStepBasic);
 
+
         xAxis = new NumberAxis("time, ms", xMinBasic, xMaxBasic, xTickStepBasic);
+        xAxis.getStylesheets().add("/css/plotter.css");
+        xAxis.getStyleClass().add("axes");
+
         xAxis.setLabel("time, ms");
         xAxis.setSide(Side.BOTTOM);
         xAxis.setMinorTickVisible(true);
@@ -115,23 +127,37 @@ public class Axes extends Pane {
         xAxis.setAnimated(false);
 
         yAxis = new NumberAxis("a.u.",yMinBasic, yMaxBasic, yTickStepBasic);
+        yAxis.getStylesheets().add("/css/plotter.css");
+        yAxis.getStyleClass().add("axes");
+
         yAxis.setLabel("a.u.");
         yAxis.setSide(Side.LEFT);
         yAxis.setMinorTickVisible(true);
         yAxis.setMinorTickCount(2);
         yAxis.setAnimated(false);
 
+
+        yRAxis = new NumberAxis();
+        yRAxis.setSide(Side.RIGHT);
+        yRAxis.setAnimated(false);
+        yRAxis.setTickLabelsVisible(false);
+        yRAxis.setTickMarkVisible(false);
+
         xAxis.layoutYProperty().bind(heightProperty());
-        xAxis.layoutXProperty().bind(Bindings.subtract((Bindings.subtract(widthProperty(),widthProperty())),1));
+        xAxis.layoutXProperty().bind(Bindings.subtract((Bindings.subtract(widthProperty(),widthProperty())),0));
         yAxis.layoutYProperty().bind(Bindings.subtract(heightProperty(),yAxis.heightProperty()));
-        yAxis.layoutXProperty().bind(Bindings.subtract(0,yAxis.widthProperty()));
+        yAxis.layoutXProperty().bind(Bindings.subtract(1,yAxis.widthProperty()));
+
+        yRAxis.layoutYProperty().bind(Bindings.subtract(heightProperty(),yRAxis.heightProperty()));
+        yRAxis.layoutXProperty().bind(xAxis.widthProperty());
 
         yAxis.prefHeightProperty().bind(heightProperty());
         xAxis.prefWidthProperty().bind(widthProperty());
+        yRAxis.prefHeightProperty().bind(heightProperty());
 
 
 
-        getChildren().setAll(xAxis, yAxis);
+        getChildren().setAll(xAxis, yAxis, yRAxis);
 
     }
 
@@ -143,8 +169,8 @@ public class Axes extends Pane {
         yAxis.setUpperBound(yMaxBasic);
         xAxis.setTickUnit(xTickStepBasic);
         yAxis.setTickUnit(yTickStepBasic);
-        this.xOffset =0.0;
-        this.yOffset =0.0;
+        xAxisOffset = xMinBasic;
+        yAxisOffset = yMinBasic;
         PlotterSettingController.setCurrentAxesSettings( xMinBasic,xMaxBasic,xTickStepBasic,yMinBasic,yMaxBasic,yTickStepBasic);
     }
 
@@ -158,42 +184,13 @@ public class Axes extends Pane {
 
 private void setTickStepBasic (){
     this.xTickStepBasic=abs(xMaxBasic-xMinBasic)/xTicksAmount;
-    if ((yMinBasic<0.0&yMaxBasic<0.0)|(yMinBasic>0.0&yMaxBasic>0.0))
-        this.yTickStepBasic=abs(yMinBasic-yMaxBasic)/yTicksAmount;
-    else if(yMinBasic==0.0)
-        this.yTickStepBasic=abs(yMaxBasic)/yTicksAmount;
-    else if (abs(yMinBasic/yMaxBasic)<0.2)
-        this.yTickStepBasic=abs(yMinBasic);
-    else if (abs(yMaxBasic/yMinBasic)<0.2)
-        this.yTickStepBasic=abs(yMaxBasic);
-    else
-        this.yTickStepBasic=abs(yMinBasic)/yTicksAmount;
+    this.yTickStepBasic=abs(yMinBasic-yMaxBasic)/yTicksAmount;
 }
+
+
     private void evalAxisTickStep(NumberAxis axis, double ticksAmount) {
-        if((axis.getLowerBound()<0.0&axis.getUpperBound()<0.0)|(axis.getLowerBound()>0.0&axis.getUpperBound()>0.0))
-            axis.setTickUnit(abs(axis.getLowerBound()-axis.getUpperBound())/ticksAmount);
-
-        else if(axis.getLowerBound()==0.0)
-            axis.setTickUnit(abs(axis.getUpperBound())/ticksAmount);
-        else if(axis.getUpperBound()==0.0)
-            axis.setTickUnit(abs(axis.getLowerBound())/ticksAmount);
-
-        else if(abs(axis.getLowerBound()/axis.getUpperBound())<=0.01)
-            axis.setTickUnit(abs(axis.getUpperBound())/ticksAmount );
-
-        else if(abs(axis.getUpperBound()/axis.getLowerBound())<=0.01)
-            axis.setTickUnit(abs(axis.getLowerBound())/ticksAmount);
-
-        else if(abs(axis.getLowerBound()/axis.getUpperBound())<0.1)
-            axis.setTickUnit(abs(axis.getLowerBound()));
-        else if(abs(axis.getUpperBound()/axis.getLowerBound())<0.1)
-            axis.setTickUnit((abs(axis.getLowerBound()) /ticksAmount));
-
-        else
-            axis.setTickUnit(abs(axis.getLowerBound()) /ticksAmount);
+        axis.setTickUnit(abs(axis.getLowerBound()-axis.getUpperBound())/ticksAmount);
     }
-
-
 
 
     public void setAxesBounds (double xMin, double xMax, double xStep, double yMin, double yMax, double yStep){
@@ -204,19 +201,20 @@ private void setTickStepBasic (){
         yAxis.setUpperBound(yMax);
         yAxis.setTickUnit(yStep);
         setXAxisOffset(xMin);
+        setYAxisOffset(yMin);
     }
 
     void axesZoomRescale(DoubleProperty zoomTopLeftX, DoubleProperty zoomTopLeftY, DoubleProperty zoomBottomRightX, DoubleProperty zoomBottomRightY)
     {
-        double xScale = abs((xAxis.getUpperBound()-xAxis.getLowerBound()) /xAxis.getWidth());
-        double yScale = abs((yAxis.getUpperBound()-yAxis.getLowerBound()) /yAxis.getHeight());
-        double xOffset = (zoomTopLeftX.get())*xScale;
+
+        double xOffset = (zoomTopLeftX.get())/xAxis.getScale();
         xAxis.setLowerBound(xAxis.getLowerBound()+ xOffset);
-        xAxis.setUpperBound(xAxis.getLowerBound()+ (zoomBottomRightX.get()- zoomTopLeftX.get())*xScale);
+        xAxis.setUpperBound(xAxis.getLowerBound()+ (zoomBottomRightX.get()- zoomTopLeftX.get())/xAxis.getScale());
         setXAxisOffset(xAxis.getLowerBound());
-        double yOffset = (zoomBottomRightY.get()-yAxis.getHeight())*yScale;
+        double yOffset = (zoomBottomRightY.get()-yAxis.getHeight())/-yAxis.getScale();
         yAxis.setLowerBound(yAxis.getLowerBound()-yOffset);
-        yAxis.setUpperBound(yAxis.getLowerBound()+(zoomBottomRightY.get()- zoomTopLeftY.get())*yScale);
+        yAxis.setUpperBound(yAxis.getLowerBound()+(zoomBottomRightY.get()- zoomTopLeftY.get())/-yAxis.getScale());
+        setYAxisOffset(yAxis.getLowerBound());
         evalAxisTickStep(xAxis,xTicksAmount);
         evalAxisTickStep(yAxis,yTicksAmount);
 
@@ -225,17 +223,21 @@ private void setTickStepBasic (){
     }
 
     void axesPanRescale (double dxPan, double dyPan){
-        double xScale = abs((xAxis.getUpperBound()-xAxis.getLowerBound()) /xAxis.getWidth());
-        double yScale = abs((yAxis.getUpperBound()-yAxis.getLowerBound()) /yAxis.getHeight());
-        xAxis.setLowerBound(xAxis.getLowerBound()- dxPan*xScale);
-        yAxis.setLowerBound(yAxis.getLowerBound()+ dyPan*yScale);
-        xAxis.setUpperBound(xAxis.getUpperBound()- dxPan*xScale);
-        yAxis.setUpperBound(yAxis.getUpperBound()+ dyPan*yScale);
+
+        xAxis.setLowerBound(xAxis.getLowerBound()- dxPan/xAxis.getScale());
+        yAxis.setLowerBound(yAxis.getLowerBound()+ dyPan/-yAxis.getScale());
+        xAxis.setUpperBound(xAxis.getUpperBound()- dxPan/xAxis.getScale());
+        yAxis.setUpperBound(yAxis.getUpperBound()+ dyPan/-yAxis.getScale());
         setXAxisOffset(xAxis.getLowerBound());
+        setYAxisOffset(yAxis.getLowerBound());
         evalAxisTickStep(xAxis,xTicksAmount);
         evalAxisTickStep(yAxis,yTicksAmount);
         PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),xAxis.getTickUnit(),yAxis.getLowerBound(),yAxis.getUpperBound(),yAxis.getTickUnit());
 
+
+
     }
+
+
 
 }

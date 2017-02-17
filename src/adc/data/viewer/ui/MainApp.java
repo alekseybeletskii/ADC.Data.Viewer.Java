@@ -168,14 +168,14 @@ public class MainApp extends Application {
                 SignalMarker sigmrk =new SignalMarker(ii, false, color, siglabel, dataParser.getFileNumbers()[ii]);
                 sigmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
                     if(plotterController!=null) {
-                        plotterController.getPlots().getCanvas().draw();
+                        plotterController.getPlots().getCanvasData().drawData();
                     }
                 }
                 );
 
                 sigmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
                     if(plotterController!=null) {
-                        plotterController.getPlots().getCanvas().draw();
+                        plotterController.getPlots().getCanvasData().drawData();
                     }
                 }
                 );
@@ -204,13 +204,6 @@ public class MainApp extends Application {
             plotterController.setMainApp(this);
             plotterController.setPlotsOnPane();
 
-//            if(plotsStage!=null)plotsStage.close();
-//            plotsStage = new Stage();
-//            plotsStage.setTitle("selected ADC signals");
-//            plotsStage.getIcons().add(new Image("images/IPP-logo.png"));
-//            Scene scene = new Scene(plotsLayout);
-//            plotsStage.setScene(scene);
-//            plotsStage.show();
 
             signalsOverviewController.getSignalsOverviewRightPane().getChildren().addAll(plotsLayout);
             AnchorPane.setLeftAnchor(plotsLayout, 0.0);
@@ -218,8 +211,10 @@ public class MainApp extends Application {
             AnchorPane.setBottomAnchor(plotsLayout, 0.0);
             AnchorPane.setTopAnchor(plotsLayout, 0.0);
 
-            plotterController.getPlots().getCanvas().widthProperty().addListener(it -> plotterController.getPlots().getCanvas().draw());
-            plotterController.getPlots().getCanvas().heightProperty().addListener(it -> plotterController.getPlots().getCanvas().draw());
+            plotterController.getPlots().getCanvasData().widthProperty().addListener(it -> plotterController.getPlots().getCanvasData().drawData());
+            plotterController.getPlots().getCanvasData().heightProperty().addListener(it -> plotterController.getPlots().getCanvasData().drawData());
+            plotterController.getPlots().getCanvasMesh().widthProperty().addListener(it -> plotterController.getPlots().getCanvasMesh().drawMeshZeroLines());
+            plotterController.getPlots().getCanvasMesh().heightProperty().addListener(it -> plotterController.getPlots().getCanvasMesh().drawMeshZeroLines());
 
         } catch (IOException e) {
             e.printStackTrace();

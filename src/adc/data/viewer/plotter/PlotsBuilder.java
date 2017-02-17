@@ -62,26 +62,39 @@ import static java.lang.Math.abs;
 
     public class PlotsBuilder extends AnchorPane {
 
-    private  Axes axes;
-    private CanvasDrawing canvas;
+
+
+        private CanvasDataDrawing canvasMesh;
+        private  Axes axes;
+    private CanvasDataDrawing canvasData;
     private PlotterController plotterController;
     private Rectangle zoomRectangle;
+        private MainApp mainApp;
 
-    public CanvasDrawing getCanvas() {
-        return canvas;
+        public CanvasDataDrawing getCanvasData() {
+        return canvasData;
     }
+        public CanvasDataDrawing getCanvasMesh() {
+            return canvasMesh;
+        }
+
     public Axes getAxes() {
         return axes;
     }
 
     public PlotsBuilder(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController){
         this.plotterController=plotterController;
-
+        this.mainApp = mainApp;
         this.zoomRectangle =null;
-        buildAxes(mainApp);
-        canvas = new CanvasDrawing(mainApp, axes,  "Raw");
-        canvas.widthProperty().bind(axes.getXAxis().widthProperty());
-        canvas.heightProperty().bind(axes.getYAxis().heightProperty());
+
+        buildAxes();
+
+        getChildren().add(axes);
+        AnchorPane.setLeftAnchor(axes, 0.0);
+        AnchorPane.setRightAnchor(axes, 0.0);
+        AnchorPane.setBottomAnchor(axes, 0.0);
+        AnchorPane.setTopAnchor(axes, 0.0);
+
 
         axesAnchorPane.getChildren().add(this);
         AnchorPane.setLeftAnchor(this, 70.0);
@@ -89,23 +102,33 @@ import static java.lang.Math.abs;
         AnchorPane.setBottomAnchor(this, 50.0);
         AnchorPane.setTopAnchor(this, 30.0);
 
-//        this.setStyle("-fx-background-color: rgb(255, 255, 255);");
 
-        getChildren().addAll(axes, canvas);
-        AnchorPane.setLeftAnchor(canvas, 0.0);
-        AnchorPane.setRightAnchor(canvas, 0.0);
-        AnchorPane.setBottomAnchor(canvas, 0.0);
-        AnchorPane.setTopAnchor(canvas, 0.0);
-        AnchorPane.setLeftAnchor(axes, 0.0);
-        AnchorPane.setRightAnchor(axes, 0.0);
-        AnchorPane.setBottomAnchor(axes, 0.0);
-        AnchorPane.setTopAnchor(axes, 0.0);
+
+        canvasMesh = new CanvasDataDrawing(mainApp, axes,  "Raw");
+        canvasMesh.widthProperty().bind(axes.getXAxis().widthProperty());
+        canvasMesh.heightProperty().bind(axes.getYAxis().heightProperty());
+        getChildren().add(canvasMesh);
+        AnchorPane.setLeftAnchor(canvasMesh, 0.0);
+        AnchorPane.setRightAnchor(canvasMesh, 0.0);
+        AnchorPane.setBottomAnchor(canvasMesh, 0.0);
+        AnchorPane.setTopAnchor(canvasMesh, 0.0);
+
+
+        canvasData = new CanvasDataDrawing(mainApp, axes,  "Raw");
+        canvasData.widthProperty().bind(axes.getXAxis().widthProperty());
+        canvasData.heightProperty().bind(axes.getYAxis().heightProperty());
+        getChildren().add(canvasData);
+        AnchorPane.setLeftAnchor(canvasData, 0.0);
+        AnchorPane.setRightAnchor(canvasData, 0.0);
+        AnchorPane.setBottomAnchor(canvasData, 0.0);
+        AnchorPane.setTopAnchor(canvasData, 0.0);
 
         showMouseXY();
         zoom();
+
     }
 
-    private void buildAxes(MainApp mainApp) {
+    private void buildAxes() {
 
         PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
         PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
@@ -137,8 +160,8 @@ import static java.lang.Math.abs;
         double absMaxYValue = abs(maxYValue)>abs(minYValue)?abs(maxYValue):abs(minYValue);
         double xMinBasic = 0.0;
         double xMaxBasic = longestTime; // milliseconds
-        double xAxisTicksAmount =10;
-        double yAxisTicksAmount =10;
+        double xAxisTicksAmount =10.0;
+        double yAxisTicksAmount =10.0;
 
         this.axes = new Axes(xMinBasic, xMaxBasic, -absMaxYValue, absMaxYValue, xAxisTicksAmount,yAxisTicksAmount);
 
@@ -152,7 +175,7 @@ import static java.lang.Math.abs;
         DoubleProperty panStartX = new SimpleDoubleProperty();
         DoubleProperty panStartY = new SimpleDoubleProperty();
 
-        canvas.setOnMousePressed(mpressed -> {
+        canvasData.setOnMousePressed(mpressed -> {
             if(mpressed.getButton()== MouseButton.PRIMARY){
                 zoomTopLeftX.set(mpressed.getX());
                 zoomTopLeftY.set(mpressed.getY());
@@ -171,7 +194,7 @@ import static java.lang.Math.abs;
         });
 
 
-        canvas.setOnMouseDragged(mdragged -> {
+        canvasData.setOnMouseDragged(mdragged -> {
 
             setMouseXYText(mdragged);
 
@@ -203,25 +226,31 @@ import static java.lang.Math.abs;
                 panStartY.set(mdragged.getY());
 
                 this.getScene().setCursor(Cursor.OPEN_HAND);
-                canvas.draw();
+                canvasData.drawData();
+
 
             }
         });
 
-        canvas.setOnMouseReleased(mreleased -> {
+        canvasData.setOnMouseReleased(mreleased -> {
             if(mreleased.getButton()== MouseButton.PRIMARY) {
                 if (zoomRectangle.getWidth() == 0.0 & zoomRectangle.getHeight() == 0.0) {
                     axes.setAxesBasicSetup();
                     this.getChildren().remove(zoomRectangle);
+
                     zoomRectangle = null;
-                    canvas.draw();
+
+                    canvasData.drawData();
+
                 } else if (zoomRectangle.getWidth() != 0.0 & zoomRectangle.getHeight() != 0.0) {
 
                     axes.axesZoomRescale(zoomTopLeftX, zoomTopLeftY, zoomBottomRightX, zoomBottomRightY);
                     this.getChildren().remove(zoomRectangle);
-                    zoomRectangle = null;
 
-                    canvas.draw();
+
+                    canvasData.drawData();
+
+                    zoomRectangle = null;
                 }
             }
             this.getScene().setCursor(Cursor.DEFAULT);
@@ -230,16 +259,25 @@ import static java.lang.Math.abs;
     }
 
     private void showMouseXY() {
-        this.setOnMouseMoved(this::setMouseXYText);
+        canvasData.setOnMouseMoved(this::setMouseXYText);
     }
 
     private void setMouseXYText(MouseEvent event) {
-        double xScale = (axes.getXAxis().getUpperBound()-axes.getXAxis().getLowerBound()) /axes.getXAxis().getWidth();
-        double yScale = (axes.getYAxis().getUpperBound()-axes.getYAxis().getLowerBound()) /axes.getYAxis().getHeight();
-        String coordinatesAxes = String.format("x= %.4f ; y= %.4f",
-                event.getX()* xScale+axes.getXAxisOffset(),
-                -(event.getY()-canvas.getShiftYZero()-1)* yScale);
+
+        String coordinatesAxes = String.format("x= %.6f ; y= %.6f",
+
+                (event.getX()+canvasData.getShiftXZero())/ axes.getXAxis().getScale(),
+                -(event.getY()- canvasData.getShiftYZero())/ -axes.getYAxis().getScale());
         plotterController.getXyLabel().setText(coordinatesAxes);
     }
+
+        void canvasUnbind(CanvasDataDrawing canv){
+            canv.heightProperty().unbind();
+            canv.widthProperty().unbind();
+        }
+        void canvasBindBasic(CanvasDataDrawing canv){
+            canv.widthProperty().bind(axes.getXAxis().widthProperty());
+            canv.heightProperty().bind(axes.getYAxis().heightProperty());
+        }
 
 }
