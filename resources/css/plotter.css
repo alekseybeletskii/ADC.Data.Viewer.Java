@@ -46,12 +46,35 @@
 }
 
 
-.button{
+.axis-tick-mark {
+    -fx-stroke: darkmagenta;
+    -fx-stroke-width: 1;
 
-    /*-fx-background-color: cornflowerblue;*/
+}
+.axis-minor-tick-mark {
+    -fx-stroke: darkmagenta;
+    -fx-stroke-width: 1;
+
 }
 
-.axes{
+.axis-label  {
+    -fx-font-family: sans-serif ;
+    -fx-text-fill: darkblue;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+
+.axis {
     -fx-background-color: transparent;
-
+    -fx-tick-label-fill: darkmagenta;
 }
+
+.axesBorder{
+    -fx-fill: transparent;
+    -fx-stroke: darkmagenta;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
+}
+
+

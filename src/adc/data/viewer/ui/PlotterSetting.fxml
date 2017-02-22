@@ -92,8 +92,8 @@
                   <TextField fx:id="manualXmax" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label text="Xstep" GridPane.rowIndex="5" />
                   <Label text="Ystep" GridPane.rowIndex="6" />
-                  <TextField fx:id="manualXstep" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField fx:id="manualYstep" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="manualXstep" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="manualYstep" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label text="Xticks" GridPane.rowIndex="7" />
                   <Label text="Yticks" GridPane.rowIndex="8" />
                   <TextField disable="true" promptText="10" GridPane.columnIndex="1" GridPane.rowIndex="7" />

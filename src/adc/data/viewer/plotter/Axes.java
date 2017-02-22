@@ -45,51 +45,37 @@ package adc.data.viewer.plotter;
 
 
 //import adc.data.viewer.ui.PlotterSettingController;
+import adc.data.viewer.model.SignalMarker;
+import adc.data.viewer.processing.SimpleMath;
+import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterSettingController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Side;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import org.gillius.jfxutils.chart.StableTicksAxis;
 
 import static java.lang.Math.abs;
 
 
 public class Axes extends Pane {
-    private NumberAxis xAxis;
-    private NumberAxis yAxis;
-    private NumberAxis yRAxis;
+    private MainApp mainApp;
+
+    private long mostSamples;
+    private double absMaxYValue;
+    private StableTicksAxis xAxis;
+    private StableTicksAxis yAxis;
+
     private double xAxisOffset;
     private double yAxisOffset;
-    private double xTicksAmount;
-    private double yTicksAmount;
-    private double xTickStepBasic;
-    private double yTickStepBasic;
     private double xMinBasic;
     private double xMaxBasic;
     private double yMinBasic;
     private double yMaxBasic;
-    private double xScale;
-    private double yScale;
+    private Rectangle axesBoxRectangle;
 
-    public double getXScale() {
-        return xScale;
-    }
-    public double getYScale() {
-        return yScale;
-    }
-    public double getXAxisTicksAmount() {
-        return xTicksAmount;
-    }
-    public void setXAxisTicksAmount(double xAxisTicksAmount) {
-        this.xTicksAmount = xAxisTicksAmount;
-    }
-    public double getYAxisTicksAmount() {
-        return yTicksAmount;
-    }
-    public void setYAxisTicksAmount(double yAxisTicksAmount) {
-        this.yTicksAmount = yAxisTicksAmount;
-    }
+
     public double getXAxisOffset() {
         return xAxisOffset;
     }
@@ -104,60 +90,57 @@ public class Axes extends Pane {
     }
 
 
-    Axes(double xMinBasic, double xMaxBasic,  double yMinBasic, double yMaxBasic,  double xTicksAmount, double yTicksAmount) {
-
-         this.xTicksAmount = xTicksAmount;
-         this.yTicksAmount = yTicksAmount;
-         this.xMinBasic= xMinBasic;
-         this.xMaxBasic= xMaxBasic;
-         this.yMinBasic= yMinBasic;
-         this.yMaxBasic= yMaxBasic;
-         setTickStepBasic();
-         PlotterSettingController.setCurrentAxesSettings(xMinBasic,xMaxBasic,xTickStepBasic,yMinBasic,yMaxBasic,yTickStepBasic);
+    Axes(MainApp mainApp) {
+        this.mainApp= mainApp;
 
 
-        xAxis = new NumberAxis("time, ms", xMinBasic, xMaxBasic, xTickStepBasic);
-        xAxis.getStylesheets().add("/css/plotter.css");
-        xAxis.getStyleClass().add("axes");
+        axesBoxRectangle = new Rectangle(0,0);
+
+
+        obtainDataAndTimeMargins();
+        PlotterSettingController.setCurrentAxesSettings(xMinBasic,xMaxBasic,yMinBasic,yMaxBasic);
+
+
+        xAxis = new StableTicksAxis(xMinBasic, xMaxBasic);
+//        xAxis.getStylesheets().add("/css/plotter.css");
+//        xAxis.getStyleClass().add("axes");
 
         xAxis.setLabel("time, ms");
         xAxis.setSide(Side.BOTTOM);
         xAxis.setMinorTickVisible(true);
-        xAxis.setMinorTickCount(2);
+        xAxis.setMinorTickCount(1);
         xAxis.setAnimated(false);
 
-        yAxis = new NumberAxis("a.u.",yMinBasic, yMaxBasic, yTickStepBasic);
-        yAxis.getStylesheets().add("/css/plotter.css");
-        yAxis.getStyleClass().add("axes");
+        yAxis = new StableTicksAxis(yMinBasic, yMaxBasic);
+//        yAxis.getStylesheets().add("/css/plotter.css");
+//        yAxis.getStyleClass().add("axes");
 
         yAxis.setLabel("a.u.");
         yAxis.setSide(Side.LEFT);
         yAxis.setMinorTickVisible(true);
-        yAxis.setMinorTickCount(2);
+        yAxis.setMinorTickCount(1);
         yAxis.setAnimated(false);
 
-
-        yRAxis = new NumberAxis();
-        yRAxis.setSide(Side.RIGHT);
-        yRAxis.setAnimated(false);
-        yRAxis.setTickLabelsVisible(false);
-        yRAxis.setTickMarkVisible(false);
 
         xAxis.layoutYProperty().bind(heightProperty());
         xAxis.layoutXProperty().bind(Bindings.subtract((Bindings.subtract(widthProperty(),widthProperty())),0));
         yAxis.layoutYProperty().bind(Bindings.subtract(heightProperty(),yAxis.heightProperty()));
-        yAxis.layoutXProperty().bind(Bindings.subtract(1,yAxis.widthProperty()));
+        yAxis.layoutXProperty().bind(Bindings.subtract(0.0,yAxis.widthProperty()));
 
-        yRAxis.layoutYProperty().bind(Bindings.subtract(heightProperty(),yRAxis.heightProperty()));
-        yRAxis.layoutXProperty().bind(xAxis.widthProperty());
 
         yAxis.prefHeightProperty().bind(heightProperty());
         xAxis.prefWidthProperty().bind(widthProperty());
-        yRAxis.prefHeightProperty().bind(heightProperty());
 
 
+        axesBoxRectangle.widthProperty().bind(widthProperty());
+        axesBoxRectangle.heightProperty().bind(heightProperty());
+        axesBoxRectangle.layoutXProperty().bind(Bindings.add(xAxis.layoutXProperty(),0));
+        axesBoxRectangle.layoutYProperty().bind(Bindings.add(yAxis.layoutYProperty(),0));
 
-        getChildren().setAll(xAxis, yAxis, yRAxis);
+        axesBoxRectangle.getStyleClass().add("axesBorder");
+
+        getChildren().setAll(axesBoxRectangle,xAxis, yAxis);
+
 
     }
 
@@ -167,39 +150,29 @@ public class Axes extends Pane {
         xAxis.setUpperBound(xMaxBasic);
         yAxis.setLowerBound(yMinBasic);
         yAxis.setUpperBound(yMaxBasic);
-        xAxis.setTickUnit(xTickStepBasic);
-        yAxis.setTickUnit(yTickStepBasic);
         xAxisOffset = xMinBasic;
         yAxisOffset = yMinBasic;
-        PlotterSettingController.setCurrentAxesSettings( xMinBasic,xMaxBasic,xTickStepBasic,yMinBasic,yMaxBasic,yTickStepBasic);
+        PlotterSettingController.setCurrentAxesSettings( xMinBasic,xMaxBasic,yMinBasic,yMaxBasic);
     }
 
-     NumberAxis getXAxis() {
+    public StableTicksAxis getXAxis() {
         return xAxis;
     }
 
-     NumberAxis getYAxis() {
+    public StableTicksAxis getYAxis() {
         return yAxis;
     }
 
-private void setTickStepBasic (){
-    this.xTickStepBasic=abs(xMaxBasic-xMinBasic)/xTicksAmount;
-    this.yTickStepBasic=abs(yMinBasic-yMaxBasic)/yTicksAmount;
-}
 
 
-    private void evalAxisTickStep(NumberAxis axis, double ticksAmount) {
-        axis.setTickUnit(abs(axis.getLowerBound()-axis.getUpperBound())/ticksAmount);
-    }
 
-
-    public void setAxesBounds (double xMin, double xMax, double xStep, double yMin, double yMax, double yStep){
+    public void setAxesBounds (double xMin, double xMax,  double yMin, double yMax){
         xAxis.setLowerBound(xMin);
         xAxis.setUpperBound(xMax);
-        xAxis.setTickUnit(xStep);
+
         yAxis.setLowerBound(yMin);
         yAxis.setUpperBound(yMax);
-        yAxis.setTickUnit(yStep);
+
         setXAxisOffset(xMin);
         setYAxisOffset(yMin);
     }
@@ -215,10 +188,8 @@ private void setTickStepBasic (){
         yAxis.setLowerBound(yAxis.getLowerBound()-yOffset);
         yAxis.setUpperBound(yAxis.getLowerBound()+(zoomBottomRightY.get()- zoomTopLeftY.get())/-yAxis.getScale());
         setYAxisOffset(yAxis.getLowerBound());
-        evalAxisTickStep(xAxis,xTicksAmount);
-        evalAxisTickStep(yAxis,yTicksAmount);
 
-        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),xAxis.getTickUnit(),yAxis.getLowerBound(),yAxis.getUpperBound(),yAxis.getTickUnit());
+        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound());
 
     }
 
@@ -230,14 +201,41 @@ private void setTickStepBasic (){
         yAxis.setUpperBound(yAxis.getUpperBound()+ dyPan/-yAxis.getScale());
         setXAxisOffset(xAxis.getLowerBound());
         setYAxisOffset(yAxis.getLowerBound());
-        evalAxisTickStep(xAxis,xTicksAmount);
-        evalAxisTickStep(yAxis,yTicksAmount);
-        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),xAxis.getTickUnit(),yAxis.getLowerBound(),yAxis.getUpperBound(),yAxis.getTickUnit());
 
-
+        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound());
 
     }
 
+    public void obtainDataAndTimeMargins() {
 
+xMinBasic= 0.0;
+xMaxBasic= 0.0;
+yMinBasic= 0.0;
+yMaxBasic= 0.0;
+
+        double dt; // time scale of longest amongst selected signal, ms
+
+        //detect longest signal
+        for (SignalMarker signalMarker : mainApp.getSignalList()){
+
+            if (signalMarker.getSignalSelected())
+            {
+                dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
+                mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
+
+                if (mostSamples *dt > xMaxBasic) {
+                    xMaxBasic = mostSamples *dt;
+                }
+                double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
+                SimpleMath.findMaxMin(testSignal);
+                if (SimpleMath.getMax()> yMaxBasic) yMaxBasic =SimpleMath.getMax();
+                if (SimpleMath.getMin()< yMinBasic) yMinBasic =SimpleMath.getMin();
+            }
+        }
+
+        absMaxYValue = abs(yMaxBasic)>abs(yMinBasic)?abs(yMaxBasic):abs(yMinBasic);
+        yMaxBasic=absMaxYValue;
+        yMinBasic=-absMaxYValue;
+    }
 
 }

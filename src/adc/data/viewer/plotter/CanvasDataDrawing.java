@@ -48,6 +48,7 @@ import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.processing.SavitzkyGolayFilter;
 import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.ui.MainApp;
+import adc.data.viewer.ui.PlotterSettingController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -60,11 +61,11 @@ import java.util.Arrays;
 import static java.lang.Math.round;
 
 
-/*
- * Canvas is normally not resizable but by overriding isResizable() and
- * binding its width and height to the width and height of the Pane it will
- * automatically resize.
- */
+ /*
+  * Canvas is normally not resizable but by overriding isResizable() and
+  * binding its width and height to the width and height of the Pane it will
+  * automatically resize.
+  */
 public class CanvasDataDrawing extends Canvas {
 
 
@@ -108,9 +109,9 @@ public class CanvasDataDrawing extends Canvas {
         this.mainApp = mainApp;
         this.axes = axes;
         this.allSignals = mainApp.getDataParser();
-        this.lineOrScatter = "line";
+        this.lineOrScatter = "line+scatter";
         this.pointSize =6;
-
+        PlotterSettingController.setChosenLineOrScatter(lineOrScatter);
         dx.bind(Bindings.divide(widthProperty(),Bindings.subtract(axes.getXAxis().upperBoundProperty(),axes.getXAxis().lowerBoundProperty())));
         dy.bind(Bindings.divide(heightProperty(),Bindings.subtract(axes.getYAxis().upperBoundProperty(),axes.getYAxis().lowerBoundProperty())));
         shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(),dx));
@@ -164,6 +165,7 @@ public class CanvasDataDrawing extends Canvas {
     public void drawData() {
 
         cleanCanvas();
+        drawmesh();
 
         graphicContext.setLineWidth(1);
         graphicContext.setLineDashes(0);
@@ -249,33 +251,35 @@ public class CanvasDataDrawing extends Canvas {
 
     public void drawmesh() {
 
-        graphicContext.setStroke(Color.DARKGRAY);
-        graphicContext.setLineWidth(1.0);
-        graphicContext.setLineDashes(3);
+            graphicContext.setStroke(Color.DARKGRAY);
+            graphicContext.setLineWidth(1.0);
+            graphicContext.setLineDashes(3);
 
-        //drawData X axis mesh
-        double ticksXNext = axes.getXAxis().getLowerBound();
-        while (ticksXNext < axes.getXAxis().getUpperBound())
-        {
-            graphicContext.beginPath();
-            graphicContext.moveTo(ticksXNext*dx.get()-shiftXZero.get()+0.5,getHeight());
-            graphicContext.lineTo(ticksXNext*dx.get()-shiftXZero.get()+0.5,0);
-            graphicContext.stroke();
-            ticksXNext = ticksXNext +axes.getXAxis().getTickUnit();
-        }
+            //drawData X axis mesh
+            double tickXNext = axes.getXAxis().getAxisFirstTick().get();
+            double tickXUnit = axes.getXAxis().getTickUnit().get();
 
-        //drawData Y axis mesh
-        double ticksYNext = axes.getYAxis().getLowerBound();
-        while (ticksYNext < axes.getYAxis().getUpperBound())
-        {
-            graphicContext.beginPath();
-            graphicContext.moveTo(0,-ticksYNext*dy.get()+ shiftYZero.get()+0.5);
-            graphicContext.lineTo(getWidth(),-ticksYNext*dy.get()+ shiftYZero.get()+0.5);
-            graphicContext.stroke();
-            ticksYNext = ticksYNext + axes.getYAxis().getTickUnit();
-        }
+            while (tickXNext < axes.getXAxis().getUpperBound()) {
+                tickXNext = tickXNext+tickXUnit;
+                graphicContext.beginPath();
+                graphicContext.moveTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, getHeight());
+                graphicContext.lineTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, 0);
+                graphicContext.stroke();
 
+            }
 
+            //drawData Y axis mesh
+            double tickYNext = axes.getYAxis().getAxisFirstTick().get();
+            double tickYUnit = axes.getYAxis().getTickUnit().get();
+
+            while (tickYNext < axes.getYAxis().getUpperBound()) {
+                tickYNext = tickYNext+tickYUnit;
+                graphicContext.beginPath();
+                graphicContext.moveTo(0, (int)( -tickYNext * dy.get() + shiftYZero.get()) + 0.5);
+                graphicContext.lineTo(getWidth(), (int)(-tickYNext * dy.get() + shiftYZero.get()) + 0.5);
+                graphicContext.stroke();
+
+            }
 
     }
 

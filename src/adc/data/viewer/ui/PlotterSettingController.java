@@ -68,14 +68,17 @@ public class PlotterSettingController {
     static Double xmin;
     static Double ymax;
     static Double xmax;
-    static Double xstep;
-    static Double ystep;
     static int sgleft;
     static int sgright;
     static int sgorder;
     static int fftsize;
     static String fftwindow;
     static int fftoverlap;
+
+    public static void setChosenLineOrScatter(String chosenLineOrScatter) {
+        PlotterSettingController.chosenLineOrScatter = chosenLineOrScatter;
+    }
+
     static String chosenLineOrScatter;
 
     private ObservableList<String> lineOrScatter = FXCollections.observableArrayList();
@@ -107,13 +110,11 @@ public class PlotterSettingController {
     @FXML
     private TextField FFTWindowOverlap;
 
-    public static void setCurrentAxesSettings(Double xmn, Double xmx, Double xstp, Double ymn, Double ymx, Double ystp){
+    public static void setCurrentAxesSettings(Double xmn, Double xmx,  Double ymn, Double ymx){
         xmin=xmn;
         xmax=xmx;
-        xstep=xstp;
         ymin=ymn;
         ymax=ymx;
-        ystep=ystp;
 
     }
 
@@ -154,8 +155,6 @@ public class PlotterSettingController {
         manualYmin.setText(String.valueOf(ymin));
         manualXmax.setText(String.valueOf(xmax));
         manualXmin.setText(String.valueOf(xmin));
-        manualXstep.setText(String.valueOf(xstep));
-        manualYstep.setText(String.valueOf(ystep));
         manualSGFilterLeft.setText(String.valueOf(sgleft));
         manualSGFilterRight.setText(String.valueOf(sgright));
         manualSGFilterOrder.setText(String.valueOf(sgorder));
@@ -163,7 +162,7 @@ public class PlotterSettingController {
         FFTWindowType.setText(fftwindow);
         FFTWindowOverlap.setText(String.valueOf(fftoverlap));
 
-        lineOrScatter.addAll("line","scatter","line+scatter");
+        lineOrScatter.addAll("line+scatter","line","scatter");
         chooseLineOrScatter.itemsProperty().setValue(lineOrScatter);
         chooseLineOrScatter.setValue(chosenLineOrScatter);
 
@@ -171,6 +170,7 @@ public class PlotterSettingController {
             mainApp.getPlotterController().getPlots().getCanvasData().setLineOrScatter(newValue);
             chosenLineOrScatter=newValue;
         });
+
     }
 
     @FXML
@@ -184,10 +184,8 @@ public class PlotterSettingController {
         if(
                 TestDataType.isDouble(manualXmin.getText())&&
                         TestDataType.isDouble(manualXmax.getText())&&
-                        TestDataType.isDouble(manualXstep.getText())&&
                         TestDataType.isDouble(manualYmin.getText())&&
                         TestDataType.isDouble(manualYmax.getText())&&
-                        TestDataType.isDouble(manualYstep.getText())&&
                         TestDataType.isInteger(manualSGFilterLeft.getText(),10)&&
                         TestDataType.isInteger(manualSGFilterRight.getText(),10)&&
                         TestDataType.isInteger(manualSGFilterOrder.getText(),10)&&
@@ -197,18 +195,17 @@ public class PlotterSettingController {
         {
             xmin=Double.parseDouble(manualXmin.getText());
             xmax=Double.parseDouble(manualXmax.getText());
-            xstep=Double.parseDouble(manualXstep.getText());
             ymin=Double.parseDouble(manualYmin.getText());
             ymax=Double.parseDouble(manualYmax.getText());
-            ystep=Double.parseDouble(manualYstep.getText());
             sgleft=Integer.parseInt(manualSGFilterLeft.getText());
             sgright=Integer.parseInt(manualSGFilterRight.getText());
             sgorder=Integer.parseInt(manualSGFilterOrder.getText());
             fftsize=Integer.parseInt(FFTSize.getText());
             fftoverlap=Integer.parseInt(FFTWindowOverlap.getText());
             fftwindow=FFTWindowType.getText();
+
             if ((xmin>xmax)|(ymin>ymax)) mainApp.getPlotterController().getPlots().getAxes().setAxesBasicSetup();
-            else mainApp.getPlotterController().getPlots().getAxes().setAxesBounds(xmin, xmax,xstep,ymin,ymax,ystep );
+            else mainApp.getPlotterController().getPlots().getAxes().setAxesBounds(xmin, xmax,ymin,ymax);
             mainApp.getPlotterController().getPlots().getCanvasData().drawData();
             plotterSettingsStage.close();
         }

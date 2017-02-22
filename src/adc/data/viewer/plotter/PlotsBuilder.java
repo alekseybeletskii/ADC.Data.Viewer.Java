@@ -46,8 +46,6 @@ package adc.data.viewer.plotter;
 import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterController;
 import adc.data.viewer.ui.PlotterSettingController;
-import adc.data.viewer.processing.SimpleMath;
-import adc.data.viewer.model.SignalMarker;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Cursor;
@@ -58,8 +56,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-import static java.lang.Math.abs;
-
     public class PlotsBuilder extends AnchorPane {
 
 
@@ -69,6 +65,7 @@ import static java.lang.Math.abs;
     private CanvasDataDrawing canvasData;
     private PlotterController plotterController;
     private Rectangle zoomRectangle;
+
         private MainApp mainApp;
 
         public CanvasDataDrawing getCanvasData() {
@@ -87,7 +84,10 @@ import static java.lang.Math.abs;
         this.mainApp = mainApp;
         this.zoomRectangle =null;
 
-        buildAxes();
+        PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
+        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
+
+        this.axes = new Axes(mainApp);
 
         getChildren().add(axes);
         AnchorPane.setLeftAnchor(axes, 0.0);
@@ -128,46 +128,8 @@ import static java.lang.Math.abs;
 
     }
 
-    private void buildAxes() {
 
-        PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
-        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
-
-        double longestTime =0; // longest signal, ms
-        double minYValue =0;
-        double maxYValue =0;
-        long samples;
-        double dt; // time scale of longest amongst selected signal, ms
-
-        //detect longest signal
-        for (SignalMarker signalMarker : mainApp.getSignalList()){
-
-            if (signalMarker.getSignalSelected())
-            {
-                dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
-                samples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
-
-                if (samples*dt > longestTime) {
-                    longestTime = samples*dt;
-                }
-                double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
-                SimpleMath.findMaxMin(testSignal);
-                if (SimpleMath.getMax()>maxYValue) maxYValue=SimpleMath.getMax();
-                if (SimpleMath.getMin()<minYValue) minYValue=SimpleMath.getMin();
-            }
-        }
-
-        double absMaxYValue = abs(maxYValue)>abs(minYValue)?abs(maxYValue):abs(minYValue);
-        double xMinBasic = 0.0;
-        double xMaxBasic = longestTime; // milliseconds
-        double xAxisTicksAmount =10.0;
-        double yAxisTicksAmount =10.0;
-
-        this.axes = new Axes(xMinBasic, xMaxBasic, -absMaxYValue, absMaxYValue, xAxisTicksAmount,yAxisTicksAmount);
-
-    }
-
-    private void zoom() {
+        private void zoom() {
         DoubleProperty zoomTopLeftX = new SimpleDoubleProperty();
         DoubleProperty zoomTopLeftY = new SimpleDoubleProperty();
         DoubleProperty zoomBottomRightX = new SimpleDoubleProperty();
@@ -228,32 +190,33 @@ import static java.lang.Math.abs;
                 this.getScene().setCursor(Cursor.OPEN_HAND);
                 canvasData.drawData();
 
-
             }
         });
 
         canvasData.setOnMouseReleased(mreleased -> {
             if(mreleased.getButton()== MouseButton.PRIMARY) {
-                if (zoomRectangle.getWidth() == 0.0 & zoomRectangle.getHeight() == 0.0) {
+                if (zoomRectangle.getWidth() == 0.0 & zoomRectangle.getHeight() == 0.0 & !mainApp.getSignalList().isEmpty()) {
+                    axes.obtainDataAndTimeMargins();
                     axes.setAxesBasicSetup();
                     this.getChildren().remove(zoomRectangle);
 
                     zoomRectangle = null;
 
-                    canvasData.drawData();
 
                 } else if (zoomRectangle.getWidth() != 0.0 & zoomRectangle.getHeight() != 0.0) {
 
                     axes.axesZoomRescale(zoomTopLeftX, zoomTopLeftY, zoomBottomRightX, zoomBottomRightY);
+
                     this.getChildren().remove(zoomRectangle);
 
 
-                    canvasData.drawData();
 
                     zoomRectangle = null;
                 }
             }
             this.getScene().setCursor(Cursor.DEFAULT);
+
+            canvasData.drawData();
 
         });
     }
@@ -271,13 +234,5 @@ import static java.lang.Math.abs;
         plotterController.getXyLabel().setText(coordinatesAxes);
     }
 
-        void canvasUnbind(CanvasDataDrawing canv){
-            canv.heightProperty().unbind();
-            canv.widthProperty().unbind();
-        }
-        void canvasBindBasic(CanvasDataDrawing canv){
-            canv.widthProperty().bind(axes.getXAxis().widthProperty());
-            canv.heightProperty().bind(axes.getYAxis().heightProperty());
-        }
 
 }
