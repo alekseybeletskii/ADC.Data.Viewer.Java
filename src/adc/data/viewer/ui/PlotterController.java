@@ -57,7 +57,7 @@ public class PlotterController {
     private  PlotsBuilder plots;
 
     @FXML
-    private AnchorPane axesAnchorPane;
+    private AnchorPane plotsLayout;
 
     @FXML
     private Label xyLabel;
@@ -75,7 +75,7 @@ public class PlotterController {
     }
     public void setPlotsOnPane() {
 
-        plots = new PlotsBuilder(mainApp, axesAnchorPane, this);
+        plots = new PlotsBuilder(mainApp, plotsLayout, this);
 
     }
 

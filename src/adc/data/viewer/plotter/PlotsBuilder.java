@@ -59,8 +59,6 @@ import javafx.scene.shape.StrokeType;
     public class PlotsBuilder extends AnchorPane {
 
 
-
-        private CanvasDataDrawing canvasMesh;
         private  Axes axes;
     private CanvasDataDrawing canvasData;
     private PlotterController plotterController;
@@ -71,9 +69,7 @@ import javafx.scene.shape.StrokeType;
         public CanvasDataDrawing getCanvasData() {
         return canvasData;
     }
-        public CanvasDataDrawing getCanvasMesh() {
-            return canvasMesh;
-        }
+
 
     public Axes getAxes() {
         return axes;
@@ -100,18 +96,11 @@ import javafx.scene.shape.StrokeType;
         AnchorPane.setLeftAnchor(this, 70.0);
         AnchorPane.setRightAnchor(this, 50.0);
         AnchorPane.setBottomAnchor(this, 50.0);
-        AnchorPane.setTopAnchor(this, 30.0);
+//        AnchorPane.setTopAnchor(this, 30.0);
+        AnchorPane.setTopAnchor(this, 0.0);
+        this.toBack();
 
 
-
-        canvasMesh = new CanvasDataDrawing(mainApp, axes,  "Raw");
-        canvasMesh.widthProperty().bind(axes.getXAxis().widthProperty());
-        canvasMesh.heightProperty().bind(axes.getYAxis().heightProperty());
-        getChildren().add(canvasMesh);
-        AnchorPane.setLeftAnchor(canvasMesh, 0.0);
-        AnchorPane.setRightAnchor(canvasMesh, 0.0);
-        AnchorPane.setBottomAnchor(canvasMesh, 0.0);
-        AnchorPane.setTopAnchor(canvasMesh, 0.0);
 
 
         canvasData = new CanvasDataDrawing(mainApp, axes,  "Raw");

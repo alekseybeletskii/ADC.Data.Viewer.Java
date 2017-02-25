@@ -51,7 +51,7 @@
   ~ 	********************* END LICENSE BLOCK ***********************************
   -->
 
-<AnchorPane fx:id="axesAnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterController">
+<AnchorPane fx:id="plotsLayout" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterController">
    <children>
       <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>

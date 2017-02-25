@@ -216,12 +216,6 @@ public class MainApp extends Application {
 
             plotterController.getPlots().getCanvasData().widthProperty().addListener(it -> plotterController.getPlots().getCanvasData().drawData());
             plotterController.getPlots().getCanvasData().heightProperty().addListener(it -> plotterController.getPlots().getCanvasData().drawData());
-//            plotterController.getPlots().getCanvasMesh().widthProperty().addListener(it -> plotterController.getPlots().getCanvasMesh().drawMeshZeroLines());
-//            plotterController.getPlots().getCanvasMesh().heightProperty().addListener(it -> plotterController.getPlots().getCanvasMesh().drawMeshZeroLines());
-
-
-//            plotterController.getPlots().getAxes().getXAxis().getTickUnit().addListener(observable -> plotterController.getPlots().getCanvasData().drawmesh());
-//            plotterController.getPlots().getAxes().getYAxis().getTickUnit().addListener(observable -> plotterController.getPlots().getCanvasData().drawmesh());
 
 
         } catch (IOException e) {
@@ -294,6 +288,5 @@ public class MainApp extends Application {
         signalList.clear();
         signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
         plotsLayout = null;
-
     }
 }

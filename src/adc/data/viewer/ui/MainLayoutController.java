@@ -44,7 +44,6 @@
 package adc.data.viewer.ui;
 
 import adc.data.viewer.parser.DataParser;
-import adc.data.viewer.model.SignalMarker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -153,16 +152,15 @@ public class MainLayoutController {
 
     @FXML
     private void handleDrawPlots() {
-        boolean isAnyChecked =false;
-        for (SignalMarker signalMarker : mainApp.getSignalList())
-        {
-            isAnyChecked = signalMarker.isSignalSelected();
-            if(isAnyChecked)break;
-        }
+//        boolean isAnyChecked =false;
+//        for (SignalMarker signalMarker : mainApp.getSignalList())
+//        {
+//            isAnyChecked = signalMarker.isSignalSelected();
+//            if(isAnyChecked)break;
+//        }
 
-        if (mainApp.getSignalList().size() != 0&&isAnyChecked) {
+        if (mainApp.getSignalList().size() != 0) {
             mainApp.drawPlots();
-
         }
 
     }

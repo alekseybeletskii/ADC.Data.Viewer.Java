@@ -102,8 +102,7 @@ public class Axes extends Pane {
 
 
         xAxis = new StableTicksAxis(xMinBasic, xMaxBasic);
-//        xAxis.getStylesheets().add("/css/plotter.css");
-//        xAxis.getStyleClass().add("axes");
+
 
         xAxis.setLabel("time, ms");
         xAxis.setSide(Side.BOTTOM);
@@ -112,8 +111,7 @@ public class Axes extends Pane {
         xAxis.setAnimated(false);
 
         yAxis = new StableTicksAxis(yMinBasic, yMaxBasic);
-//        yAxis.getStylesheets().add("/css/plotter.css");
-//        yAxis.getStyleClass().add("axes");
+
 
         yAxis.setLabel("a.u.");
         yAxis.setSide(Side.LEFT);
@@ -208,18 +206,19 @@ public class Axes extends Pane {
 
     public void obtainDataAndTimeMargins() {
 
-xMinBasic= 0.0;
-xMaxBasic= 0.0;
-yMinBasic= 0.0;
-yMaxBasic= 0.0;
+xMinBasic= Integer.MAX_VALUE;
+xMaxBasic= Integer.MIN_VALUE;
+yMinBasic= Integer.MAX_VALUE;
+yMaxBasic= Integer.MIN_VALUE;
 
         double dt; // time scale of longest amongst selected signal, ms
-
+        boolean isAnySelected =false;
         //detect longest signal
         for (SignalMarker signalMarker : mainApp.getSignalList()){
 
             if (signalMarker.getSignalSelected())
             {
+                isAnySelected =true;
                 dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
                 mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
 
@@ -232,10 +231,16 @@ yMaxBasic= 0.0;
                 if (SimpleMath.getMin()< yMinBasic) yMinBasic =SimpleMath.getMin();
             }
         }
-
+        xMinBasic=0.0;
         absMaxYValue = abs(yMaxBasic)>abs(yMinBasic)?abs(yMaxBasic):abs(yMinBasic);
-        yMaxBasic=absMaxYValue;
-        yMinBasic=-absMaxYValue;
+//        yMaxBasic=absMaxYValue;
+//        yMinBasic=-absMaxYValue;
+        if(!isAnySelected){
+            xMinBasic= 0.0;
+            xMaxBasic= 1.0;
+            yMinBasic= -1.0;
+            yMaxBasic= 1.0;
+        }
     }
 
 }
