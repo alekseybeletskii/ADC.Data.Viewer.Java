@@ -12,6 +12,10 @@ and Savitsky-Golay filter are available
 
 ![plot](resources/jpg/PlotterSettingsAndSGfilter.jpg)
 
+You can view signals one by one as well
+
+![plot](resources/jpg/drawingOneByOne.jpg)
+
 ADC files examples are included in the "resources/sampledata/" subfolder.
 Check "resources/jpg/" sub-folder with screen-shots.
 Executable Jar file is located in "resources/jar/" subfolder.

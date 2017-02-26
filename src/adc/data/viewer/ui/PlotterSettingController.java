@@ -64,6 +64,12 @@ public class PlotterSettingController {
     private Stage plotterSettingsStage;
     private Alert alertInvalidParam;
 
+    public void setPlotterController(PlotterController plotterController) {
+        this.plotterController = plotterController;
+    }
+
+    private PlotterController plotterController;
+
     static Double ymin;
     static Double xmin;
     static Double ymax;
@@ -167,7 +173,7 @@ public class PlotterSettingController {
         chooseLineOrScatter.setValue(chosenLineOrScatter);
 
         chooseLineOrScatter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mainApp.getPlotterController().getPlots().getCanvasData().setLineOrScatter(newValue);
+            plotterController.getPlotter().getCanvasData().setLineOrScatter(newValue);
             chosenLineOrScatter=newValue;
         });
 
@@ -204,9 +210,9 @@ public class PlotterSettingController {
             fftoverlap=Integer.parseInt(FFTWindowOverlap.getText());
             fftwindow=FFTWindowType.getText();
 
-            if ((xmin>xmax)|(ymin>ymax)) mainApp.getPlotterController().getPlots().getAxes().setAxesBasicSetup();
-            else mainApp.getPlotterController().getPlots().getAxes().setAxesBounds(xmin, xmax,ymin,ymax);
-            mainApp.getPlotterController().getPlots().getCanvasData().drawData();
+            if ((xmin>xmax)|(ymin>ymax)) plotterController.getPlotter().getAxes().setAxesBasicSetup();
+            else plotterController.getPlotter().getAxes().setAxesBounds(xmin, xmax,ymin,ymax);
+            plotterController.getPlotter().getCanvasData().drawData();
             plotterSettingsStage.close();
         }
 

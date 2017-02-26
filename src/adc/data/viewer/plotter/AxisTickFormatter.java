@@ -41,62 +41,31 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-.button{
-    -fx-border-width: 1;
-    -fx-border-radius: 10;
-    -fx-border-color: darkgreen;
-    -fx-text-fill: black;
-    -fx-background-radius: 10;
-    -fx-background-color: transparent;
-    -fx-padding: 1,1,1,1;
-    -fx-font-size: 10;
-    -fx-border-style:  dashed;
-    /*-fx-font-weight: bold;*/
+package adc.data.viewer.plotter;
+
+import javafx.scene.chart.ValueAxis;
+
+/**
+ * AxisTickFormatter provides label formatting logic for a {@link ValueAxis}. Many formatters use the java.text.Format
+ * implementations, which are typically not thread-safe. Therefore, most AxisTickFormatter instances are not
+ * thread-safe for concurrent use.
+ *
+ * @author Jason Winnebeck
+ */
+public interface AxisTickFormatter {
+	/**
+	 * Sets the range of formatting. Some formatters use this to determine labels based on the scale of the range, i.e.
+	 * picking 1,000,000 versus 1e6 or "January 2103" when a range is months wide versus "04:30" when a range is minutes
+	 * wide.
+	 *
+	 * @param low         low value of the axis
+	 * @param high        high value of the axis
+	 * @param tickSpacing distance between each tick
+	 */
+	public void setRange( double low, double high, double tickSpacing );
+
+	/**
+	 * Given a number on the axis at a tick point, return a label.
+	 */
+	public String format( Number value );
 }
-
-.button:pressed{
-    -fx-text-fill: darkolivegreen;
-
-}
-
-.button:hover{
-    -fx-background-color: palegreen;
-}
-
-.AnchorPane{
--fx-background-color: azure;
-}
-
-
-.axis-tick-mark {
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-
-}
-.axis-minor-tick-mark {
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-
-}
-
-.axis-label  {
-    -fx-font-family: sans-serif ;
-    -fx-text-fill: darkblue;
-    -fx-font-weight: bold;
-    -fx-font-style: italic;
-}
-
-
-.axis {
-    -fx-background-color: transparent;
-    -fx-tick-label-fill: darkmagenta;
-}
-
-.axesBorder{
-    -fx-fill: transparent;
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-    -fx-stroke-type: inside;
-}
-
-

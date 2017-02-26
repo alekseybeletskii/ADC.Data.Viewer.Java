@@ -54,7 +54,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Side;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import org.gillius.jfxutils.chart.StableTicksAxis;
 
 import static java.lang.Math.abs;
 
@@ -97,7 +96,8 @@ public class Axes extends Pane {
         axesBoxRectangle = new Rectangle(0,0);
 
 
-        obtainDataAndTimeMargins();
+        obtainDataAndTimeMargins(mainApp.getNextSignalToDraw());
+
         PlotterSettingController.setCurrentAxesSettings(xMinBasic,xMaxBasic,yMinBasic,yMaxBasic);
 
 
@@ -204,7 +204,7 @@ public class Axes extends Pane {
 
     }
 
-    public void obtainDataAndTimeMargins() {
+    public void obtainDataAndTimeMargins(SignalMarker sm) {
 
 xMinBasic= Integer.MAX_VALUE;
 xMaxBasic= Integer.MIN_VALUE;
@@ -214,23 +214,24 @@ yMaxBasic= Integer.MIN_VALUE;
         double dt; // time scale of longest amongst selected signal, ms
         boolean isAnySelected =false;
         //detect longest signal
-        for (SignalMarker signalMarker : mainApp.getSignalList()){
-
-            if (signalMarker.getSignalSelected())
-            {
-                isAnySelected =true;
-                dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
-                mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
-
-                if (mostSamples *dt > xMaxBasic) {
-                    xMaxBasic = mostSamples *dt;
+        switch(mainApp.getPlotsLayoutType()){
+            case "AllPlots":
+                for (SignalMarker signalMarker : mainApp.getSignalList()){
+                    if (signalMarker.getSignalSelected())
+                    {
+                        isAnySelected =true;
+                        selectedSignalMargins(signalMarker);
+                    }
                 }
-                double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
-                SimpleMath.findMaxMin(testSignal);
-                if (SimpleMath.getMax()> yMaxBasic) yMaxBasic =SimpleMath.getMax();
-                if (SimpleMath.getMin()< yMinBasic) yMinBasic =SimpleMath.getMin();
-            }
+                break;
+            case "AllPlotsByOne":
+                isAnySelected =true;
+                selectedSignalMargins(sm);
+                break;
+            default:
+                break;
         }
+
         xMinBasic=0.0;
         absMaxYValue = abs(yMaxBasic)>abs(yMinBasic)?abs(yMaxBasic):abs(yMinBasic);
 //        yMaxBasic=absMaxYValue;
@@ -241,6 +242,20 @@ yMaxBasic= Integer.MIN_VALUE;
             yMinBasic= -1.0;
             yMaxBasic= 1.0;
         }
+    }
+
+    public void selectedSignalMargins(SignalMarker signalMarker) {
+        double dt;
+        dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
+        mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
+
+        if (mostSamples *dt > xMaxBasic) {
+            xMaxBasic = mostSamples *dt;
+        }
+        double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
+        SimpleMath.findMaxMin(testSignal);
+        if (SimpleMath.getMax()> yMaxBasic) yMaxBasic =SimpleMath.getMax();
+        if (SimpleMath.getMin()< yMinBasic) yMinBasic =SimpleMath.getMin();
     }
 
 }

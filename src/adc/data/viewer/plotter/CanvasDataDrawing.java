@@ -48,6 +48,7 @@ import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.processing.SavitzkyGolayFilter;
 import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.ui.MainApp;
+import adc.data.viewer.ui.PlotterController;
 import adc.data.viewer.ui.PlotterSettingController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -68,171 +69,213 @@ import static java.lang.Math.round;
   */
 public class CanvasDataDrawing extends Canvas {
 
+     public void setNextSignalToDraw(SignalMarker nextSignalToDraw) {
+         this.nextSignalToDraw = nextSignalToDraw;
+     }
 
-    private final DataParser allSignals;
-    private final Axes axes;
-    private final MainApp mainApp;
-    private DoubleProperty dx = new SimpleDoubleProperty();
-    private DoubleProperty dy = new SimpleDoubleProperty();
-    private DoubleProperty shiftXZero = new SimpleDoubleProperty();
-    private DoubleProperty shiftYZero = new SimpleDoubleProperty();
+     public SignalMarker getNextSignalToDraw() {
+         return nextSignalToDraw;
+     }
 
-    private String plotType;
-    private String lineOrScatter;
-    private int pointSize;
+     public void setPlotterController(PlotterController plotterController) {
+         this.plotterController = plotterController;
+     }
 
-    private SavitzkyGolayFilter sgfilter;
-    private GraphicsContext graphicContext;
+     private PlotterController plotterController;
+     private SignalMarker nextSignalToDraw;
+     private final DataParser allSignals;
+     private final Axes axes;
+     private final MainApp mainApp;
+     private DoubleProperty dx = new SimpleDoubleProperty();
+     private DoubleProperty dy = new SimpleDoubleProperty();
+     private DoubleProperty shiftXZero = new SimpleDoubleProperty();
+     private DoubleProperty shiftYZero = new SimpleDoubleProperty();
 
-    public void setLineOrScatter(String lineOrScatter) {
-        this.lineOrScatter = lineOrScatter;
-    }
-    public void setPlotType(String plotType) {
-        this.plotType = plotType;
-    }
-    public void setSGfilter(SavitzkyGolayFilter sgfilter) {
-        this.sgfilter = sgfilter;
-    }
-    public double getShiftYZero() {
-        return shiftYZero.get();
-    }
-    public SavitzkyGolayFilter getSgfilter() {
-        return sgfilter;
-    }
-    public double getShiftXZero() {
-        return shiftXZero.get();
-    }
+     private String plotType;
+     private String lineOrScatter;
+     private int pointSize;
 
+     private SavitzkyGolayFilter sgfilter;
+     private GraphicsContext graphicContext;
 
-    CanvasDataDrawing(MainApp mainApp, Axes axes, String plotType) {
-        this.plotType =plotType;
-        this.mainApp = mainApp;
-        this.axes = axes;
-        this.allSignals = mainApp.getDataParser();
-        this.lineOrScatter = "line+scatter";
-        this.pointSize =6;
-        PlotterSettingController.setChosenLineOrScatter(lineOrScatter);
-        dx.bind(Bindings.divide(widthProperty(),Bindings.subtract(axes.getXAxis().upperBoundProperty(),axes.getXAxis().lowerBoundProperty())));
-        dy.bind(Bindings.divide(heightProperty(),Bindings.subtract(axes.getYAxis().upperBoundProperty(),axes.getYAxis().lowerBoundProperty())));
-        shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(),dx));
-        shiftYZero.bind(Bindings.multiply(axes.getYAxis().upperBoundProperty(),dy));
-        graphicContext = getGraphicsContext2D();
+     public void setLineOrScatter(String lineOrScatter) {
+         this.lineOrScatter = lineOrScatter;
+     }
 
-    }
+     public void setPlotType(String plotType) {
+         this.plotType = plotType;
+     }
 
-    @Override
-    public boolean isResizable() {
-        return true;
-    }
+     public void setSGfilter(SavitzkyGolayFilter sgfilter) {
+         this.sgfilter = sgfilter;
+     }
 
-    @Override
-    public double prefWidth(double height) {
-        return getWidth();
-    }
+     public double getShiftYZero() {
+         return shiftYZero.get();
+     }
 
-    @Override
-    public double prefHeight(double width) {
-        return getHeight();
-    }
+     public SavitzkyGolayFilter getSgfilter() {
+         return sgfilter;
+     }
 
-    /**
-     * Canvas drawing now successfully copes with millions of data points
-     * due to simple point-per-pixel approach (see "decimator" method)
-     */
+     public double getShiftXZero() {
+         return shiftXZero.get();
+     }
 
 
-    public void drawDataMeshZerolines() {
+     CanvasDataDrawing(MainApp mainApp, Axes axes, String plotType) {
+         this.plotType = plotType;
+         this.mainApp = mainApp;
+         this.axes = axes;
+         this.allSignals = mainApp.getDataParser();
+         this.lineOrScatter = "line+scatter";
+         this.pointSize = 6;
+         PlotterSettingController.setChosenLineOrScatter(lineOrScatter);
+         dx.bind(Bindings.divide(widthProperty(), Bindings.subtract(axes.getXAxis().upperBoundProperty(), axes.getXAxis().lowerBoundProperty())));
+         dy.bind(Bindings.divide(heightProperty(), Bindings.subtract(axes.getYAxis().upperBoundProperty(), axes.getYAxis().lowerBoundProperty())));
+         shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(), dx));
+         shiftYZero.bind(Bindings.multiply(axes.getYAxis().upperBoundProperty(), dy));
+         graphicContext = getGraphicsContext2D();
 
-        cleanCanvas();
-        drawmesh();
-        drawData();
-        drawZeroLines();
+     }
 
-    }
+     @Override
+     public boolean isResizable() {
+         return true;
+     }
 
-    public void drawMeshZeroLines(){
-        cleanCanvas();
-        drawmesh();
+     @Override
+     public double prefWidth(double height) {
+         return getWidth();
+     }
 
-    }
+     @Override
+     public double prefHeight(double width) {
+         return getHeight();
+     }
 
-    public void cleanCanvas() {
-        graphicContext.clearRect(0, 0, getWidth(), getHeight());
-        graphicContext.setFill(Color.TRANSPARENT);
-        graphicContext.fillRect(0,0,getWidth(), getHeight());
-    }
+     /**
+      * Canvas drawing now successfully copes with millions of data points
+      * due to simple point-per-pixel approach (see "decimator" method)
+      */
 
-    public void drawData() {
 
-        cleanCanvas();
-        drawmesh();
+     public void drawDataMeshZerolines() {
 
-        graphicContext.setLineWidth(1);
-        graphicContext.setLineDashes(0);
-        for (SignalMarker signalMarker:mainApp.getSignalList()){
-            if(signalMarker.getSignalSelected()) {
-                int nextSignal = signalMarker.getSignalIndex();
-                String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
-                int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
+         cleanCanvas();
+         drawmesh();
+         drawData();
+         drawZeroLines();
+
+     }
+
+     public void drawMeshZeroLines() {
+         cleanCanvas();
+         drawmesh();
+
+     }
+
+     public void cleanCanvas() {
+         graphicContext.clearRect(0, 0, getWidth(), getHeight());
+         graphicContext.setFill(Color.TRANSPARENT);
+         graphicContext.fillRect(0, 0, getWidth(), getHeight());
+     }
+
+     public void drawData() {
+
+         cleanCanvas();
+         drawmesh();
+
+         graphicContext.setLineWidth(1);
+         graphicContext.setLineDashes(0);
+
+         switch (mainApp.getPlotsLayoutType()) {
+             case "AllPlots":
+                 for (SignalMarker signalMarker : mainApp.getSignalList()) {
+                     if (signalMarker.getSignalSelected()) {
+                         drawNextSignal(signalMarker);
+                     }
+                 }
+                 break;
+             case "AllPlotsByOne":
+                 plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel());
+                 drawNextSignal(nextSignalToDraw);
+                 break;
+             default:
+                 break;
+         }
+
+         drawZeroLines();
+
+
+     }
+
+
+
+
+
+
+
+     public void drawNextSignal(SignalMarker signalMarker) {
+         int nextSignal = signalMarker.getSignalIndex();
+         String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
+         int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 
 //dt,dtCadre in milliseconds
-                double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
-                double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
-                int nextSignalLength = allSignals.getSignals()[nextSignal].length;
-                int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
-                int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
+         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
+         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
+         int nextSignalLength = allSignals.getSignals()[nextSignal].length;
+         int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
+         int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
 
 
-               if((xRight>0)&&(xLeft<nextSignalLength)) {
+         if((xRight>0)&&(xLeft<nextSignalLength)) {
 
 
-                   double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
-                           xLeft < 0 ? 0 : xLeft, xRight > nextSignalLength ? nextSignalLength : xRight);
+             double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
+                     xLeft < 0 ? 0 : xLeft, xRight > nextSignalLength ? nextSignalLength : xRight);
 
-                   switch (plotType) {
-                       case "Raw":
-                           graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.beginPath();
-                           decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
-                           break;
-                       case "SGFiltered":
-                           graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.beginPath();
-                           int i = 0;
-                           for (double yy : sgfilter.filterData(sigSubarray)) {
-                               sigSubarray[i] = sigSubarray[i] - yy;
-                               i++;
-                           }
-                           decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
-                           break;
-                       case "RawAndSGFilter":
-                           graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.beginPath();
-                           decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
-                           sigSubarray = sgfilter.filterData(sigSubarray);
-                           graphicContext.setStroke(Color.BLACK);
-                           graphicContext.setFill(Color.TRANSPARENT);
-                           graphicContext.beginPath();
-                           decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
-                           break;
-                       case "SGFilter":
-                           sigSubarray = sgfilter.filterData(sigSubarray);
-                           graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                           graphicContext.beginPath();
-                           decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
-                           break;
-                   }
-               }
-            }
-        }
-        drawZeroLines();
-    }
+             switch (plotType) {
+                 case "Raw":
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.beginPath();
+                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
+                     break;
+                 case "SGFiltered":
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.beginPath();
+                     int i = 0;
+                     for (double yy : sgfilter.filterData(sigSubarray)) {
+                         sigSubarray[i] = sigSubarray[i] - yy;
+                         i++;
+                     }
+                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
+                     break;
+                 case "RawAndSGFilter":
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.beginPath();
+                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
+                     sigSubarray = sgfilter.filterData(sigSubarray);
+                     graphicContext.setStroke(Color.BLACK);
+                     graphicContext.setFill(Color.TRANSPARENT);
+                     graphicContext.beginPath();
+                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
+                     break;
+                 case "SGFilter":
+                     sigSubarray = sgfilter.filterData(sigSubarray);
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.beginPath();
+                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
+                     break;
+             }
+         }
+     }
 
-    private void drawZeroLines() {
+     private void drawZeroLines() {
         //drawData X-Y zero lines
         graphicContext.setStroke(Color.BLACK);
         graphicContext.setLineWidth(1);

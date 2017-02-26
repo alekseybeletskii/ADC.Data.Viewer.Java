@@ -70,7 +70,7 @@ public class MainLayoutController {
     @FXML
     private void handleOpen() {
 
-        mainApp.setPlotterController(null);
+        mainApp.getPlotterControllerlist().clear();
 
         List<File> inpList = new ArrayList<>();
         List<File> chosenFiles;
@@ -147,30 +147,31 @@ public class MainLayoutController {
 
     @FXML
     private void handleClear() {
-        mainApp.clearOldListAndPlots();
+        mainApp.clearAll();
     }
 
     @FXML
     private void handleDrawPlots() {
-//        boolean isAnyChecked =false;
-//        for (SignalMarker signalMarker : mainApp.getSignalList())
-//        {
-//            isAnyChecked = signalMarker.isSignalSelected();
-//            if(isAnyChecked)break;
-//        }
 
-        if (mainApp.getSignalList().size() != 0) {
-            mainApp.drawPlots();
+        if (!mainApp.getSignalList().isEmpty()) {
+            mainApp.drawPlots("AllPlots");
         }
 
+    }
+    @FXML
+    private void handleDrawPlotsByOne(){
+        if (!mainApp.getSignalList().isEmpty()) {
+            mainApp.drawPlots("AllPlotsByOne");
+        }
     }
 
     @FXML
     private void handleHidePlots() {
-        if(mainApp.getPlotsLayout()!=null)
-        if(!mainApp.getPlotsLayout().isVisible())
-        mainApp.getPlotsLayout().setVisible(true);
-        else mainApp.getPlotsLayout().setVisible(false);}
+
+        if(!mainApp.getSignalsOverviewController().getPlotsScrollPane().isVisible())
+            mainApp.getSignalsOverviewController().getPlotsScrollPane().setVisible(true);
+        else mainApp.getSignalsOverviewController().getPlotsScrollPane().setVisible(false);
+    }
 
     @FXML
     private void handleReadme() {

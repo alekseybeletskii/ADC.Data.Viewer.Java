@@ -56,8 +56,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-    public class PlotsBuilder extends AnchorPane {
-
+    public class Plotter extends AnchorPane {
 
         private  Axes axes;
     private CanvasDataDrawing canvasData;
@@ -75,7 +74,7 @@ import javafx.scene.shape.StrokeType;
         return axes;
     }
 
-    public PlotsBuilder(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController){
+    public Plotter(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController){
         this.plotterController=plotterController;
         this.mainApp = mainApp;
         this.zoomRectangle =null;
@@ -92,14 +91,6 @@ import javafx.scene.shape.StrokeType;
         AnchorPane.setTopAnchor(axes, 0.0);
 
 
-        axesAnchorPane.getChildren().add(this);
-        AnchorPane.setLeftAnchor(this, 70.0);
-        AnchorPane.setRightAnchor(this, 50.0);
-        AnchorPane.setBottomAnchor(this, 50.0);
-//        AnchorPane.setTopAnchor(this, 30.0);
-        AnchorPane.setTopAnchor(this, 0.0);
-        this.toBack();
-
 
 
 
@@ -111,6 +102,21 @@ import javafx.scene.shape.StrokeType;
         AnchorPane.setRightAnchor(canvasData, 0.0);
         AnchorPane.setBottomAnchor(canvasData, 0.0);
         AnchorPane.setTopAnchor(canvasData, 0.0);
+
+
+        axesAnchorPane.getChildren().add(this);
+        AnchorPane.setLeftAnchor(this, 70.0);
+        AnchorPane.setRightAnchor(this, 50.0);
+        AnchorPane.setBottomAnchor(this, 50.0);
+//        AnchorPane.setTopAnchor(this, 30.0);
+        AnchorPane.setTopAnchor(this, 0.0);
+        this.toBack();
+
+
+        AnchorPane.setLeftAnchor(axesAnchorPane, 10.0);
+        AnchorPane.setRightAnchor(axesAnchorPane, 10.0);
+        AnchorPane.setBottomAnchor(axesAnchorPane, 10.0);
+        AnchorPane.setTopAnchor(axesAnchorPane, 10.0);
 
         showMouseXY();
         zoom();
@@ -126,7 +132,7 @@ import javafx.scene.shape.StrokeType;
         DoubleProperty panStartX = new SimpleDoubleProperty();
         DoubleProperty panStartY = new SimpleDoubleProperty();
 
-        canvasData.setOnMousePressed(mpressed -> {
+        setOnMousePressed(mpressed -> {
             if(mpressed.getButton()== MouseButton.PRIMARY){
                 zoomTopLeftX.set(mpressed.getX());
                 zoomTopLeftY.set(mpressed.getY());
@@ -145,7 +151,7 @@ import javafx.scene.shape.StrokeType;
         });
 
 
-        canvasData.setOnMouseDragged(mdragged -> {
+        setOnMouseDragged(mdragged -> {
 
             setMouseXYText(mdragged);
 
@@ -182,31 +188,24 @@ import javafx.scene.shape.StrokeType;
             }
         });
 
-        canvasData.setOnMouseReleased(mreleased -> {
+        setOnMouseReleased(mreleased -> {
             if(mreleased.getButton()== MouseButton.PRIMARY) {
                 if (zoomRectangle.getWidth() == 0.0 & zoomRectangle.getHeight() == 0.0 & !mainApp.getSignalList().isEmpty()) {
-                    axes.obtainDataAndTimeMargins();
+                    axes.obtainDataAndTimeMargins(canvasData.getNextSignalToDraw());
                     axes.setAxesBasicSetup();
-                    this.getChildren().remove(zoomRectangle);
-
+                    getChildren().remove(zoomRectangle);
                     zoomRectangle = null;
 
 
                 } else if (zoomRectangle.getWidth() != 0.0 & zoomRectangle.getHeight() != 0.0) {
-
                     axes.axesZoomRescale(zoomTopLeftX, zoomTopLeftY, zoomBottomRightX, zoomBottomRightY);
-
-                    this.getChildren().remove(zoomRectangle);
-
-
-
+                    getChildren().remove(zoomRectangle);
                     zoomRectangle = null;
                 }
             }
-            this.getScene().setCursor(Cursor.DEFAULT);
+            getScene().setCursor(Cursor.DEFAULT);
 
             canvasData.drawData();
-
         });
     }
 

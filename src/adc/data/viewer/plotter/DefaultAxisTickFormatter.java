@@ -41,62 +41,46 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-.button{
-    -fx-border-width: 1;
-    -fx-border-radius: 10;
-    -fx-border-color: darkgreen;
-    -fx-text-fill: black;
-    -fx-background-radius: 10;
-    -fx-background-color: transparent;
-    -fx-padding: 1,1,1,1;
-    -fx-font-size: 10;
-    -fx-border-style:  dashed;
-    /*-fx-font-weight: bold;*/
+package adc.data.viewer.plotter;
+
+import java.text.NumberFormat;
+
+/**
+ * DefaultAxisTickFormatter formats labels using a default number instance.
+ *
+ * @author Jason Winnebeck
+ */
+public class DefaultAxisTickFormatter implements AxisTickFormatter {
+//	private final NumberFormat normalFormat = NumberFormat.getNumberInstance();
+//	private final NumberFormat engFormat = new DecimalFormat( "0.###E0" );
+
+	private NumberFormat currFormat = NumberFormat.getNumberInstance();
+
+	public DefaultAxisTickFormatter() {
+	}
+
+	@Override
+	public void setRange( double low, double high, double tickSpacing ) {
+		//The below is an attempt as using engineering notation for large numbers, but it doesn't work.
+//		currFormat = normalFormat;
+//		double log10 = Math.log10( low );
+//		if ( log10 < -4.0 || log10 > 5.0 ) {
+//			currFormat = engFormat;
+//		} else {
+//			log10 = Math.log10( high );
+//			if ( log10 < -4.0 || log10 > 5.0 ) {
+//				currFormat = engFormat;
+//			}
+//		}
+
+//		if (tickSpacing <= 10000.0)
+//			currFormat = normalFormat;
+//		else
+//			currFormat = engFormat;
+	}
+
+	@Override
+	public String format( Number value ) {
+		return currFormat.format( value );
+	}
 }
-
-.button:pressed{
-    -fx-text-fill: darkolivegreen;
-
-}
-
-.button:hover{
-    -fx-background-color: palegreen;
-}
-
-.AnchorPane{
--fx-background-color: azure;
-}
-
-
-.axis-tick-mark {
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-
-}
-.axis-minor-tick-mark {
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-
-}
-
-.axis-label  {
-    -fx-font-family: sans-serif ;
-    -fx-text-fill: darkblue;
-    -fx-font-weight: bold;
-    -fx-font-style: italic;
-}
-
-
-.axis {
-    -fx-background-color: transparent;
-    -fx-tick-label-fill: darkmagenta;
-}
-
-.axesBorder{
-    -fx-fill: transparent;
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-    -fx-stroke-type: inside;
-}
-
-

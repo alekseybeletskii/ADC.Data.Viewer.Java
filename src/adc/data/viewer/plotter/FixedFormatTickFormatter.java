@@ -41,62 +41,28 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-.button{
-    -fx-border-width: 1;
-    -fx-border-radius: 10;
-    -fx-border-color: darkgreen;
-    -fx-text-fill: black;
-    -fx-background-radius: 10;
-    -fx-background-color: transparent;
-    -fx-padding: 1,1,1,1;
-    -fx-font-size: 10;
-    -fx-border-style:  dashed;
-    /*-fx-font-weight: bold;*/
+package adc.data.viewer.plotter;
+
+import java.text.Format;
+
+/**
+ * FixedFormatTickFormatter uses the format given to format all ticks, regardless of the range settings.
+ *
+ * @author Jason Winnebeck
+ */
+public class FixedFormatTickFormatter implements AxisTickFormatter {
+	private final Format format;
+
+	public FixedFormatTickFormatter( Format format ) {
+		this.format = format;
+	}
+
+	@Override
+	public void setRange( double low, double high, double tickSpacing ) {
+	}
+
+	@Override
+	public String format( Number value ) {
+		return format.format( value );
+	}
 }
-
-.button:pressed{
-    -fx-text-fill: darkolivegreen;
-
-}
-
-.button:hover{
-    -fx-background-color: palegreen;
-}
-
-.AnchorPane{
--fx-background-color: azure;
-}
-
-
-.axis-tick-mark {
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-
-}
-.axis-minor-tick-mark {
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-
-}
-
-.axis-label  {
-    -fx-font-family: sans-serif ;
-    -fx-text-fill: darkblue;
-    -fx-font-weight: bold;
-    -fx-font-style: italic;
-}
-
-
-.axis {
-    -fx-background-color: transparent;
-    -fx-tick-label-fill: darkmagenta;
-}
-
-.axesBorder{
-    -fx-fill: transparent;
-    -fx-stroke: darkmagenta;
-    -fx-stroke-width: 1;
-    -fx-stroke-type: inside;
-}
-
-

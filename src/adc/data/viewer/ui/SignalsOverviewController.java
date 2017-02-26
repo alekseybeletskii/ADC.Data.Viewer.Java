@@ -45,14 +45,12 @@ package adc.data.viewer.ui;
 
 import adc.data.viewer.model.SignalMarker;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
@@ -65,6 +63,18 @@ public class SignalsOverviewController {
     private boolean checkedFlag;
 
 
+
+
+
+    @FXML
+    VBox plotsVBox;
+
+    public ScrollPane getPlotsScrollPane() {
+        return plotsScrollPane;
+    }
+
+    @FXML
+    ScrollPane plotsScrollPane;
 
     @FXML
     private AnchorPane signalsOverviewRightPane;
@@ -100,6 +110,13 @@ public class SignalsOverviewController {
     @FXML
     private SplitPane signalsOverviewSplitPane;
 
+    public VBox getPlotsVBox() {
+        return plotsVBox;
+    }
+
+
+
+
     public AnchorPane getSignalsOverviewRightPane() {
         return signalsOverviewRightPane;
     }
@@ -109,17 +126,14 @@ public class SignalsOverviewController {
 
     @FXML
     private void initialize() {
+
         checkedFlag =true;
         signalsTable.setPlaceholder(new Label("Check \"Help->How to use\" for instructions"));
-
         signalSelectedColumn.setCellValueFactory(cellData -> cellData.getValue().signalSelectedProperty() );
         signalColorColumn.setCellValueFactory(cellData -> cellData.getValue().signalColorProperty());
         signalLabelColumn.setCellValueFactory(cellData -> cellData.getValue().signalLabelProperty());
-//        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(signalSelectedColumn));
         signalColorColumn.setCellFactory(c->new TableCellColoredView<>(signalColorColumn));
-
-
-//        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(param -> mainApp.getSignalList().get(param).signalSelectedProperty()));
+//        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(signalSelectedColumn));
         signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(param ->
          mainApp.getSignalList().get(param).signalSelectedProperty()
         ));
@@ -166,11 +180,6 @@ public class SignalsOverviewController {
     public void setTableItems() {
         // Add observable list data to the table
         signalsTable.itemsProperty().setValue(mainApp.getSignalList());
-//        signalSelectedColumn.getCellObservableValue(0).addListener((observable, oldValue, newValue) -> System.out.println(newValue));
-//        signalSelectedColumn.onEditCommitProperty().addListener((observable, oldValue, newValue) -> System.out.println("gggggg"));
-//        signalsTable.getSelectionModel().getSelectedCells()
-//        signalsTable.getSelectionModel().selectedIndexProperty().addListener   ( c -> System.out.println("fbsdf"));
-//        signalSelectedColumn.cellValueFactoryProperty().addListener((observable, oldValue, newValue) -> System.out.println(newValue));
     }
 
 

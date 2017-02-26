@@ -62,7 +62,8 @@
           <Menu mnemonicParsing="false" text="Plot">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleSignalsToText" text="Export all to txt" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleDrawPlots" text="Draw Plots" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleDrawPlots" text="Draw" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleDrawPlotsByOne" text="Draw by one" />
                   <MenuItem mnemonicParsing="false" onAction="#handleHidePlots" text="Hide/Show Plots" />
                </items>
           </Menu>

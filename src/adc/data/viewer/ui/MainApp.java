@@ -43,8 +43,8 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.model.SignalMarker;
+import adc.data.viewer.parser.DataParser;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,6 +59,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainApp extends Application {
 
@@ -66,35 +68,40 @@ public class MainApp extends Application {
         launch(args);
     }
 
-    private Stage primaryStage;
     private Stage plotsStage;
+    private  boolean redrawAllowed;
+    private SignalMarker nextSignalToDraw;
+    private String plotsLayoutType;
+    private Stage primaryStage;
     private BorderPane mainLayout;
-    private AnchorPane plotsLayout;
     private DataParser dataParser;
     private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
     private TextFileDataController textFileDataController;
 
+    public List<PlotterController> getPlotterControllerlist() {
+        return plotterControllerlist;
+    }
 
-
+    private List<PlotterController> plotterControllerlist =new ArrayList<>();
     private PlotterController plotterController;
-
     private PlotterSettingController plotterSettingController;
     private SignalsOverviewController signalsOverviewController;
 
-
-
-     void setPlotterController(PlotterController plotterController) {
-        this.plotterController = plotterController;
+    public String getPlotsLayoutType() {
+        return plotsLayoutType;
     }
+    public SignalMarker getNextSignalToDraw() {
+        return nextSignalToDraw;
+    }
+//    void setPlotterController(PlotterController plotterController) {
+//        this.plotterController = plotterController;
+//    }
     public SignalsOverviewController getSignalsOverviewController() {
         return signalsOverviewController;
     }
-     AnchorPane getPlotsLayout() {
-        return plotsLayout;
-    }
-     PlotterController getPlotterController() {
-        return plotterController;
-    }
+//    PlotterController getPlotterController() {
+//        return plotterController;
+//    }
     public TextFileDataController getTextFileDataController() {
         return textFileDataController;
     }
@@ -107,11 +114,11 @@ public class MainApp extends Application {
     public DataParser getDataParser() {
         return dataParser;
     }
-     Stage getPlotsStage() {
-        return plotsStage;
-    }
     public void setDataPars(DataParser dataParser) {
         this.dataParser = dataParser;
+    }
+    Stage getPlotsStage() {
+        return plotsStage;
     }
 
     @Override
@@ -147,13 +154,16 @@ public class MainApp extends Application {
             signalsOverviewController  = loader.getController();
             signalsOverviewController.setMainApp(this);
             signalsOverviewController.setTableItems();
+            signalsOverviewController.getPlotsScrollPane().setVisible(false);
+            signalsOverviewController.getSignalsOverviewSplitPane().setVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
      void fillSignalList() {
-        clearOldListAndPlots();
+        clearAll();
+         redrawAllowed=true;
         int i=0;
         float []  hueArray = new float[dataParser.getSignalLabels().length];
         for (int jj = 0; jj< dataParser.getSignalLabels().length; jj++) {
@@ -169,54 +179,91 @@ public class MainApp extends Application {
             Color color = Color.hsb(hue, saturation, brightness);
             if(siglabel!=null&&!siglabel.isEmpty()) {
                 SignalMarker sigmrk =new SignalMarker(ii, false, color, siglabel, dataParser.getFileNumbers()[ii]);
-                sigmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
-                    if(plotterController!=null) {
-                        plotterController.getPlots().getCanvasData().drawData();
-                    }
-                }
-                );
-
-                sigmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
-                    if(plotterController!=null) {
-                        plotterController.getPlots().getCanvasData().drawData();
-                    }
-                }
-                );
-
-
-
+                signalMarkerAddListeners(sigmrk);
                 signalList.add(sigmrk);
             }
             ii++;
         }
+         signalsOverviewController.getSignalsOverviewSplitPane().setVisible(true);
 
+     }
+
+    private void signalMarkerAddListeners(SignalMarker sigmrk) {
+        sigmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(plotterController!=null&&redrawAllowed) {
+                plotterController.getPlotter().getCanvasData().drawData();
+            }
+        }
+        );
+
+        sigmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
+            if(plotterController!=null&&redrawAllowed) {
+                plotterController.getPlotter().getCanvasData().drawData();
+            }
+        }
+        );
     }
 
-     void drawPlots() {
+    void drawPlots(String plotsLayoutType) {
+        this.plotsLayoutType=plotsLayoutType;
+        clearPlots();
+        switch (plotsLayoutType){
+            case "AllPlots":
+                signalsOverviewController.getPlotsScrollPane().setFitToHeight(true);
+                nextSignalToDraw=null;
+                layoutLoader();
+                plotterControllerlist.get(plotterControllerlist.size()-1)
+                        .getPlotsLayout().prefHeightProperty()
+                        .bind(signalsOverviewController.getPlotsVBox().heightProperty());
+                break;
+            case "AllPlotsByOne":
+                signalsOverviewController.getPlotsScrollPane().setFitToHeight(true);
+                for (SignalMarker sm:signalList) {
+                    if (sm.getSignalSelected()) {
+                        nextSignalToDraw=sm;
+                        layoutLoader();
+                        plotterControllerlist.get(plotterControllerlist.size()-1)
+                                .getPlotsLayout().prefHeightProperty()
+                                .bind(signalsOverviewController.getPlotsVBox().heightProperty());
+                    }
+                }
+                break;
+            case "AllPlotsByOneScroll":
+                signalsOverviewController.getPlotsScrollPane().setFitToHeight(false);
+                for (SignalMarker sm:signalList) {
+                    if (sm.getSignalSelected()) {
+                        nextSignalToDraw=sm;
+                        layoutLoader();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        for (PlotterController pc:plotterControllerlist){
+//            pc.getPlotsLayout().prefHeightProperty().bind(signalsOverviewController.getPlotsVBox().heightProperty());
+//            pc.getPlotsLayout().setPrefHeight(signalsOverviewController.getSignalsOverviewRightPane().getHeight());
+            pc.getPlotter().getCanvasData().widthProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
+            pc.getPlotter().getCanvasData().heightProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
+            signalsOverviewController.getPlotsVBox().getChildren().add(pc.getPlotsLayout());
+        }
+        signalsOverviewController.getPlotsScrollPane().setVisible(true);
+    }
+
+    private void layoutLoader() {
         try {
-            if(plotsLayout!=null) {
-                signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
-                plotsLayout = null;
-            }
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("Plotter.fxml"));
-            plotsLayout = loader.load();
-
+            loader.load();
             plotterController = loader.getController();
-
             plotterController.setMainApp(this);
             plotterController.setPlotsOnPane();
+            plotterController.getPlotter().getCanvasData().setPlotterController(plotterController);
+            plotterController.getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
+            plotterControllerlist.add(plotterController);
 
-
-            signalsOverviewController.getSignalsOverviewRightPane().getChildren().addAll(plotsLayout);
-            AnchorPane.setLeftAnchor(plotsLayout, 0.0);
-            AnchorPane.setRightAnchor(plotsLayout, 0.0);
-            AnchorPane.setBottomAnchor(plotsLayout, 0.0);
-            AnchorPane.setTopAnchor(plotsLayout, 0.0);
-
-            plotterController.getPlots().getCanvasData().widthProperty().addListener(it -> plotterController.getPlots().getCanvasData().drawData());
-            plotterController.getPlots().getCanvasData().heightProperty().addListener(it -> plotterController.getPlots().getCanvasData().drawData());
-
+//            plotterController.getPlotsLayout().prefHeightProperty().bind(signalsOverviewController.getPlotsVBox().heightProperty());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -246,7 +293,7 @@ public class MainApp extends Application {
         }
     }
 
-     void setPlotterSetting() {
+     void setPlotterSetting(PlotterController pc) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("PlotterSetting.fxml"));
@@ -256,6 +303,7 @@ public class MainApp extends Application {
             plotterSettingStage.setResizable(false);
             plotterSettingStage.setAlwaysOnTop(true);
             plotterSettingController.setMainApp(this);
+            plotterSettingController.setPlotterController(pc);
             plotterSettingController.setPlotterSettingStage(plotterSettingStage);
             plotterSettingStage.setTitle("Plotter Settings");
             Scene scene = new Scene(plotterSetting);
@@ -284,9 +332,25 @@ public class MainApp extends Application {
         }
     }
 
-     void clearOldListAndPlots(){
-        signalList.clear();
-        signalsOverviewController.getSignalsOverviewRightPane().getChildren().remove(plotsLayout);
-        plotsLayout = null;
+     void clearAll(){
+             signalList.clear();
+             signalsOverviewController.getPlotsVBox().getChildren().clear();
+             plotterControllerlist.clear();
+             signalsOverviewController.getPlotsScrollPane().setVisible(false);
+    }
+
+    private void clearPlots(){
+        if(plotsLayoutType.equals("AllPlots")) {
+            redrawAllowed=true;
+            signalsOverviewController.getPlotsVBox().getChildren().clear();
+            plotterControllerlist.clear();
+            signalsOverviewController.getPlotsScrollPane().setVisible(false);
+        }
+        if(plotsLayoutType.equals("AllPlotsByOne")){
+            redrawAllowed=false;
+            signalsOverviewController.getPlotsVBox().getChildren().clear();
+            plotterControllerlist.clear();
+            signalsOverviewController.getPlotsScrollPane().setVisible(false);
+        }
     }
 }

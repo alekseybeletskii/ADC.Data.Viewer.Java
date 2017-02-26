@@ -44,73 +44,95 @@
 package adc.data.viewer.ui;
 
 
-import adc.data.viewer.plotter.PlotsBuilder;
+import adc.data.viewer.plotter.Plotter;
 import adc.data.viewer.processing.SavitzkyGolayFilter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 public class PlotterController {
 
     private MainApp mainApp;
-    private  PlotsBuilder plots;
+    private Plotter plotter;
 
+
+
+    @FXML
+    Label legend;
     @FXML
     private AnchorPane plotsLayout;
-
     @FXML
     private Label xyLabel;
+    @FXML
+    private Button subtractSGFilter;
 
-
-
-    public  PlotsBuilder getPlots() {
-        return plots;
+    public Plotter getPlotter() {
+        return plotter;
     }
     public Label getXyLabel() {
         return xyLabel;
+    }
+    public AnchorPane getPlotsLayout() {
+        return plotsLayout;
     }
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
     public void setPlotsOnPane() {
 
-        plots = new PlotsBuilder(mainApp, plotsLayout, this);
+        plotter = new Plotter(mainApp, plotsLayout, this);
 
+    }
+
+    public void setLegend(Label legend) {
+        this.legend = legend;
+    }
+    public Label getLegend() {
+        return legend;
     }
 
     @FXML
     public void handleRaw(ActionEvent actionEvent) {
-        plots.getCanvasData().setSGfilter(null);
-        plots.getCanvasData().setPlotType("Raw");
-        plots.getCanvasData().drawData();
+
+        plotter.getCanvasData().setSGfilter(null);
+        plotter.getCanvasData().setPlotType("Raw");
+        plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleRawAndSGFilter(ActionEvent actionEvent) {
-        plots.getCanvasData().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
-        plots.getCanvasData().setPlotType("RawAndSGFilter");
-        plots.getCanvasData().drawData();
+        plotter.getCanvasData().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
+        plotter.getCanvasData().setPlotType("RawAndSGFilter");
+        plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleSGFiltered(ActionEvent actionEvent) {
-        plots.getCanvasData().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
-        plots.getCanvasData().setPlotType("SGFiltered");
-        plots.getCanvasData().drawData();
+        plotter.getCanvasData().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
+        plotter.getCanvasData().setPlotType("SGFiltered");
+        plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleSGFilter(ActionEvent actionEvent) {
-        plots.getCanvasData().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
-        plots.getCanvasData().setPlotType("SGFilter");
-        plots.getCanvasData().drawData();
+        plotter.getCanvasData().setSGfilter(new SavitzkyGolayFilter(PlotterSettingController.sgleft, PlotterSettingController.sgright, PlotterSettingController.sgorder));
+        plotter.getCanvasData().setPlotType("SGFilter");
+        plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handlePlotterSettings(ActionEvent actionEvent) {
-        mainApp.setPlotterSetting();
+//        mainApp.setPlotterController(this);
+        mainApp.setPlotterSetting(this);
     }
 
+
+
+    @FXML
+    private void initialize() {
+    subtractSGFilter.setText("\u2013SGfilter");
+    }
 
 }

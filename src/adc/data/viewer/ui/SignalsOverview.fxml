@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -9,6 +10,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <!--
@@ -54,7 +56,7 @@
   ~ 	********************* END LICENSE BLOCK ***********************************
   -->
 
-<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.SignalsOverviewController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.SignalsOverviewController">
    <children>
       <SplitPane fx:id="signalsOverviewSplitPane" dividerPositions="0.2" layoutX="225.0" layoutY="164.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -72,9 +74,9 @@
                   </TableView>
                </children>
             </AnchorPane>
-          <AnchorPane fx:id="signalsOverviewRightPane" minHeight="0.0" minWidth="0.0">
+          <AnchorPane fx:id="signalsOverviewRightPane">
                <children>
-                  <GridPane fx:id="signalFeaturesGrid" alignment="TOP_CENTER" hgap="10.0" layoutY="87.0" vgap="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                  <GridPane fx:id="signalFeaturesGrid" alignment="TOP_CENTER" hgap="10.0" layoutY="87.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="0.0" vgap="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -152,7 +154,7 @@
                                <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label contentDisplay="CENTER" text="Signal features:" textAlignment="CENTER" GridPane.columnSpan="2147483647">
+                        <Label contentDisplay="CENTER" text="Selected signal features:" textAlignment="CENTER" GridPane.columnSpan="2147483647">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -165,6 +167,11 @@
                         <Insets left="10.0" />
                      </padding>
                   </GridPane>
+                  <ScrollPane fx:id="plotsScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="0.0" maxWidth="0.0" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <VBox fx:id="plotsVBox" />
+                     </content>
+                  </ScrollPane>
                </children>
             </AnchorPane>
         </items>

@@ -51,7 +51,7 @@
   ~ 	********************* END LICENSE BLOCK ***********************************
   -->
 
-<AnchorPane fx:id="plotsLayout" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterController">
+<AnchorPane fx:id="plotsLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterController">
    <children>
       <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -68,9 +68,9 @@
             </Label>
          </center>
          <left>
-            <HBox BorderPane.alignment="CENTER">
+            <HBox spacing="2.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button defaultButton="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handlePlotterSettings" prefHeight="10.0" prefWidth="56.0" text="Settings">
                      <font>
                         <Font size="10.0" />
                      </font>
@@ -90,7 +90,7 @@
                         <Font size="10.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#handleSGFiltered" text="- SGfilter">
+                  <Button fx:id="subtractSGFilter" mnemonicParsing="false" onAction="#handleSGFiltered" text="- SGfilter">
                      <font>
                         <Font size="10.0" />
                      </font>
@@ -100,10 +100,23 @@
                   <Insets />
                </opaqueInsets>
                <BorderPane.margin>
-                  <Insets bottom="3.0" left="70.0" top="3.0" />
+                  <Insets bottom="2.0" left="70.0" top="2.0" />
                </BorderPane.margin>
             </HBox>
          </left>
+         <right>
+            <Label fx:id="legend" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
+               <font>
+                  <Font size="10.0" />
+               </font>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets right="50.0" />
+               </padding>
+            </Label>
+         </right>
       </BorderPane>
    </children>
 </AnchorPane>
