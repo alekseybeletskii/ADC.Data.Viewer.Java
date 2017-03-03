@@ -35,7 +35,11 @@ How to use:
    - "File->Open" shows a file chooser dialog, files with "dat" and "txt" extensions will be available;
    - "Plot->Export all to txt " converts all signals shown in the main table
        to the text format and save it to a subfolder named "<source>/txt"
-   - "Plot->Draw Plots" plots checked signals in a separate window.
+   - "Plot->Draw" shows selected signals;
+                  arrow UP,DOWN - list by one;
+                  ctrl+HOME - show all in one;
+   - "Plot->Draw by one" shows selected signals inside one plot as a stack, one by one;
+   - "Plot->Draw by one and scroll" shows selected signals one by one inside a one long plot with scrolling;
    -  When plots are shown, Savitsky-Golay filter can be applied.
    -  double click on table will check/uncheck all signals
    -  individual color can be set for every signal
@@ -45,7 +49,7 @@ Zoom and pan plots with mouse:
    - pan: right click + drag 
    - rescale to a full view: left click + drag back from a bottom right to a top left
 
-NOTE: if there are a lot of points, drawing will take some time.
+NOTE: if there are a lot of points, complete drawing will take some time.
       Laptop with Intel i5 renders a 1 000 000 of points about 1 minute,
       in case of drawing all data "as is".
       Feature is included that enables  rapid drawing even when there are
