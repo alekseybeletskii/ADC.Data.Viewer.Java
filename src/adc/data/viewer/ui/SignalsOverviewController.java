@@ -44,10 +44,12 @@
 package adc.data.viewer.ui;
 
 import adc.data.viewer.model.SignalMarker;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -74,7 +76,7 @@ public class SignalsOverviewController {
     }
 
     @FXML
-    ScrollPane plotsScrollPane;
+    private ScrollPane plotsScrollPane;
 
     @FXML
     private AnchorPane signalsOverviewRightPane;
@@ -116,7 +118,9 @@ public class SignalsOverviewController {
 
 
 
-
+    public TableView<SignalMarker> getSignalsTable() {
+        return signalsTable;
+    }
     public AnchorPane getSignalsOverviewRightPane() {
         return signalsOverviewRightPane;
     }
@@ -147,7 +151,26 @@ public class SignalsOverviewController {
                 {   showSignalDetails(newValue);
                 }
                 );
+
+        plotsScrollPane.getContent().setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                double height = plotsScrollPane.getContent().getBoundsInLocal().getHeight();
+                double vvalue = plotsScrollPane.getVvalue();
+                double ScrollDeltaYVval = event.getDeltaY()/height;
+                double paneContentShift =1/(mainApp.getHowManyPlots()-1);
+                if(ScrollDeltaYVval >0) {
+                    plotsScrollPane.setVvalue(vvalue + ScrollDeltaYVval - paneContentShift);
+                }
+                if(ScrollDeltaYVval <0) {
+                    plotsScrollPane.setVvalue(vvalue + ScrollDeltaYVval + paneContentShift);
+                }
+            }
+        });
     }
+
+
+
 
     private void showSignalDetails(SignalMarker signal) {
         if (signal != null){

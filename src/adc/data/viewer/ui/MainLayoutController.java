@@ -71,16 +71,13 @@ public class MainLayoutController {
     private void handleOpen() {
 
         mainApp.getPlotterControllerlist().clear();
-
         List<File> inpList = new ArrayList<>();
-        List<File> chosenFiles;
+//        List<File> chosenFiles;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(initDir);
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
                 "data files (*.dat,*.txt)", "*.dat", "*.DAT","*.txt","*.TXT");
         fileChooser.getExtensionFilters().add(extFilter);
-
-
         getMoreFiles(inpList, fileChooser);
 
         boolean morefiles = true;
@@ -105,9 +102,6 @@ public class MainLayoutController {
                 morefiles=false;
             }
         }
-
-
-
     }
 
     private void getMoreFiles(List<File> inpList, FileChooser fileChooser) {
@@ -152,18 +146,26 @@ public class MainLayoutController {
 
     @FXML
     private void handleDrawPlots() {
-
+        mainApp.setDefaultPlotsLayoutType("AllPlots");
         if (!mainApp.getSignalList().isEmpty()) {
-            mainApp.drawPlots("AllPlots");
+            mainApp.drawPlots();
         }
-
     }
     @FXML
     private void handleDrawPlotsByOne(){
+        mainApp.setDefaultPlotsLayoutType("AllPlotsByOne");
         if (!mainApp.getSignalList().isEmpty()) {
-            mainApp.drawPlots("AllPlotsByOne");
+            mainApp.drawPlots();
         }
     }
+    @FXML
+    private void handleDrawPlotsByOneScroll(){
+        mainApp.setDefaultPlotsLayoutType("AllPlotsByOneScroll");
+        if (!mainApp.getSignalList().isEmpty()) {
+            mainApp.drawPlots();
+        }
+    }
+
 
     @FXML
     private void handleHidePlots() {

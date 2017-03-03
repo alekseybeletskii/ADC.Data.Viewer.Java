@@ -59,6 +59,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.round;
 
 
@@ -91,51 +92,67 @@ public class CanvasDataDrawing extends Canvas {
      private DoubleProperty shiftXZero = new SimpleDoubleProperty();
      private DoubleProperty shiftYZero = new SimpleDoubleProperty();
 
-     private String plotType;
-     private String lineOrScatter;
-     private int pointSize;
+     private double maxZeroShift;
+     private double [] fixZeroShiftRange;
+     private boolean fixZeroShift;
 
-     private SavitzkyGolayFilter sgfilter;
+     private int [] sgFilterSettings;
+     private double widthOfLine;
+     private String plotType;
+     private String plotStyle;
+     private int pointSize;
      private GraphicsContext graphicContext;
 
-     public void setLineOrScatter(String lineOrScatter) {
-         this.lineOrScatter = lineOrScatter;
+     public void setSgFilterSettings(int[] sgFilterSettings) {
+         this.sgFilterSettings = sgFilterSettings;
+     }
+     
+     public void setWidthOfLine(double widthOfLine) {
+         this.widthOfLine = widthOfLine;
+     }
+
+     public void setPlotStyle(String plotStyle) {
+         this.plotStyle = plotStyle;
      }
 
      public void setPlotType(String plotType) {
          this.plotType = plotType;
      }
 
-     public void setSGfilter(SavitzkyGolayFilter sgfilter) {
-         this.sgfilter = sgfilter;
-     }
-
      public double getShiftYZero() {
          return shiftYZero.get();
-     }
-
-     public SavitzkyGolayFilter getSgfilter() {
-         return sgfilter;
      }
 
      public double getShiftXZero() {
          return shiftXZero.get();
      }
 
+     public void setFixZeroShiftRange(double[] fixZeroShiftRange) {
+         this.fixZeroShiftRange = fixZeroShiftRange;
+     }
 
-     CanvasDataDrawing(MainApp mainApp, Axes axes, String plotType) {
-         this.plotType = plotType;
+     public void setFixZeroShift(boolean fixZeroShift) {
+         this.fixZeroShift = fixZeroShift;
+     }
+
+
+     CanvasDataDrawing(MainApp mainApp, Axes axes) {
          this.mainApp = mainApp;
-         this.axes = axes;
+         this.widthOfLine =mainApp.getDefaultWidthOfLine();
+         this.plotType = mainApp.getDefaultPlotType();
+         this.plotStyle = mainApp.getDefaultPlotStyle();
          this.allSignals = mainApp.getDataParser();
-         this.lineOrScatter = "line+scatter";
+         this.axes = axes;
          this.pointSize = 6;
-         PlotterSettingController.setChosenLineOrScatter(lineOrScatter);
+         sgFilterSettings = mainApp.getDefaultSGFilterSettings();
+         fixZeroShiftRange =mainApp.getDefaultFixZeroShiftRange();
+         fixZeroShift = mainApp.getDefaultFixZeroShift();
          dx.bind(Bindings.divide(widthProperty(), Bindings.subtract(axes.getXAxis().upperBoundProperty(), axes.getXAxis().lowerBoundProperty())));
          dy.bind(Bindings.divide(heightProperty(), Bindings.subtract(axes.getYAxis().upperBoundProperty(), axes.getYAxis().lowerBoundProperty())));
          shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(), dx));
          shiftYZero.bind(Bindings.multiply(axes.getYAxis().upperBoundProperty(), dy));
          graphicContext = getGraphicsContext2D();
+         maxZeroShift=0;
 
      }
 
@@ -158,7 +175,6 @@ public class CanvasDataDrawing extends Canvas {
       * Canvas drawing now successfully copes with millions of data points
       * due to simple point-per-pixel approach (see "decimator" method)
       */
-
 
      public void drawDataMeshZerolines() {
 
@@ -186,41 +202,57 @@ public class CanvasDataDrawing extends Canvas {
          cleanCanvas();
          drawmesh();
 
-         graphicContext.setLineWidth(1);
+         graphicContext.setLineWidth(widthOfLine);
          graphicContext.setLineDashes(0);
 
-         switch (mainApp.getPlotsLayoutType()) {
+         switch (mainApp.getDefaultPlotsLayoutType()) {
              case "AllPlots":
-                 for (SignalMarker signalMarker : mainApp.getSignalList()) {
-                     if (signalMarker.getSignalSelected()) {
-                         drawNextSignal(signalMarker);
+                 int i=0;
+                 for (SignalMarker sigMarc : mainApp.getSignalList()) {
+
+                     if (sigMarc.getSignalSelected()) {
+                         i++;
+                         nextSignalToDraw=sigMarc;
+                         drawNextSignal(sigMarc);
                      }
                  }
+
+                 if(i==1){
+                     plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
+                     plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
+                 }
+                 else{
+                     plotterController.getLegend().setText("="+plotType+"=");
+                     plotterController.getSignalIndexLabel().setText("");
+                 }
+
                  break;
              case "AllPlotsByOne":
-                 plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel());
+                 plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
+                 plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
+                 drawNextSignal(nextSignalToDraw);
+                 break;
+             case "AllPlotsByOneScroll":
+                 plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
+                 plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
                  drawNextSignal(nextSignalToDraw);
                  break;
              default:
                  break;
          }
 
-         drawZeroLines();
 
+         drawZeroLines();
 
      }
 
 
-
-
-
-
-
      public void drawNextSignal(SignalMarker signalMarker) {
+         double zeroShift = 0;
+
          int nextSignal = signalMarker.getSignalIndex();
          String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
          int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
-
 //dt,dtCadre in milliseconds
          double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
          double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
@@ -228,12 +260,25 @@ public class CanvasDataDrawing extends Canvas {
          int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
          int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
 
-
          if((xRight>0)&&(xLeft<nextSignalLength)) {
-
-
              double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
                      xLeft < 0 ? 0 : xLeft, xRight > nextSignalLength ? nextSignalLength : xRight);
+
+             SavitzkyGolayFilter sgfilter;
+             int sgLeft = (sgFilterSettings[0]+sgFilterSettings[1])>=sigSubarray.length?1:sgFilterSettings[0];
+             int sgRight = (sgFilterSettings[0]+sgFilterSettings[1])>=sigSubarray.length?1:sgFilterSettings[1];
+
+             if(fixZeroShift){
+                 int zeroStart = (int) round(fixZeroShiftRange[0] / dt);
+                 int zeroEnd = (int) round(fixZeroShiftRange[1] / dt);
+                 if(zeroEnd-zeroStart>0&&zeroStart>0&&zeroEnd<nextSignalLength) {
+                     zeroShift =SimpleMath.findAverage(Arrays.copyOfRange(allSignals.getSignals()[nextSignal],zeroStart,zeroEnd));
+                     for(int i=0; i<sigSubarray.length; i++)
+                     sigSubarray[i]=sigSubarray[i]- zeroShift;
+                     maxZeroShift=abs(maxZeroShift)>abs(zeroShift)?maxZeroShift:zeroShift;
+                 }
+                 else PlotterSettingController.setFixZeroShiftDefault(0,0,false);
+             }
 
              switch (plotType) {
                  case "Raw":
@@ -243,6 +288,7 @@ public class CanvasDataDrawing extends Canvas {
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      break;
                  case "SGFiltered":
+                     sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
                      graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
                      graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
                      graphicContext.beginPath();
@@ -254,6 +300,8 @@ public class CanvasDataDrawing extends Canvas {
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      break;
                  case "RawAndSGFilter":
+                     sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
+
                      graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
                      graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
                      graphicContext.beginPath();
@@ -265,6 +313,8 @@ public class CanvasDataDrawing extends Canvas {
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      break;
                  case "SGFilter":
+                     sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
+
                      sigSubarray = sgfilter.filterData(sigSubarray);
                      graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
                      graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
@@ -350,7 +400,7 @@ public class CanvasDataDrawing extends Canvas {
                 if (x == 0) {
                     graphicContext.moveTo(mapX(x, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
                 }
-                switch (lineOrScatter){
+                switch (plotStyle){
                     case "line":
                         graphicContext.lineTo(mapX(x, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
                         break;

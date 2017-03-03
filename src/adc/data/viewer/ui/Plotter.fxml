@@ -53,22 +53,9 @@
 
 <AnchorPane fx:id="plotsLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterController">
    <children>
-      <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <center>
-            <Label text="x=...; y=..." BorderPane.alignment="CENTER_LEFT" fx:id="xyLabel">
-               <font>
-                  <Font name="System Italic" size="14.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <BorderPane.margin>
-                  <Insets left="10.0" />
-               </BorderPane.margin>
-            </Label>
-         </center>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
-            <HBox spacing="2.0" BorderPane.alignment="CENTER">
+            <HBox spacing="2.0">
                <children>
                   <Button defaultButton="true" mnemonicParsing="false" onAction="#handlePlotterSettings" prefHeight="10.0" prefWidth="56.0" text="Settings">
                      <font>
@@ -95,27 +82,53 @@
                         <Font size="10.0" />
                      </font>
                   </Button>
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" text="x=......; y=......" fx:id="xyLabel">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Label>
                </children>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <padding>
+                  <Insets left="70.0" />
+               </padding>
                <BorderPane.margin>
-                  <Insets bottom="2.0" left="70.0" top="2.0" />
+                  <Insets bottom="2.0" top="2.0" />
                </BorderPane.margin>
             </HBox>
          </left>
          <right>
-            <Label fx:id="legend" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="legend" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="signalLabel">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="50.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="signalIndexLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="signalIndexLabel" textAlignment="RIGHT" textFill="#1e68b0">
+                     <font>
+                        <Font name="System Bold Italic" size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
                <BorderPane.margin>
-                  <Insets />
+                  <Insets bottom="2.0" top="2.0" />
                </BorderPane.margin>
-               <padding>
-                  <Insets right="50.0" />
-               </padding>
-            </Label>
+            </HBox>
          </right>
       </BorderPane>
    </children>

@@ -45,7 +45,6 @@ package adc.data.viewer.plotter;
 
 import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterController;
-import adc.data.viewer.ui.PlotterSettingController;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Cursor;
@@ -58,29 +57,36 @@ import javafx.scene.shape.StrokeType;
 
     public class Plotter extends AnchorPane {
 
-        private  Axes axes;
+    private static int plotterObjectsCounter;
+    private  Axes axes;
     private CanvasDataDrawing canvasData;
     private PlotterController plotterController;
     private Rectangle zoomRectangle;
+    private MainApp mainApp;
 
-        private MainApp mainApp;
-
-        public CanvasDataDrawing getCanvasData() {
+    public CanvasDataDrawing getCanvasData() {
         return canvasData;
     }
+    public static void setPlotterObjectsCounter(int plotterObjectsCounter) {
+            Plotter.plotterObjectsCounter = plotterObjectsCounter;
+        }
 
 
-    public Axes getAxes() {
+
+        public Axes getAxes() {
         return axes;
     }
 
-    public Plotter(MainApp mainApp, AnchorPane axesAnchorPane, PlotterController plotterController){
+    public Plotter(MainApp mainApp, AnchorPane plotterLayout, PlotterController plotterController){
+        plotterObjectsCounter++;
+//        System.out.println(plotterObjectsCounter);
+//        System.out.println(mainApp.getHowManyPlots());
         this.plotterController=plotterController;
         this.mainApp = mainApp;
         this.zoomRectangle =null;
 
-        PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
-        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
+//        PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
+//        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
 
         this.axes = new Axes(mainApp);
 
@@ -91,10 +97,7 @@ import javafx.scene.shape.StrokeType;
         AnchorPane.setTopAnchor(axes, 0.0);
 
 
-
-
-
-        canvasData = new CanvasDataDrawing(mainApp, axes,  "Raw");
+        canvasData = new CanvasDataDrawing(mainApp, axes);
         canvasData.widthProperty().bind(axes.getXAxis().widthProperty());
         canvasData.heightProperty().bind(axes.getYAxis().heightProperty());
         getChildren().add(canvasData);
@@ -104,20 +107,21 @@ import javafx.scene.shape.StrokeType;
         AnchorPane.setTopAnchor(canvasData, 0.0);
 
 
-        axesAnchorPane.getChildren().add(this);
+        plotterLayout.getChildren().add(this);
         AnchorPane.setLeftAnchor(this, 70.0);
         AnchorPane.setRightAnchor(this, 50.0);
-        AnchorPane.setBottomAnchor(this, 50.0);
-//        AnchorPane.setTopAnchor(this, 30.0);
         AnchorPane.setTopAnchor(this, 0.0);
+        AnchorPane.setBottomAnchor(this, 50.0);
+
+
+
+
+        AnchorPane.setLeftAnchor(plotterLayout, 10.0);
+        AnchorPane.setRightAnchor(plotterLayout, 10.0);
+        AnchorPane.setBottomAnchor(plotterLayout, 10.0);
+        AnchorPane.setTopAnchor(plotterLayout, 10.0);
+
         this.toBack();
-
-
-        AnchorPane.setLeftAnchor(axesAnchorPane, 10.0);
-        AnchorPane.setRightAnchor(axesAnchorPane, 10.0);
-        AnchorPane.setBottomAnchor(axesAnchorPane, 10.0);
-        AnchorPane.setTopAnchor(axesAnchorPane, 10.0);
-
         showMouseXY();
         zoom();
 
@@ -169,8 +173,8 @@ import javafx.scene.shape.StrokeType;
                     zoomRectangle.setHeight(recHeight);
                 }
                 if(recWidth<0&recHeight<0){
-                    zoomRectangle.setWidth(0.0);
-                    zoomRectangle.setHeight(0.0);
+                    zoomRectangle.setWidth(recWidth);
+                    zoomRectangle.setHeight(recHeight);
                 }
             }
 
@@ -190,14 +194,14 @@ import javafx.scene.shape.StrokeType;
 
         setOnMouseReleased(mreleased -> {
             if(mreleased.getButton()== MouseButton.PRIMARY) {
-                if (zoomRectangle.getWidth() == 0.0 & zoomRectangle.getHeight() == 0.0 & !mainApp.getSignalList().isEmpty()) {
+                if (zoomRectangle.getWidth() < 0.0 & zoomRectangle.getHeight() < 0.0 & !mainApp.getSignalList().isEmpty()) {
                     axes.obtainDataAndTimeMargins(canvasData.getNextSignalToDraw());
                     axes.setAxesBasicSetup();
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;
 
 
-                } else if (zoomRectangle.getWidth() != 0.0 & zoomRectangle.getHeight() != 0.0) {
+                } else if (zoomRectangle.getWidth() > 0.0 & zoomRectangle.getHeight() > 0.0) {
                     axes.axesZoomRescale(zoomTopLeftX, zoomTopLeftY, zoomBottomRightX, zoomBottomRightY);
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;

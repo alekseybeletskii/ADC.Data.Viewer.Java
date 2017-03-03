@@ -45,6 +45,7 @@ package adc.data.viewer.ui;
 
 import adc.data.viewer.model.SignalMarker;
 import adc.data.viewer.parser.DataParser;
+import adc.data.viewer.plotter.Plotter;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -52,6 +53,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -69,46 +71,48 @@ public class MainApp extends Application {
     }
 
     private Stage plotsStage;
+
+
     private  boolean redrawAllowed;
     private SignalMarker nextSignalToDraw;
-    private String plotsLayoutType;
+    private String defaultPlotsLayoutType;
     private Stage primaryStage;
     private BorderPane mainLayout;
     private DataParser dataParser;
     private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
     private TextFileDataController textFileDataController;
+    private int nextSignalToDrawIndex;
+    private int howManyPlots;
+    private double defaultWidthOfLine;
+    private String defaultPlotStyle;
+    private String defaultPlotType;
+    private int [] defaultSGFilterSettings;
+    private double [] defaultFixZeroShiftRange;
+    private double [] savedAxesRange;
+    private boolean defaultFixZeroShift;
+    private boolean useSavedAxesRange;
 
     public List<PlotterController> getPlotterControllerlist() {
         return plotterControllerlist;
     }
-
     private List<PlotterController> plotterControllerlist =new ArrayList<>();
-    private PlotterController plotterController;
-    private PlotterSettingController plotterSettingController;
     private SignalsOverviewController signalsOverviewController;
-
-    public String getPlotsLayoutType() {
-        return plotsLayoutType;
+    public String getDefaultPlotsLayoutType() {
+        return defaultPlotsLayoutType;
     }
     public SignalMarker getNextSignalToDraw() {
         return nextSignalToDraw;
     }
-//    void setPlotterController(PlotterController plotterController) {
-//        this.plotterController = plotterController;
-//    }
     public SignalsOverviewController getSignalsOverviewController() {
         return signalsOverviewController;
     }
-//    PlotterController getPlotterController() {
-//        return plotterController;
-//    }
     public TextFileDataController getTextFileDataController() {
         return textFileDataController;
     }
     public ObservableList<SignalMarker> getSignalList() {
         return signalList;
     }
-     Stage getPrimaryStage() {
+    Stage getPrimaryStage() {
         return primaryStage;
     }
     public DataParser getDataParser() {
@@ -117,8 +121,62 @@ public class MainApp extends Application {
     public void setDataPars(DataParser dataParser) {
         this.dataParser = dataParser;
     }
+    public double getHowManyPlots() {
+        return howManyPlots;
+    }
     Stage getPlotsStage() {
         return plotsStage;
+    }
+    public String getDefaultPlotType() {
+        return defaultPlotType;
+    }
+    public void setDefaultPlotType(String defaultPlotType) {
+        this.defaultPlotType = defaultPlotType;
+    }
+    public void setDefaultWidthOfLine(double defaultWidthOfLine) {
+        this.defaultWidthOfLine = defaultWidthOfLine;
+    }
+    public double getDefaultWidthOfLine() {
+        return defaultWidthOfLine;
+    }
+    public String getDefaultPlotStyle() {
+        return defaultPlotStyle;
+    }
+    public void setDefaultPlotStyle(String defaultPlotStyle) {
+        this.defaultPlotStyle = defaultPlotStyle;
+    }
+    public int[] getDefaultSGFilterSettings() {
+        return defaultSGFilterSettings;
+    }
+    public void setDefaultSGFilterSettings(int[] defaultSGFilterSettings) {
+        this.defaultSGFilterSettings = defaultSGFilterSettings;
+    }
+    public double[] getDefaultFixZeroShiftRange() {
+        return defaultFixZeroShiftRange;
+    }
+    public void setDefaultFixZeroShiftRange(double[] defaultFixZeroShiftRange) {
+        this.defaultFixZeroShiftRange = defaultFixZeroShiftRange;
+    }
+    public boolean getDefaultFixZeroShift() {
+        return defaultFixZeroShift;
+    }
+    public void setDefaultFixZeroShift(boolean defaultFixZeroShift) {
+        this.defaultFixZeroShift = defaultFixZeroShift;
+    }
+    public double[] getSavedAxesRange() {
+        return savedAxesRange;
+    }
+    public void setSavedAxesRange(double[] savedAxesRange) {
+        this.savedAxesRange = savedAxesRange;
+    }
+    public boolean isUseSavedAxesRange() {
+        return useSavedAxesRange;
+    }
+    public void setUseSavedAxesRange(boolean useSavedAxesRange) {
+        this.useSavedAxesRange = useSavedAxesRange;
+    }
+    public void setDefaultPlotsLayoutType(String defaultPlotsLayoutType) {
+        this.defaultPlotsLayoutType = defaultPlotsLayoutType;
     }
 
     @Override
@@ -128,6 +186,21 @@ public class MainApp extends Application {
         this.primaryStage.getIcons().add(new Image("images/IPP-logo.png"));
         initMainLayout();
         showSignalsOverview();
+        defaultWidthOfLine =1.0;
+        defaultPlotType="Raw";
+        defaultPlotStyle = "line+scatter";
+        defaultPlotsLayoutType = "AllPlots";
+        nextSignalToDrawIndex =-1;
+        defaultSGFilterSettings = new int [] {50,50,1};
+        defaultFixZeroShiftRange = new double [] {0,0};
+        savedAxesRange = new double [] {0.0,1.0,-1.0,1.0};
+        defaultFixZeroShift = false;
+        useSavedAxesRange =false;
+        PlotterSettingController.setSGFilterSettingsDefault(defaultSGFilterSettings[0],defaultSGFilterSettings[1],defaultSGFilterSettings[2]);
+        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
+        PlotterSettingController.setFixZeroShiftDefault(defaultFixZeroShiftRange[0], defaultFixZeroShiftRange[1], defaultFixZeroShift);
+        PlotterSettingController.setWidthOfLineDefault(defaultWidthOfLine);
+        PlotterSettingController.setChosenLineOrScatter(defaultPlotStyle);
     }
 
     private void initMainLayout() {
@@ -156,6 +229,7 @@ public class MainApp extends Application {
             signalsOverviewController.setTableItems();
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
             signalsOverviewController.getSignalsOverviewSplitPane().setVisible(false);
+            setKeyPressedAction();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,26 +262,13 @@ public class MainApp extends Application {
 
      }
 
-    private void signalMarkerAddListeners(SignalMarker sigmrk) {
-        sigmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(plotterController!=null&&redrawAllowed) {
-                plotterController.getPlotter().getCanvasData().drawData();
-            }
-        }
-        );
 
-        sigmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
-            if(plotterController!=null&&redrawAllowed) {
-                plotterController.getPlotter().getCanvasData().drawData();
-            }
-        }
-        );
-    }
 
-    void drawPlots(String plotsLayoutType) {
-        this.plotsLayoutType=plotsLayoutType;
+    void drawPlots() {
+        Plotter.setPlotterObjectsCounter(0);
+
         clearPlots();
-        switch (plotsLayoutType){
+        switch (defaultPlotsLayoutType){
             case "AllPlots":
                 signalsOverviewController.getPlotsScrollPane().setFitToHeight(true);
                 nextSignalToDraw=null;
@@ -234,6 +295,10 @@ public class MainApp extends Application {
                     if (sm.getSignalSelected()) {
                         nextSignalToDraw=sm;
                         layoutLoader();
+
+                        plotterControllerlist.get(plotterControllerlist.size()-1)
+                                .getPlotsLayout().setPrefHeight
+                                (signalsOverviewController.getSignalsOverviewRightPane().getHeight());
                     }
                 }
                 break;
@@ -241,18 +306,27 @@ public class MainApp extends Application {
                 break;
         }
 
+        howManyPlots=0;
         for (PlotterController pc:plotterControllerlist){
-//            pc.getPlotsLayout().prefHeightProperty().bind(signalsOverviewController.getPlotsVBox().heightProperty());
-//            pc.getPlotsLayout().setPrefHeight(signalsOverviewController.getSignalsOverviewRightPane().getHeight());
+
+            if(defaultPlotsLayoutType.equals("AllPlotsByOne")){
+               AnchorPane.setBottomAnchor(pc.getPlotter(),25.0);
+            }
+            howManyPlots++;
             pc.getPlotter().getCanvasData().widthProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
             pc.getPlotter().getCanvasData().heightProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
             signalsOverviewController.getPlotsVBox().getChildren().add(pc.getPlotsLayout());
         }
+
+
         signalsOverviewController.getPlotsScrollPane().setVisible(true);
+        signalsOverviewController.getPlotsVBox().requestFocus();
     }
 
     private void layoutLoader() {
+        PlotterController plotterController;
         try {
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("Plotter.fxml"));
             loader.load();
@@ -262,8 +336,6 @@ public class MainApp extends Application {
             plotterController.getPlotter().getCanvasData().setPlotterController(plotterController);
             plotterController.getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
             plotterControllerlist.add(plotterController);
-
-//            plotterController.getPlotsLayout().prefHeightProperty().bind(signalsOverviewController.getPlotsVBox().heightProperty());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -294,6 +366,7 @@ public class MainApp extends Application {
     }
 
      void setPlotterSetting(PlotterController pc) {
+            PlotterSettingController plotterSettingController;
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("PlotterSetting.fxml"));
@@ -333,6 +406,7 @@ public class MainApp extends Application {
     }
 
      void clearAll(){
+         nextSignalToDrawIndex=-1;
              signalList.clear();
              signalsOverviewController.getPlotsVBox().getChildren().clear();
              plotterControllerlist.clear();
@@ -340,17 +414,81 @@ public class MainApp extends Application {
     }
 
     private void clearPlots(){
-        if(plotsLayoutType.equals("AllPlots")) {
+        if(defaultPlotsLayoutType.equals("AllPlots")) {
             redrawAllowed=true;
             signalsOverviewController.getPlotsVBox().getChildren().clear();
             plotterControllerlist.clear();
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
         }
-        if(plotsLayoutType.equals("AllPlotsByOne")){
+        if(defaultPlotsLayoutType.equals("AllPlotsByOne")){
             redrawAllowed=false;
             signalsOverviewController.getPlotsVBox().getChildren().clear();
             plotterControllerlist.clear();
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
         }
+        if(defaultPlotsLayoutType.equals("AllPlotsByOneScroll")){
+            redrawAllowed=false;
+            signalsOverviewController.getPlotsVBox().getChildren().clear();
+            plotterControllerlist.clear();
+            signalsOverviewController.getPlotsScrollPane().setVisible(false);
+        }
+    }
+
+    private void signalMarkerAddListeners(SignalMarker sigmrk) {
+        sigmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if(!plotterControllerlist.isEmpty()&&redrawAllowed) {
+                        plotterControllerlist.get(0).getPlotter().getCanvasData().drawData();
+                    }
+                }
+        );
+
+        sigmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
+                    if(!plotterControllerlist.isEmpty()&&redrawAllowed) {
+                        plotterControllerlist.get(0).getPlotter().getCanvasData().drawData();
+                    }
+                }
+        );
+    }
+
+    private void setKeyPressedAction(){
+
+        signalsOverviewController.getPlotsScrollPane().setOnKeyPressed(k -> {
+
+            if(defaultPlotsLayoutType.equals("AllPlots")) {
+                if(k.getCode()== KeyCode.HOME&&k.isShortcutDown()) {
+                    signalList.forEach(sig -> sig.setSignalSelected(true));
+                    nextSignalToDrawIndex = -1;
+                }
+                else
+                switch (k.getCode()) {
+                    case HOME:
+                        signalList.forEach(sig -> sig.setSignalSelected(false));
+                        nextSignalToDrawIndex=0;
+                        signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                        break;
+                    case END:
+                        signalList.forEach(sig -> sig.setSignalSelected(false));
+                        nextSignalToDrawIndex=signalList.size()-1;
+                        signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                        break;
+                    case DOWN:
+                        signalList.forEach(sig -> sig.setSignalSelected(false));
+                        nextSignalToDrawIndex++;
+                        nextSignalToDrawIndex=nextSignalToDrawIndex>signalList.size()-1?0:nextSignalToDrawIndex;
+                        signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                        break;
+                    case UP:
+                        signalList.forEach(sig -> sig.setSignalSelected(false));
+                        nextSignalToDrawIndex--;
+                        nextSignalToDrawIndex=nextSignalToDrawIndex<0?signalList.size()-1:nextSignalToDrawIndex;
+                        signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        });
+
     }
 }

@@ -69,4 +69,8 @@ public class SimpleMath {
         if (arrayMin.isPresent()) min = arrayMin.getAsDouble();
 
     }
+
+    public static double findAverage (double [] anArray){
+       return Arrays.stream(anArray).average().getAsDouble();
+    }
 }

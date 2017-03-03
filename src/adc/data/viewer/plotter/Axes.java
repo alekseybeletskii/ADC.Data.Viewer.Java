@@ -66,6 +66,7 @@ public class Axes extends Pane {
     private StableTicksAxis xAxis;
     private StableTicksAxis yAxis;
 
+    private double fixYZeroShift=0.0;
     private double xAxisOffset;
     private double yAxisOffset;
     private double xMinBasic;
@@ -87,22 +88,27 @@ public class Axes extends Pane {
     public void setYAxisOffset(double yOffset) {
         this.yAxisOffset = yOffset;
     }
-
+    public void setFixYZeroShift(double fixYZeroShift) {
+        this.fixYZeroShift = fixYZeroShift;
+    }
 
     Axes(MainApp mainApp) {
+
         this.mainApp= mainApp;
 
 
         axesBoxRectangle = new Rectangle(0,0);
 
-
         obtainDataAndTimeMargins(mainApp.getNextSignalToDraw());
 
-        PlotterSettingController.setCurrentAxesSettings(xMinBasic,xMaxBasic,yMinBasic,yMaxBasic);
 
+        if (mainApp.isUseSavedAxesRange()) {
+            PlotterSettingController.setCurrentAxesSettings(mainApp.getSavedAxesRange()[0], mainApp.getSavedAxesRange()[1], mainApp.getSavedAxesRange()[2], mainApp.getSavedAxesRange()[3],true);
+            setSavedAxesBounds(mainApp.getSavedAxesRange()[0], mainApp.getSavedAxesRange()[1], mainApp.getSavedAxesRange()[2], mainApp.getSavedAxesRange()[3]);
+        }
+        else PlotterSettingController.setCurrentAxesSettings(xMinBasic,xMaxBasic,yMinBasic,yMaxBasic,false);
 
         xAxis = new StableTicksAxis(xMinBasic, xMaxBasic);
-
 
         xAxis.setLabel("time, ms");
         xAxis.setSide(Side.BOTTOM);
@@ -142,15 +148,23 @@ public class Axes extends Pane {
 
     }
 
+    private void setSavedAxesBounds ( double xmn, double xmx, double ymn, double ymx)
+    {
+        xMinBasic=xmn;
+        xMaxBasic=xmx;
+        yMinBasic=ymn;
+        yMaxBasic=ymx;
+    }
+
     public void setAxesBasicSetup( ){
 
         xAxis.setLowerBound(xMinBasic);
         xAxis.setUpperBound(xMaxBasic);
-        yAxis.setLowerBound(yMinBasic);
-        yAxis.setUpperBound(yMaxBasic);
+        yAxis.setLowerBound(yMinBasic-fixYZeroShift);
+        yAxis.setUpperBound(yMaxBasic-fixYZeroShift);
         xAxisOffset = xMinBasic;
-        yAxisOffset = yMinBasic;
-        PlotterSettingController.setCurrentAxesSettings( xMinBasic,xMaxBasic,yMinBasic,yMaxBasic);
+        yAxisOffset = yMinBasic-fixYZeroShift;
+        PlotterSettingController.setCurrentAxesSettings( xMinBasic,xMaxBasic,yMinBasic-fixYZeroShift,yMaxBasic-fixYZeroShift,false);
     }
 
     public StableTicksAxis getXAxis() {
@@ -187,9 +201,11 @@ public class Axes extends Pane {
         yAxis.setUpperBound(yAxis.getLowerBound()+(zoomBottomRightY.get()- zoomTopLeftY.get())/-yAxis.getScale());
         setYAxisOffset(yAxis.getLowerBound());
 
-        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound());
+        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound(),false);
 
     }
+
+
 
     void axesPanRescale (double dxPan, double dyPan){
 
@@ -200,7 +216,7 @@ public class Axes extends Pane {
         setXAxisOffset(xAxis.getLowerBound());
         setYAxisOffset(yAxis.getLowerBound());
 
-        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound());
+        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound(),false);
 
     }
 
@@ -214,7 +230,7 @@ yMaxBasic= Integer.MIN_VALUE;
         double dt; // time scale of longest amongst selected signal, ms
         boolean isAnySelected =false;
         //detect longest signal
-        switch(mainApp.getPlotsLayoutType()){
+        switch(mainApp.getDefaultPlotsLayoutType()){
             case "AllPlots":
                 for (SignalMarker signalMarker : mainApp.getSignalList()){
                     if (signalMarker.getSignalSelected())
@@ -225,6 +241,10 @@ yMaxBasic= Integer.MIN_VALUE;
                 }
                 break;
             case "AllPlotsByOne":
+                isAnySelected =true;
+                selectedSignalMargins(sm);
+                break;
+            case "AllPlotsByOneScroll":
                 isAnySelected =true;
                 selectedSignalMargins(sm);
                 break;

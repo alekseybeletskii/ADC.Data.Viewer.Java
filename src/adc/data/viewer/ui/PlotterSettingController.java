@@ -48,10 +48,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import static javafx.scene.control.Alert.AlertType.WARNING;
@@ -63,32 +60,42 @@ public class PlotterSettingController {
     private MainApp mainApp;
     private Stage plotterSettingsStage;
     private Alert alertInvalidParam;
-
-    public void setPlotterController(PlotterController plotterController) {
-        this.plotterController = plotterController;
-    }
-
     private PlotterController plotterController;
 
-    static Double ymin;
-    static Double xmin;
-    static Double ymax;
-    static Double xmax;
-    static int sgleft;
-    static int sgright;
-    static int sgorder;
-    static int fftsize;
-    static String fftwindow;
-    static int fftoverlap;
-
-    public static void setChosenLineOrScatter(String chosenLineOrScatter) {
-        PlotterSettingController.chosenLineOrScatter = chosenLineOrScatter;
-    }
-
+    public static Double ymin;
+    public static Double xmin;
+    public static Double ymax;
+    public static Double xmax;
+    public static int sgleft;
+    public static int sgright;
+    public static int sgorder;
+    public static int fftsize;
+    public static String fftwindow;
+    public static int fftoverlap;
+    public static double startZero;
+    public static double endZero;
+    public static boolean fixZero;
+    public static boolean isUseSavedAxesRange;
+    public static double widthOfLine;
     static String chosenLineOrScatter;
 
     private ObservableList<String> lineOrScatter = FXCollections.observableArrayList();
 
+    @FXML
+    private TextField lineWidth;
+    @FXML
+    private TextField zeroShiftStart;
+    @FXML
+    private TextField zeroShiftEnd;
+
+//
+//    public void setFixZeroShift(boolean fixZeroShift) {
+//        this.fixZeroShift.setSelected(fixZeroShift);
+//    }
+    @FXML
+    private CheckBox useSavedAxesRange;
+    @FXML
+    private CheckBox fixZeroShift;
     @FXML
     private ChoiceBox<String> chooseLineOrScatter;
     @FXML
@@ -99,10 +106,6 @@ public class PlotterSettingController {
     private TextField manualXmax;
     @FXML
     private TextField manualXmin;
-    @FXML
-    private TextField manualXstep;
-    @FXML
-    private TextField manualYstep;
     @FXML
     private TextField manualSGFilterLeft;
     @FXML
@@ -116,13 +119,38 @@ public class PlotterSettingController {
     @FXML
     private TextField FFTWindowOverlap;
 
-    public static void setCurrentAxesSettings(Double xmn, Double xmx,  Double ymn, Double ymx){
+
+
+
+//        xmin =pc.getPlotter().getAxes().getXAxis().getLowerBound();
+//        xmax =pc.getPlotter().getAxes().getXAxis().getUpperBound();
+//        ymin =pc.getPlotter().getAxes().getXAxis().getLowerBound();
+//        ymax =pc.getPlotter().getAxes().getXAxis().getUpperBound();
+
+
+
+    public void setPlotterController(PlotterController plotterController) {
+        this.plotterController = plotterController;
+    }
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+    }
+    public static void setChosenLineOrScatter(String chosenLineOrScatter) {
+        PlotterSettingController.chosenLineOrScatter = chosenLineOrScatter;
+    }
+    public static void setWidthOfLineDefault(double widthOfLine) {
+        PlotterSettingController.widthOfLine = widthOfLine;
+    }
+
+
+    public static void setCurrentAxesSettings(Double xmn, Double xmx,  Double ymn, Double ymx,boolean useSavedAxesRange){
         xmin=xmn;
         xmax=xmx;
         ymin=ymn;
         ymax=ymx;
-
+        isUseSavedAxesRange = useSavedAxesRange;
     }
+
 
     public static void setSGFilterSettingsDefault(int sglft,int sgrt,int ord){
         sgleft=sglft;
@@ -136,9 +164,12 @@ public class PlotterSettingController {
         fftoverlap=ftoverlap;
     }
 
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
+    public  static void setFixZeroShiftDefault(double startZ, double endZ, boolean fixZ){
+        startZero =startZ;
+        endZero =endZ;
+        fixZero = fixZ;
     }
+
 
     public void setPlotterSettingStage(Stage plotterSettingsStage) {
         this.plotterSettingsStage = plotterSettingsStage;
@@ -147,11 +178,11 @@ public class PlotterSettingController {
     @FXML
     public void initialize() {
 
+
         alertInvalidParam = new Alert(WARNING);
         DialogPane dialogPane = alertInvalidParam.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
         dialogPane.getStyleClass().add("myDialog");
-//        alertInvalidParam.initStyle(StageStyle.UNDECORATED);
         alertInvalidParam.setWidth(700);
         alertInvalidParam.setHeight(700);
         alertInvalidParam.setTitle("Warning");
@@ -167,13 +198,16 @@ public class PlotterSettingController {
         FFTSize.setText(String.valueOf(fftsize));
         FFTWindowType.setText(fftwindow);
         FFTWindowOverlap.setText(String.valueOf(fftoverlap));
-
+        lineWidth.setText(String.valueOf(widthOfLine));
+        zeroShiftStart.setText(String.valueOf(startZero));
+        zeroShiftEnd.setText(String.valueOf(endZero));
+        fixZeroShift.setSelected(fixZero);
         lineOrScatter.addAll("line+scatter","line","scatter");
         chooseLineOrScatter.itemsProperty().setValue(lineOrScatter);
         chooseLineOrScatter.setValue(chosenLineOrScatter);
-
+        useSavedAxesRange.setSelected(isUseSavedAxesRange);
         chooseLineOrScatter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            plotterController.getPlotter().getCanvasData().setLineOrScatter(newValue);
+            plotterController.getPlotter().getCanvasData().setPlotStyle(newValue);
             chosenLineOrScatter=newValue;
         });
 
@@ -188,7 +222,7 @@ public class PlotterSettingController {
     private void handleOk(ActionEvent actionEvent)  {
 
         if(
-                TestDataType.isDouble(manualXmin.getText())&&
+                        TestDataType.isDouble(manualXmin.getText())&&
                         TestDataType.isDouble(manualXmax.getText())&&
                         TestDataType.isDouble(manualYmin.getText())&&
                         TestDataType.isDouble(manualYmax.getText())&&
@@ -196,7 +230,10 @@ public class PlotterSettingController {
                         TestDataType.isInteger(manualSGFilterRight.getText(),10)&&
                         TestDataType.isInteger(manualSGFilterOrder.getText(),10)&&
                         TestDataType.isInteger(FFTSize.getText(),10)&&
-                        TestDataType.isInteger(FFTWindowOverlap.getText(),10)
+                        TestDataType.isInteger(FFTWindowOverlap.getText(),10)&&
+                        TestDataType.isDouble(lineWidth.getText())&&
+                        TestDataType.isDouble(zeroShiftStart.getText())&&
+                        TestDataType.isDouble(zeroShiftEnd.getText())
                 )
         {
             xmin=Double.parseDouble(manualXmin.getText());
@@ -209,11 +246,30 @@ public class PlotterSettingController {
             fftsize=Integer.parseInt(FFTSize.getText());
             fftoverlap=Integer.parseInt(FFTWindowOverlap.getText());
             fftwindow=FFTWindowType.getText();
-
+            widthOfLine=Double.parseDouble(lineWidth.getText());
+            startZero=Double.parseDouble(zeroShiftStart.getText());
+            endZero=Double.parseDouble(zeroShiftEnd.getText());
+            fixZero=fixZeroShift.isSelected();
+            isUseSavedAxesRange = useSavedAxesRange.isSelected();
             if ((xmin>xmax)|(ymin>ymax)) plotterController.getPlotter().getAxes().setAxesBasicSetup();
-            else plotterController.getPlotter().getAxes().setAxesBounds(xmin, xmax,ymin,ymax);
-            plotterController.getPlotter().getCanvasData().drawData();
+            else plotterController.getPlotter().getAxes().setAxesBounds(xmin,xmax,ymin,ymax);
+
+            plotterController.getPlotter().getCanvasData().setWidthOfLine(widthOfLine);
+            plotterController.getPlotter().getCanvasData().setPlotStyle(chosenLineOrScatter);
+            plotterController.getPlotter().getCanvasData().setSgFilterSettings(new int[]{sgleft,sgright,sgorder});
+            plotterController.getPlotter().getCanvasData().setFixZeroShiftRange(new double[]{startZero,endZero});
+            plotterController.getPlotter().getCanvasData().setFixZeroShift(fixZero);
+            mainApp.setDefaultPlotStyle(chosenLineOrScatter);
+            mainApp.setDefaultWidthOfLine(widthOfLine);
+            mainApp.setDefaultSGFilterSettings(new int[]{sgleft,sgright,sgorder});
+            mainApp.setDefaultFixZeroShift(fixZero);
+            mainApp.setDefaultFixZeroShiftRange(new double [] {startZero,endZero});
+            mainApp.setSavedAxesRange(new double [] {xmin,xmax,ymin,ymax});
+            mainApp.setUseSavedAxesRange(isUseSavedAxesRange);
             plotterSettingsStage.close();
+
+            plotterController.getPlotter().getCanvasData().drawData();
+
         }
 
         else{
