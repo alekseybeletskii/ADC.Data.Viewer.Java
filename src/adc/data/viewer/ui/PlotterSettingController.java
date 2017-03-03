@@ -89,7 +89,7 @@ public class PlotterSettingController {
     private TextField zeroShiftEnd;
 
 //
-//    public void setFixZeroShift(boolean fixZeroShift) {
+//    public void setIsFixZeroShift(boolean fixZeroShift) {
 //        this.fixZeroShift.setSelected(fixZeroShift);
 //    }
     @FXML
@@ -258,7 +258,7 @@ public class PlotterSettingController {
             plotterController.getPlotter().getCanvasData().setPlotStyle(chosenLineOrScatter);
             plotterController.getPlotter().getCanvasData().setSgFilterSettings(new int[]{sgleft,sgright,sgorder});
             plotterController.getPlotter().getCanvasData().setFixZeroShiftRange(new double[]{startZero,endZero});
-            plotterController.getPlotter().getCanvasData().setFixZeroShift(fixZero);
+            plotterController.getPlotter().getCanvasData().setIsFixZeroShift(fixZero);
             mainApp.setDefaultPlotStyle(chosenLineOrScatter);
             mainApp.setDefaultWidthOfLine(widthOfLine);
             mainApp.setDefaultSGFilterSettings(new int[]{sgleft,sgright,sgorder});

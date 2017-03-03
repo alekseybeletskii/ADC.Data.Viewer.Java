@@ -82,6 +82,24 @@ public class CanvasDataDrawing extends Canvas {
          this.plotterController = plotterController;
      }
 
+     public double getxTheMIN() {
+         return xTheMIN;
+     }
+
+     public double getxTheMAX() {
+         return xTheMAX;
+     }
+
+     public double getyTheMIN() {
+         return yTheMIN;
+     }
+
+     public double getyTheMAX() {
+         return yTheMAX;
+     }
+
+     private double xTheMIN,xTheMAX,yTheMIN,yTheMAX;
+
      private PlotterController plotterController;
      private SignalMarker nextSignalToDraw;
      private final DataParser allSignals;
@@ -94,7 +112,7 @@ public class CanvasDataDrawing extends Canvas {
 
      private double maxZeroShift;
      private double [] fixZeroShiftRange;
-     private boolean fixZeroShift;
+     private boolean isFixZeroShift;
 
      private int [] sgFilterSettings;
      private double widthOfLine;
@@ -131,12 +149,14 @@ public class CanvasDataDrawing extends Canvas {
          this.fixZeroShiftRange = fixZeroShiftRange;
      }
 
-     public void setFixZeroShift(boolean fixZeroShift) {
-         this.fixZeroShift = fixZeroShift;
+     public void setIsFixZeroShift(boolean fixZeroShift) {
+         this.isFixZeroShift = fixZeroShift;
      }
 
 
      CanvasDataDrawing(MainApp mainApp, Axes axes) {
+
+
          this.mainApp = mainApp;
          this.widthOfLine =mainApp.getDefaultWidthOfLine();
          this.plotType = mainApp.getDefaultPlotType();
@@ -146,7 +166,7 @@ public class CanvasDataDrawing extends Canvas {
          this.pointSize = 6;
          sgFilterSettings = mainApp.getDefaultSGFilterSettings();
          fixZeroShiftRange =mainApp.getDefaultFixZeroShiftRange();
-         fixZeroShift = mainApp.getDefaultFixZeroShift();
+         isFixZeroShift = mainApp.getDefaultFixZeroShift();
          dx.bind(Bindings.divide(widthProperty(), Bindings.subtract(axes.getXAxis().upperBoundProperty(), axes.getXAxis().lowerBoundProperty())));
          dy.bind(Bindings.divide(heightProperty(), Bindings.subtract(axes.getYAxis().upperBoundProperty(), axes.getYAxis().lowerBoundProperty())));
          shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(), dx));
@@ -199,6 +219,11 @@ public class CanvasDataDrawing extends Canvas {
 
      public void drawData() {
 
+         xTheMIN=Integer.MAX_VALUE;
+         xTheMAX=Integer.MIN_VALUE;
+         yTheMIN=Integer.MAX_VALUE;
+         yTheMAX=Integer.MIN_VALUE;
+
          cleanCanvas();
          drawmesh();
 
@@ -248,17 +273,23 @@ public class CanvasDataDrawing extends Canvas {
 
 
      public void drawNextSignal(SignalMarker signalMarker) {
-         double zeroShift = 0;
 
+         double zeroShift = 0;
+         int nextSignalLength =0;
          int nextSignal = signalMarker.getSignalIndex();
          String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
          int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 //dt,dtCadre in milliseconds
          double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
          double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
-         int nextSignalLength = allSignals.getSignals()[nextSignal].length;
+         nextSignalLength = allSignals.getSignals()[nextSignal].length;
          int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
          int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
+
+         xTheMIN=0.0;
+         xTheMAX=nextSignalLength*dt>xTheMAX?nextSignalLength*dt:xTheMAX;
+
+
 
          if((xRight>0)&&(xLeft<nextSignalLength)) {
              double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
@@ -268,7 +299,7 @@ public class CanvasDataDrawing extends Canvas {
              int sgLeft = (sgFilterSettings[0]+sgFilterSettings[1])>=sigSubarray.length?1:sgFilterSettings[0];
              int sgRight = (sgFilterSettings[0]+sgFilterSettings[1])>=sigSubarray.length?1:sgFilterSettings[1];
 
-             if(fixZeroShift){
+             if(isFixZeroShift){
                  int zeroStart = (int) round(fixZeroShiftRange[0] / dt);
                  int zeroEnd = (int) round(fixZeroShiftRange[1] / dt);
                  if(zeroEnd-zeroStart>0&&zeroStart>0&&zeroEnd<nextSignalLength) {
@@ -381,18 +412,19 @@ public class CanvasDataDrawing extends Canvas {
 
         if (step > 1) {
 
-            for (int i=0;i<sigSubarray.length;i=i+step)
+            for (int i=0;i<sigSubarray.length-step;i=i+step)
             {
                 double [] sigSegment = Arrays.copyOfRange(sigSubarray,
                         i,i+step);
-                SimpleMath.findMaxMin(sigSegment);
-
                 if (i == 0) {
                     graphicContext.moveTo(mapX(i, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(sigSegment[i]));
                 }
-                graphicContext.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMax()));
-                graphicContext.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMin()));
+
+
+                graphicContext.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMax(sigSegment)));
+                graphicContext.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMin(sigSegment)));
             }
+
         }
         else {
             int x=0;
@@ -415,6 +447,13 @@ public class CanvasDataDrawing extends Canvas {
                 x++;
             }
         }
+
+        double ymax,ymin;
+        ymax=SimpleMath.getMax(sigSubarray);
+        ymin=SimpleMath.getMin(sigSubarray);
+        yTheMIN=ymin<yTheMIN?ymin:yTheMIN;
+        yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
+
         graphicContext.stroke();
     }
     private double mapX(double x, double dt) {

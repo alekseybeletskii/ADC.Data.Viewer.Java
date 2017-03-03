@@ -273,9 +273,10 @@ yMaxBasic= Integer.MIN_VALUE;
             xMaxBasic = mostSamples *dt;
         }
         double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
-        SimpleMath.findMaxMin(testSignal);
-        if (SimpleMath.getMax()> yMaxBasic) yMaxBasic =SimpleMath.getMax();
-        if (SimpleMath.getMin()< yMinBasic) yMinBasic =SimpleMath.getMin();
+        double maximum = SimpleMath.getMax(testSignal);
+        double minimum = SimpleMath.getMin(testSignal);
+        if (maximum> yMaxBasic) yMaxBasic =maximum;
+        if (minimum< yMinBasic) yMinBasic =minimum;
     }
 
 }
