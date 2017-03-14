@@ -61,7 +61,7 @@ import java.util.stream.IntStream;
  * -"signals" with all signals
  * -"signalLabels" with labels to be shown in table view for convenient signals selection
  * -"signalFullPath" full paths to every signal used when saving as separate text files
- * "saveToFile" method to convert data from the binary to the text format
+ * "saveToText" method to convert data from the binary to the text format
  */
 
 
@@ -70,29 +70,31 @@ public class DataParser {
     private DataParams dataParams;
     private DataFormatsDetect dataFormatsDetect;
     private double[] [] signals;
-    private int sigCount=-1;
+    private int sigCount;
     private String [] signalLabels;
     private Path [] signalFullPath;
     private int [] fileNumbers;
     private MainApp mainApp;
 
 
-    /**
-     * The constructor takes a list of files in the "List<File>" format after the button "Open" is pressed
-     * @param filesList
-     * a list of files to be processed
-     */
 
-    public DataParser(List<File> filesList, MainApp mainApp) {
 
+    public DataParser( MainApp mainApp) {
         this.mainApp=mainApp;
-        mainApp.setDataPars(this);
-        File[] filesListToProcess = filesList.toArray(new File[filesList.size()]);
+        dataFormatsDetect = new DataFormatsDetect(mainApp);
+    }
 
+    public synchronized void parseNewList(List<File> filesList) {
+        sigCount =-1;
+        File[] filesListToProcess = filesList.toArray(new File[filesList.size()]);
         dataPaths = new DataPaths(filesListToProcess);  //produce Paths from an input list of files
         dataParams = new DataParams(filesListToProcess.length); //This object will contain parameters from all files that have been opened
         for ( DataTypesList frmt : DataTypesList.values()) frmt.getDataType().setDataParser(this);
-        dataFormatsDetect = new DataFormatsDetect(this, mainApp); //infers data format of a current file
+
+
+
+        dataFormatsDetect.detectFormat();
+
 
         setParam();
 
@@ -115,7 +117,7 @@ public class DataParser {
 
             if (!formatName.equals("TEXTFILE"))
 
-            DataTypesList.valueOf(formatName).getDataType().setParam(i);
+                DataTypesList.valueOf(formatName).getDataType().setParam(i);
 
             i++;
         }
@@ -133,7 +135,7 @@ public class DataParser {
             if (formatName.equals("TEXTFILE"))
             {mainApp.getTextFileDataController().setData(i,sigCount);
                 i++;
-            continue;}
+                continue;}
 
             DataTypesList.valueOf(formatName).getDataType().setData(i,sigCount);
 
@@ -166,7 +168,7 @@ public class DataParser {
     /**
      * The method saves avery signal as a separate text file to the "txt" subdirectory
      */
-    public void saveToFile (){
+    public void saveToText(){
         int i=0;
         byte [] stringBytes;
         while (i< signalLabels.length){
@@ -203,20 +205,20 @@ public class DataParser {
 
     }
 
-    public void setDataParams(DataParams dataParams) {
-        this.dataParams = dataParams;
-    }
-
     public DataParams getDataParams() {
         return dataParams;
     }
 
-    public void setDataPaths(DataPaths dataPaths) {
-        this.dataPaths = dataPaths;
+    public void setDataParams(DataParams dataParams) {
+        this.dataParams = dataParams;
     }
 
     public DataPaths getDataPaths() {
         return dataPaths;
+    }
+
+    public void setDataPaths(DataPaths dataPaths) {
+        this.dataPaths = dataPaths;
     }
 
     /**

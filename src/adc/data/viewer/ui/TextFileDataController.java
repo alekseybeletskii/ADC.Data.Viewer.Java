@@ -46,7 +46,6 @@ package adc.data.viewer.ui;
 import adc.data.viewer.parser.DataParams;
 import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.processing.TestDataType;
-import adc.data.viewer.ui.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -110,12 +109,13 @@ public class TextFileDataController {
         dialogPane.getStyleClass().add("myDialog");
         alertInvalidParam.setTitle("Warning");
         alertInvalidParam.setHeaderText("Invalid data format!");
-        alertInvalidParam.setContentText("channel number: integer;\nchannel rate: float ");
+        alertInvalidParam.setContentText("channel number: integer;\nchannel rate: float\n ");
 
         txtCreationDate.setText(creationDate);
         txtDeviceName.setText(deviceName);
         txtChannelNum.setText(String.valueOf(channelNum));
         txtChannelRate.setText(String.valueOf(channelRate));
+        dialogPane.toFront();
     }
 
     @FXML

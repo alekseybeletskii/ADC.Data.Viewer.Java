@@ -219,6 +219,9 @@ public class CanvasDataDrawing extends Canvas {
 
      public void drawData() {
 
+//         axes.obtainDataAndTimeMargins();
+//         axes.setAxesBasicSetup();
+//         System.out.println("drawing..");
          xTheMIN=Integer.MAX_VALUE;
          xTheMAX=Integer.MIN_VALUE;
          yTheMIN=Integer.MAX_VALUE;
@@ -234,11 +237,10 @@ public class CanvasDataDrawing extends Canvas {
              case "AllPlots":
                  int i=0;
                  for (SignalMarker sigMarc : mainApp.getSignalList()) {
-
                      if (sigMarc.getSignalSelected()) {
                          i++;
                          nextSignalToDraw=sigMarc;
-                         drawNextSignal(sigMarc);
+                         drawNextSignal(nextSignalToDraw);
                      }
                  }
 
@@ -267,61 +269,69 @@ public class CanvasDataDrawing extends Canvas {
          }
 
 
+
          drawZeroLines();
+
 
      }
 
 
      public void drawNextSignal(SignalMarker signalMarker) {
-
          double zeroShift = 0;
          int nextSignalLength =0;
-         int nextSignal = signalMarker.getSignalIndex();
-         String label = mainApp.getDataParser().getSignalLabels()[nextSignal];
+         int nextSignalIndex = signalMarker.getSignalIndex();
+         double [] nextSignal = allSignals.getSignals()[nextSignalIndex].clone();
+         String label = mainApp.getDataParser().getSignalLabels()[nextSignalIndex];
          int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 //dt,dtCadre in milliseconds
-         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignal).getFileNumber()]);
-         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignal).getFileNumber()];
-         nextSignalLength = allSignals.getSignals()[nextSignal].length;
+         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignalIndex).getFileNumber()]);
+         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignalIndex).getFileNumber()];
+         nextSignalLength = nextSignal.length;
          int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
          int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
 
+         if(isFixZeroShift){
+             int zeroStart = (int) round(fixZeroShiftRange[0] / dt);
+             int zeroEnd = (int) round(fixZeroShiftRange[1] / dt);
+             if(zeroEnd-zeroStart>0&&zeroStart>0&&zeroEnd<nextSignalLength) {
+                 zeroShift =SimpleMath.findAverage(Arrays.copyOfRange(nextSignal,zeroStart,zeroEnd));
+                 for(int i=0; i<nextSignal.length; i++)
+                     nextSignal[i]=nextSignal[i]- zeroShift;
+                 maxZeroShift=abs(maxZeroShift)>abs(zeroShift)?maxZeroShift:zeroShift;
+             }
+             else PlotterSettingController.setFixZeroShiftDefault(0,0,false);
+         }
+
          xTheMIN=0.0;
          xTheMAX=nextSignalLength*dt>xTheMAX?nextSignalLength*dt:xTheMAX;
-
+         double ymax,ymin;
+         ymax=SimpleMath.getMax(nextSignal);
+         ymin=SimpleMath.getMin(nextSignal);
+         yTheMIN=ymin<yTheMIN?ymin:yTheMIN;
+         yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
 
 
          if((xRight>0)&&(xLeft<nextSignalLength)) {
-             double[] sigSubarray = Arrays.copyOfRange(allSignals.getSignals()[nextSignal],
+             double[] sigSubarray = Arrays.copyOfRange(nextSignal,
                      xLeft < 0 ? 0 : xLeft, xRight > nextSignalLength ? nextSignalLength : xRight);
 
              SavitzkyGolayFilter sgfilter;
              int sgLeft = (sgFilterSettings[0]+sgFilterSettings[1])>=sigSubarray.length?1:sgFilterSettings[0];
              int sgRight = (sgFilterSettings[0]+sgFilterSettings[1])>=sigSubarray.length?1:sgFilterSettings[1];
 
-             if(isFixZeroShift){
-                 int zeroStart = (int) round(fixZeroShiftRange[0] / dt);
-                 int zeroEnd = (int) round(fixZeroShiftRange[1] / dt);
-                 if(zeroEnd-zeroStart>0&&zeroStart>0&&zeroEnd<nextSignalLength) {
-                     zeroShift =SimpleMath.findAverage(Arrays.copyOfRange(allSignals.getSignals()[nextSignal],zeroStart,zeroEnd));
-                     for(int i=0; i<sigSubarray.length; i++)
-                     sigSubarray[i]=sigSubarray[i]- zeroShift;
-                     maxZeroShift=abs(maxZeroShift)>abs(zeroShift)?maxZeroShift:zeroShift;
-                 }
-                 else PlotterSettingController.setFixZeroShiftDefault(0,0,false);
-             }
+
 
              switch (plotType) {
                  case "Raw":
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      break;
                  case "SGFiltered":
                      sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      int i = 0;
                      for (double yy : sgfilter.filterData(sigSubarray)) {
@@ -333,8 +343,8 @@ public class CanvasDataDrawing extends Canvas {
                  case "RawAndSGFilter":
                      sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
 
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      sigSubarray = sgfilter.filterData(sigSubarray);
@@ -347,8 +357,8 @@ public class CanvasDataDrawing extends Canvas {
                      sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
 
                      sigSubarray = sgfilter.filterData(sigSubarray);
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignal).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignal).getSignalColor());
+                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      break;
@@ -448,11 +458,11 @@ public class CanvasDataDrawing extends Canvas {
             }
         }
 
-        double ymax,ymin;
-        ymax=SimpleMath.getMax(sigSubarray);
-        ymin=SimpleMath.getMin(sigSubarray);
-        yTheMIN=ymin<yTheMIN?ymin:yTheMIN;
-        yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
+//        double ymax,ymin;
+//        ymax=SimpleMath.getMax(sigSubarray);
+//        ymin=SimpleMath.getMin(sigSubarray);
+//        yTheMIN=ymin<yTheMIN?ymin:yTheMIN;
+//        yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
 
         graphicContext.stroke();
     }

@@ -57,18 +57,27 @@ import java.nio.file.*;
  */
 class DataFormatsDetect {
 
-    DataFormatsDetect(DataParser dataData, MainApp mainApp){
-        Path[] dataFilePath = dataData.getDataPaths().getDataFilePath();
-        Path[] parFilePath = dataData.getDataPaths().getParFilePath();
-        DataParams dataParams = dataData.getDataParams();
+    private Path[] dataFilePath;
+    private Path[] parFilePath;
+    private DataParams dataParams;
+    private int fnum;
+    private int adcTypeLen;
+    private byte[] adcTypeByte;
+    private String dataFormat;
+    private MappedByteBuffer parBuf;
+    private MainApp mainApp;
 
-        int fnum = 0;
+    DataFormatsDetect( MainApp mainApp){
+        this.mainApp = mainApp;
+        adcTypeLen = 20;
+    }
 
-        int adcTypeLen = 20;
-        byte[] adcTypeByte;
-        String dataFormat;
-        MappedByteBuffer parBuf;
+    public synchronized void detectFormat() {
 
+        dataFilePath = mainApp.getDataParser().getDataPaths().getDataFilePath();
+        parFilePath = mainApp.getDataParser().getDataPaths().getParFilePath();
+        dataParams = mainApp.getDataParser().getDataParams();
+        fnum = 0;
         while (fnum < dataFilePath.length) {
 
             if (!Files.exists(parFilePath[fnum])) {
@@ -100,16 +109,12 @@ class DataFormatsDetect {
 
                 if (dataFormat.equals("2571090,1618190")) {
                     dataParams.setDataFormatStr("LGraph1", fnum);
-//                    DataTypesList.LGRAPH1.getDataType().setParam(parBuf, fnum);
                 } else if (dataFormat.equals("2571090,1618190 A")) {
                     dataParams.setDataFormatStr("LGraph1_2008", fnum);
-//                    DataTypesList.LGRAPH1_2008.getDataType().setParam(parBuf, fnum);
                 } else if (dataFormat.charAt(2) == '/' & dataFormat.charAt(5) == '/') {
                     dataParams.setDataFormatStr("Saturn", fnum);
-//                    DataTypesList.SATURN.getDataType().setParam(parBuf, fnum);
                 } else if (dataFormat.equals("3571090,7859525")) {
                     dataParams.setDataFormatStr("LGraph2", fnum);
-//                    DataTypesList.LGRAPH2.getDataType().setParam(parBuf, fnum);
                 }
 
                 dataParams.setDataParamsValid(true);
@@ -123,6 +128,7 @@ class DataFormatsDetect {
             }
             fnum++;
         }
+
     }
 }
 

@@ -130,18 +130,18 @@ public class DataPaths {
 
     /**
      *
-     * @param dataFileStr
+     * @param files
      * load the list from File[] array
      */
-    private void makePaths(File[] dataFileStr) {
+    private void makePaths(File[] files) {
         int count = 0;
-        dataFilePath = new Path[dataFileStr.length];
-        parFilePath = new Path[dataFileStr.length];
-        fileName = new String[dataFileStr.length];
+        dataFilePath = new Path[files.length];
+        parFilePath = new Path[files.length];
+        fileName = new String[files.length];
 
-        for (File fileStr : dataFileStr) {
+        for (File file : files) {
             try {
-                dataFilePath[count] = Paths.get(fileStr.getPath());
+                dataFilePath[count] = Paths.get(file.getPath());
                 fileName[count] = dataFilePath[count].getFileName().toString();
                 fileName[count] = fileName[count].substring(0, fileName[count].lastIndexOf('.'));
                 parFilePath[count] = dataFilePath[count].getParent().resolve(fileName[count] + ".par");

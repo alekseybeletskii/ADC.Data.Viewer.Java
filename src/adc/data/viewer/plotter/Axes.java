@@ -220,33 +220,34 @@ public class Axes extends Pane {
 
     }
 
-    public void obtainDataAndTimeMargins(SignalMarker sm) {
+    public void obtainDataAndTimeMargins(SignalMarker nextSignalToDraw) {
 
 xMinBasic= Integer.MAX_VALUE;
 xMaxBasic= Integer.MIN_VALUE;
 yMinBasic= Integer.MAX_VALUE;
 yMaxBasic= Integer.MIN_VALUE;
 
-        double dt; // time scale of longest amongst selected signal, ms
         boolean isAnySelected =false;
-        //detect longest signal
+
         switch(mainApp.getDefaultPlotsLayoutType()){
             case "AllPlots":
-                for (SignalMarker signalMarker : mainApp.getSignalList()){
+                if(nextSignalToDraw==null)for (SignalMarker signalMarker : mainApp.getSignalList()){
                     if (signalMarker.getSignalSelected())
                     {
                         isAnySelected =true;
                         selectedSignalMargins(signalMarker);
                     }
                 }
+                else {selectedSignalMargins(nextSignalToDraw);
+                isAnySelected =true;}
                 break;
             case "AllPlotsByOne":
                 isAnySelected =true;
-                selectedSignalMargins(sm);
+                selectedSignalMargins(mainApp.getNextSignalToDraw());
                 break;
             case "AllPlotsByOneScroll":
                 isAnySelected =true;
-                selectedSignalMargins(sm);
+                selectedSignalMargins(mainApp.getNextSignalToDraw());
                 break;
             default:
                 break;

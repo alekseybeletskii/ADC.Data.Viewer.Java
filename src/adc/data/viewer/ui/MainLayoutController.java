@@ -43,13 +43,15 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.parser.DataParser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +65,9 @@ public class MainLayoutController {
 
     private MainApp mainApp;
     private static File initDir;
+    private WatchDirectory watcher;
+    private Thread watchDirThread;
+
     void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
@@ -70,6 +75,7 @@ public class MainLayoutController {
     @FXML
     private void handleOpen() {
 
+        mainApp.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(0.2);
         mainApp.getPlotterControllerlist().clear();
         List<File> inpList = new ArrayList<>();
 //        List<File> chosenFiles;
@@ -89,6 +95,7 @@ public class MainLayoutController {
             alert.initOwner(mainApp.getPrimaryStage());
             alert.getDialogPane().setPrefSize(250,120);
             alert.getDialogPane().setMinSize(250,120);
+
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 getMoreFiles(inpList, fileChooser);
@@ -96,13 +103,31 @@ public class MainLayoutController {
             else {
                 if (!inpList.isEmpty()) {
                     initDir = inpList.get(inpList.size()-1).getParentFile();
-                    new DataParser(inpList, mainApp);
-                    mainApp.fillSignalList();
+                    mainApp.parse(inpList);
                 }
                 morefiles=false;
             }
         }
     }
+
+
+            @FXML
+        private void handleOpenAuto(){
+                mainApp.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(0);
+            DirectoryChooser chooser = new DirectoryChooser();
+            chooser.setTitle("Set Directory to Watch....");
+            chooser.setInitialDirectory(initDir);
+                File dirToWatch = chooser.showDialog(mainApp.getPrimaryStage());
+
+          if(dirToWatch!=null&&dirToWatch.exists()) {
+              final Path directoryToWatch = Paths.get(dirToWatch.getPath());
+              watcher = new WatchDirectory(directoryToWatch, mainApp, "newWatcher");
+              mainApp.setDirectoryWatcher(watcher);
+              watcher.getWatcherThread().start();
+          }
+
+        }
+
 
     private void getMoreFiles(List<File> inpList, FileChooser fileChooser) {
         List<File> chosenFiles;
@@ -118,7 +143,7 @@ public class MainLayoutController {
     private void handleSignalsToText() {
 
         if (mainApp.getSignalList().size() != 0) {
-            mainApp.getDataParser().saveToFile();
+            mainApp.getDataParser().saveToText();
         }
     }
 
@@ -137,6 +162,7 @@ public class MainLayoutController {
             mainApp.getPlotsStage().close();
         }
         System.exit(0);
+//        mainApp.getPlotsStage().setOnCloseRequest(e -> Platform.exit());
     }
 
     @FXML
