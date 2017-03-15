@@ -57,14 +57,7 @@ import java.nio.file.*;
  */
 class DataFormatsDetect {
 
-    private Path[] dataFilePath;
-    private Path[] parFilePath;
-    private DataParams dataParams;
-    private int fnum;
     private int adcTypeLen;
-    private byte[] adcTypeByte;
-    private String dataFormat;
-    private MappedByteBuffer parBuf;
     private MainApp mainApp;
 
     DataFormatsDetect( MainApp mainApp){
@@ -74,47 +67,47 @@ class DataFormatsDetect {
 
     public synchronized void detectFormat() {
 
-        dataFilePath = mainApp.getDataParser().getDataPaths().getDataFilePath();
-        parFilePath = mainApp.getDataParser().getDataPaths().getParFilePath();
-        dataParams = mainApp.getDataParser().getDataParams();
-        fnum = 0;
-        while (fnum < dataFilePath.length) {
+        Path[] dataFilePath = mainApp.getDataParser().getDataPaths().getDataFilePath();
+        Path[]   parFilePath = mainApp.getDataParser().getDataPaths().getParFilePath();
+        DataParams dataParams = mainApp.getDataParser().getDataParams();
+        int fileIndex = 0;
+        while (fileIndex < dataFilePath.length) {
 
-            if (!Files.exists(parFilePath[fnum])) {
-                parFilePath[fnum] = dataFilePath[fnum];
+            if (!Files.exists(parFilePath[fileIndex])) {
+                parFilePath[fileIndex] = dataFilePath[fileIndex];
             }
-            if(dataFilePath[fnum].getFileName().toString().substring(dataFilePath[fnum].getFileName().toString().lastIndexOf('.')+1).toLowerCase().equals("txt"))
+            if(dataFilePath[fileIndex].getFileName().toString().substring(dataFilePath[fileIndex].getFileName().toString().lastIndexOf('.')+1).toLowerCase().equals("txt"))
             {
-                dataParams.setDataFormatStr("TextFile", fnum);
-                mainApp.setTextFileParams(fnum);
-                fnum++;
+                dataParams.setDataFormatStr("TextFile", fileIndex);
+                mainApp.setTextFileParams(fileIndex);
+                fileIndex++;
                 continue;
             }
 
-            try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fnum])) {
+            try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fileIndex])) {
 
                 long fSize = fChan.size();
 
-                parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
+                MappedByteBuffer parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
 
                 parBuf.order(ByteOrder.LITTLE_ENDIAN);
 
-                adcTypeByte = new byte[adcTypeLen];
+                byte[] adcTypeByte = new byte[adcTypeLen];
 
                 parBuf.get(adcTypeByte);
 
-                dataFormat = new String(adcTypeByte, Charset.forName("UTF-8")).trim();
+                String dataFormat = new String(adcTypeByte, Charset.forName("UTF-8")).trim();
 
                 parBuf.rewind();
 
                 if (dataFormat.equals("2571090,1618190")) {
-                    dataParams.setDataFormatStr("LGraph1", fnum);
+                    dataParams.setDataFormatStr("LGraph1", fileIndex);
                 } else if (dataFormat.equals("2571090,1618190 A")) {
-                    dataParams.setDataFormatStr("LGraph1_2008", fnum);
+                    dataParams.setDataFormatStr("LGraph1_2008", fileIndex);
                 } else if (dataFormat.charAt(2) == '/' & dataFormat.charAt(5) == '/') {
-                    dataParams.setDataFormatStr("Saturn", fnum);
+                    dataParams.setDataFormatStr("Saturn", fileIndex);
                 } else if (dataFormat.equals("3571090,7859525")) {
-                    dataParams.setDataFormatStr("LGraph2", fnum);
+                    dataParams.setDataFormatStr("LGraph2", fileIndex);
                 }
 
                 dataParams.setDataParamsValid(true);
@@ -126,7 +119,7 @@ class DataFormatsDetect {
                 System.out.println("I/O Error " + e);
                 dataParams.setDataParamsValid(false);
             }
-            fnum++;
+            fileIndex++;
         }
 
     }

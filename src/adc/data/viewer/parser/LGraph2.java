@@ -74,13 +74,13 @@ class LGraph2  implements DataTypes {
         this.parFilePath = dataData.getDataPaths().getParFilePath();
     }
 
-    public void setParam(int fnum) {
+    public void setParam(int fileIndex) {
 
-        if (!Files.exists(parFilePath[fnum])) {
-            parFilePath[fnum] = dataFilePath[fnum];
+        if (!Files.exists(parFilePath[fileIndex])) {
+            parFilePath[fileIndex] = dataFilePath[fileIndex];
         }
 
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fileIndex])) {
 
             long fSize = fChan.size();
             MappedByteBuffer parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
@@ -98,42 +98,42 @@ class LGraph2  implements DataTypes {
         parBuf.position(37);
         parBuf.get(creatDateTimeByte);
         parBuf.rewind();
-        dataParams.setDeviceName(new String(deviceNameByte, Charset.forName("UTF-8")).trim(),fnum);
-        dataParams.setCreateDateTime(new String(creatDateTimeByte, Charset.forName("UTF-8")).trim(),fnum) ;
-        dataParams.setChannelsMax(parBuf.getShort(63), fnum) ;
-        dataParams.setRealChannelsQuantity(parBuf.getShort(65), fnum);
-        dataParams.setRealCadresQuantity(parBuf.getInt(67), fnum) ;
-        dataParams.setRealSamplesQuantity(parBuf.getInt(71), fnum) ;
-        dataParams.setTotalTime(parBuf.getDouble(75),fnum) ;
-        dataParams.setAdcRate(parBuf.getFloat(83),fnum) ;
+        dataParams.setDeviceName(new String(deviceNameByte, Charset.forName("UTF-8")).trim(),fileIndex);
+        dataParams.setCreateDateTime(new String(creatDateTimeByte, Charset.forName("UTF-8")).trim(),fileIndex) ;
+        dataParams.setChannelsMax(parBuf.getShort(63), fileIndex) ;
+        dataParams.setRealChannelsQuantity(parBuf.getShort(65), fileIndex);
+        dataParams.setRealCadresQuantity(parBuf.getInt(67), fileIndex) ;
+        dataParams.setRealSamplesQuantity(parBuf.getInt(71), fileIndex) ;
+        dataParams.setTotalTime(parBuf.getDouble(75),fileIndex) ;
+        dataParams.setAdcRate(parBuf.getFloat(83),fileIndex) ;
         //In LGraph-2, "ADC rate" was somehow written equal to "channel rate",
         // but real value of "ADC rate" is  "channelRate" * "RealChannelsQuantity", or 1/("TotalTime"/"RealCadresQuantity")
         //So it is recalculated below:
-        dataParams.setAdcRate(parBuf.getFloat(91)*parBuf.getShort(65),fnum) ;
-        dataParams.setInterCadreDelay(parBuf.getFloat(87),fnum) ;
-        dataParams.setChannelRate(parBuf.getFloat(91),fnum) ;
+        dataParams.setAdcRate(parBuf.getFloat(91)*parBuf.getShort(65),fileIndex) ;
+        dataParams.setInterCadreDelay(parBuf.getFloat(87),fileIndex) ;
+        dataParams.setChannelRate(parBuf.getFloat(91),fileIndex) ;
         parBuf.position(95);
         parBuf.get(arrayByte);
-        dataParams.setActiveAdcChannelArray(arrayByte,fnum) ;
+        dataParams.setActiveAdcChannelArray(arrayByte,fileIndex) ;
         parBuf.get(arrayByte);
-        dataParams.setAdcChannelArray(arrayByte,fnum) ;
+        dataParams.setAdcChannelArray(arrayByte,fileIndex) ;
         parBuf.get(arrayByte);
-        dataParams.setAdcGainArray(arrayByte,fnum) ;
+        dataParams.setAdcGainArray(arrayByte,fileIndex) ;
         parBuf.get(arrayByte);
-        dataParams.setIsSignalArray(arrayByte,fnum) ;
-        dataParams.setDataFormat(parBuf.getInt(),fnum); // start= byte#223
-        dataParams.setRealCadres64(parBuf.getLong(),fnum);
+        dataParams.setIsSignalArray(arrayByte,fileIndex) ;
+        dataParams.setDataFormat(parBuf.getInt(),fileIndex); // start= byte#223
+        dataParams.setRealCadres64(parBuf.getLong(),fileIndex);
         DoubleBuffer dbuf = parBuf.asDoubleBuffer();
         dbuf.get(arrayDouble32);
-        dataParams.setAdcScale(arrayDouble32,fnum);
+        dataParams.setAdcScale(arrayDouble32,fileIndex);
         dbuf.get(arrayDouble32);
-        dataParams.setAdcOffset(arrayDouble32,fnum);
+        dataParams.setAdcOffset(arrayDouble32,fileIndex);
         dbuf.get(arrayDouble1024);
-        dataParams.setCalibrOffset(arrayDouble1024,fnum);
+        dataParams.setCalibrOffset(arrayDouble1024,fileIndex);
         dbuf.get(arrayDouble1024);
-        dataParams.setCalibrScale(arrayDouble1024,fnum);
+        dataParams.setCalibrScale(arrayDouble1024,fileIndex);
 
-        dataParams.setSegments(parBuf.getInt(17131), fnum);  //start= byte#17131
+        dataParams.setSegments(parBuf.getInt(17131), fileIndex);  //start= byte#17131
 
 
         } catch (InvalidPathException e) {
@@ -147,18 +147,18 @@ class LGraph2  implements DataTypes {
 
     }
 
-    public void setData(int fnum, int sigCount) {
+    public void setData(int fileIndex, int signalIndex) {
 
         MappedByteBuffer dataBuf;
-        double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
-        int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fnum]];
-        int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fnum]];
+        double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fileIndex]];
+        int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
+        int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
         int activeCh=0, allCh =0;
-        while (allCh< dataParams.getActiveAdcChannelArray()[fnum].length)
+        while (allCh< dataParams.getActiveAdcChannelArray()[fileIndex].length)
         {
-            if(dataParams.getActiveAdcChannelArray()[fnum][allCh]==1){
+            if(dataParams.getActiveAdcChannelArray()[fileIndex][allCh]==1){
                 chanAdcNum[activeCh] = allCh+1;
-                switch (dataParams.getAdcGainArray()[fnum][allCh]){
+                switch (dataParams.getAdcGainArray()[fileIndex][allCh]){
                     case 0: chanAdcGain[activeCh]=1;
                         break;
                     case 1: chanAdcGain[activeCh]=2;
@@ -172,7 +172,7 @@ class LGraph2  implements DataTypes {
                 activeCh++;}
             allCh++;
         }
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fileIndex])) {
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);
@@ -180,22 +180,22 @@ class LGraph2  implements DataTypes {
             //define what part of ADC calibration table is used
             //corresponding to input voltage range (+-3V, +-1V, +-0.3V in case of ADC e20-10)
             int jj = 0;
-            while (jj < dataParams.getRealChannelsQuantity()[fnum])
+            while (jj < dataParams.getRealChannelsQuantity()[fileIndex])
             {
                 int i = 0;
-                while (i < dataParams.getRealCadresQuantity()[fnum]) {
+                while (i < dataParams.getRealCadresQuantity()[fileIndex]) {
 
-                    switch (dataParams.getDeviceName()[fnum]) {
-                        case "L783" : oneSignal[i] = (((double) dataBuf.getShort(i * dataParams.getRealChannelsQuantity()[fnum] * 2 + jj * 2) + dataParams.getAdcOffset()[fnum][jj + indexOfADCInputRange * dataParams.getRealChannelsQuantity()[fnum]]) * 5d / 2000d) / chanAdcGain[jj];
+                    switch (dataParams.getDeviceName()[fileIndex]) {
+                        case "L783" : oneSignal[i] = (((double) dataBuf.getShort(i * dataParams.getRealChannelsQuantity()[fileIndex] * 2 + jj * 2) + dataParams.getAdcOffset()[fileIndex][jj + indexOfADCInputRange * dataParams.getRealChannelsQuantity()[fileIndex]]) * 5d / 2000d) / chanAdcGain[jj];
                             break;
-                        case "E2010" :   oneSignal[i] = (((double) dataBuf.getShort(i * dataParams.getRealChannelsQuantity()[fnum] * 2 + jj * 2) + dataParams.getAdcOffset()[fnum][jj + indexOfADCInputRange * dataParams.getRealChannelsQuantity()[fnum]]) *0.000404) / chanAdcGain[jj];// 3d / 8000d) / chanAdcGain[jj];
+                        case "E2010" :   oneSignal[i] = (((double) dataBuf.getShort(i * dataParams.getRealChannelsQuantity()[fileIndex] * 2 + jj * 2) + dataParams.getAdcOffset()[fileIndex][jj + indexOfADCInputRange * dataParams.getRealChannelsQuantity()[fileIndex]]) *0.000404) / chanAdcGain[jj];// 3d / 8000d) / chanAdcGain[jj];
                             break;
-                        default: oneSignal[i] = (((double) dataBuf.getShort(i * dataParams.getRealChannelsQuantity()[fnum] * 2 + jj * 2) + dataParams.getAdcOffset()[fnum][jj + indexOfADCInputRange * dataParams.getRealChannelsQuantity()[fnum]]) * 1d / 1d) / 1d;
+                        default: oneSignal[i] = (((double) dataBuf.getShort(i * dataParams.getRealChannelsQuantity()[fileIndex] * 2 + jj * 2) + dataParams.getAdcOffset()[fileIndex][jj + indexOfADCInputRange * dataParams.getRealChannelsQuantity()[fileIndex]]) * 1d / 1d) / 1d;
                     }
                     i++;
                 }
-                sigCount++;
-                dataData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
+                signalIndex++;
+                dataData.setSignals(oneSignal,signalIndex,fileIndex,chanAdcNum[jj]);
                 jj++;
             }
 

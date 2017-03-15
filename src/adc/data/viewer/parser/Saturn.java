@@ -73,13 +73,13 @@ class Saturn implements DataTypes {
         this.parFilePath = dataData.getDataPaths().getParFilePath();
     }
 
-    public void setParam(int fnum) {
+    public void setParam(int fileIndex) {
 
-        if (!Files.exists(parFilePath[fnum])) {
-            parFilePath[fnum] = dataFilePath[fnum];
+        if (!Files.exists(parFilePath[fileIndex])) {
+            parFilePath[fileIndex] = dataFilePath[fileIndex];
         }
 
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fileIndex])) {
 
             long fSize = fChan.size();
             MappedByteBuffer parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
@@ -94,30 +94,30 @@ class Saturn implements DataTypes {
         byte[] array32Byte = new byte[32];
         double samplingperiod;
 
-        dataParams.setDeviceName("SATURNSDIAD12128H",fnum);
+        dataParams.setDeviceName("SATURNSDIAD12128H",fileIndex);
         parBuf.get(creatDateTimeByte);
-        dataParams.setCreateDateTime(new String(creatDateTimeByte, Charset.forName("UTF-8")),fnum) ;
+        dataParams.setCreateDateTime(new String(creatDateTimeByte, Charset.forName("UTF-8")),fileIndex) ;
         parBuf.get(array5Byte);
-        dataParams.setChannelsMax( Integer.parseInt(new String(array5Byte, Charset.forName("UTF-8")).trim()),fnum);
+        dataParams.setChannelsMax( Integer.parseInt(new String(array5Byte, Charset.forName("UTF-8")).trim()),fileIndex);
         parBuf.get(array5Byte);
-        dataParams.setRealChannelsQuantity( Integer.parseInt(new String(array5Byte, Charset.forName("UTF-8")).trim()),fnum);
+        dataParams.setRealChannelsQuantity( Integer.parseInt(new String(array5Byte, Charset.forName("UTF-8")).trim()),fileIndex);
         parBuf.get(array5Byte);//the first channel
         parBuf.get(array5Byte);//the last channel
         parBuf.get(array15Byte);
         samplingperiod = Double.parseDouble(new String(array15Byte, Charset.forName("UTF-8")).trim());//microseconds
         parBuf.get(array11Byte);
-        dataParams.setRealCadresQuantity(Long.parseLong(new String(array11Byte, Charset.forName("UTF-8")).trim()),fnum);
-        dataParams.setRealSamplesQuantity(dataParams.getRealChannelsQuantity()[fnum]* dataParams.getRealCadresQuantity()[fnum],fnum);
-        dataParams.setTotalTime(dataParams.getRealCadresQuantity()[fnum]*samplingperiod/1000000,fnum) ;//second
-        dataParams.setAdcRate(1000/samplingperiod,fnum) ;// kHz
-        dataParams.setInterCadreDelay(samplingperiod/1000,fnum) ;//millisecond
-        dataParams.setChannelRate(1000/(samplingperiod* dataParams.getRealChannelsQuantity()[fnum]),fnum) ;//kHz
+        dataParams.setRealCadresQuantity(Long.parseLong(new String(array11Byte, Charset.forName("UTF-8")).trim()),fileIndex);
+        dataParams.setRealSamplesQuantity(dataParams.getRealChannelsQuantity()[fileIndex]* dataParams.getRealCadresQuantity()[fileIndex],fileIndex);
+        dataParams.setTotalTime(dataParams.getRealCadresQuantity()[fileIndex]*samplingperiod/1000000,fileIndex) ;//second
+        dataParams.setAdcRate(1000/samplingperiod,fileIndex) ;// kHz
+        dataParams.setInterCadreDelay(samplingperiod/1000,fileIndex) ;//millisecond
+        dataParams.setChannelRate(1000/(samplingperiod* dataParams.getRealChannelsQuantity()[fileIndex]),fileIndex) ;//kHz
         Arrays.fill(array32Byte, (byte) 1);
-        dataParams.setActiveAdcChannelArray(array32Byte, fnum  ) ;
-        dataParams.setAdcChannelArray(array32Byte,fnum) ;
+        dataParams.setActiveAdcChannelArray(array32Byte, fileIndex  ) ;
+        dataParams.setAdcChannelArray(array32Byte,fileIndex) ;
         Arrays.fill(array32Byte, (byte) 0);
-        dataParams.setIsSignalArray(array32Byte,fnum) ;
-        dataParams.setAdcGainArray(array32Byte,fnum) ;
+        dataParams.setIsSignalArray(array32Byte,fileIndex) ;
+        dataParams.setAdcGainArray(array32Byte,fileIndex) ;
 
         } catch (InvalidPathException e) {
             System.out.println("Path Error " + e);
@@ -128,18 +128,18 @@ class Saturn implements DataTypes {
         }
     }
 
-    public  void setData(int fnum, int sigCount) {
+    public  void setData(int fileIndex, int signalIndex) {
 
         MappedByteBuffer dataBuf;
-        double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
-        int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fnum]];
-        int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fnum]];
+        double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fileIndex]];
+        int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
+        int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
         int activeCh=0, allCh =0;
-        while (allCh< dataParams.getRealChannelsQuantity()[fnum])
+        while (allCh< dataParams.getRealChannelsQuantity()[fileIndex])
         {
-            if(dataParams.getActiveAdcChannelArray()[fnum][allCh]==1){
+            if(dataParams.getActiveAdcChannelArray()[fileIndex][allCh]==1){
                 chanAdcNum[activeCh] = allCh+1;
-                switch (dataParams.getAdcGainArray()[fnum][allCh]){
+                switch (dataParams.getAdcGainArray()[fileIndex][allCh]){
                     case 0: chanAdcGain[activeCh]=1;
                         break;
                     case 1: chanAdcGain[activeCh]=2;
@@ -155,18 +155,18 @@ class Saturn implements DataTypes {
         }
 
 
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fileIndex])) {
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);
             int jj = 0;
 
-            while (jj < dataParams.getRealChannelsQuantity()[fnum])
+            while (jj < dataParams.getRealChannelsQuantity()[fileIndex])
             {
                 int i = 0;
-                while (i < dataParams.getRealCadresQuantity()[fnum]) {
+                while (i < dataParams.getRealCadresQuantity()[fileIndex]) {
 
-                    oneSignal[i] = ((double)dataBuf.getShort ( 6000+ i* dataParams.getRealChannelsQuantity()[fnum]*2+jj*2) )/chanAdcGain[jj] ;
+                    oneSignal[i] = ((double)dataBuf.getShort ( 6000+ i* dataParams.getRealChannelsQuantity()[fileIndex]*2+jj*2) )/chanAdcGain[jj] ;
 
                     if  (-2046<= oneSignal[i] && oneSignal[i] <=-1)  //ADC от -1 до -2046 => -0.005...-5.12 V
                     {oneSignal[i] = (5.12/2048)*( oneSignal[i]- 1);}
@@ -176,8 +176,8 @@ class Saturn implements DataTypes {
                     {oneSignal[i] = 0;}
                     i++;
                 }
-                sigCount++;
-                dataData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
+                signalIndex++;
+                dataData.setSignals(oneSignal,signalIndex,fileIndex,chanAdcNum[jj]);
                 jj++;
             }
         } catch (InvalidPathException e) {

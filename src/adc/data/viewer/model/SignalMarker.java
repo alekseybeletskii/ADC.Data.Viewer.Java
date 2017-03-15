@@ -54,25 +54,28 @@ import javafx.scene.paint.Color;
 public class SignalMarker {
 
 
+    public double[] getSignalData() {
+        return signalData;
+    }
 
+    private final double [] signalData;
     private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
     private final ObjectProperty<Color> signalColor;
-    private final IntegerProperty fileNumber;
+    private final IntegerProperty fileIndex;
 
 
-    public SignalMarker(int signalIndex, Boolean signalSelected, Color signalColor, String  signalLable, int fileNumber) {
+    public SignalMarker(int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalData) {
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
         this.signalLabel = new SimpleStringProperty(signalLable);
-        this.fileNumber = new SimpleIntegerProperty(fileNumber);
-
-
-//        this.signalSelected.addListener((observable, oldValue, newValue) -> System.out.println(newValue.booleanValue()));
-
+        this.fileIndex = new SimpleIntegerProperty(fileIndex);
+        this.signalData = signalData;
     }
+
+
 
     public int getSignalIndex() {
         return signalIndex.get();
@@ -86,15 +89,15 @@ public class SignalMarker {
         this.signalIndex.set(signalIndex);
     }
 
-    public int getFileNumber() { return fileNumber.get();
+    public int getFileIndex() { return fileIndex.get();
     }
 
-    public IntegerProperty fileNumberProperty() {
-        return fileNumber;
+    public IntegerProperty fileIndexProperty() {
+        return fileIndex;
     }
 
-    public void setFileNumber(int fileNumber) {
-        this.fileNumber.set(fileNumber);
+    public void setFileIndex(int fileIndex) {
+        this.fileIndex.set(fileIndex);
     }
 
     public Color getSignalColor() {

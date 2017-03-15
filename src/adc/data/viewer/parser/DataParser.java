@@ -70,7 +70,7 @@ public class DataParser {
     private DataParams dataParams;
     private DataFormatsDetect dataFormatsDetect;
     private double[] [] signals;
-    private int sigCount;
+    private int signalIndex;
     private String [] signalLabels;
     private Path [] signalFullPath;
     private int [] fileNumbers;
@@ -85,7 +85,7 @@ public class DataParser {
     }
 
     public synchronized void parseNewList(List<File> filesList) {
-        sigCount =-1;
+        signalIndex =-1;
         File[] filesListToProcess = filesList.toArray(new File[filesList.size()]);
         dataPaths = new DataPaths(filesListToProcess);  //produce Paths from an input list of files
         dataParams = new DataParams(filesListToProcess.length); //This object will contain parameters from all files that have been opened
@@ -133,11 +133,11 @@ public class DataParser {
             formatName = dataParams.getDataFormatStr()[i].toUpperCase();
 
             if (formatName.equals("TEXTFILE"))
-            {mainApp.getTextFileDataController().setData(i,sigCount);
+            {mainApp.getTextFileDataController().setData(i,signalIndex);
                 i++;
                 continue;}
 
-            DataTypesList.valueOf(formatName).getDataType().setData(i,sigCount);
+            DataTypesList.valueOf(formatName).getDataType().setData(i,signalIndex);
 
             i++;
 
@@ -149,20 +149,20 @@ public class DataParser {
      *
      * @param signal
      * a signal extracted from binary file by corresponding ADC-type-class
-     * @param sigCount
+     * @param signalIndex
      * an extracted signal's sequence number in the "signals" array
-     * @param fNum
+     * @param fileIndex
      * a number of a processed source file
      * @param sigAdcNum
      * an ADC channel number of extracted signal
      */
 
-    public void setSignals(double [] signal, int sigCount, int fNum, int sigAdcNum) {
-        this.signals[sigCount] = signal.clone();
-        this.signalLabels[sigCount] = dataPaths.getFileName()[fNum]+ "_#"+sigAdcNum;
-        this.signalFullPath[sigCount] = Paths.get(dataPaths.getDataFilePath()[fNum].getParent() +System.getProperty("file.separator")+ dataPaths.getFileName()[fNum] + "_#" + sigAdcNum);
-        this.sigCount = sigCount;
-        this.fileNumbers[sigCount] = fNum;
+    public void setSignals(double [] signal, int signalIndex, int fileIndex, int sigAdcNum) {
+        this.signals[signalIndex] = signal.clone();
+        this.signalLabels[signalIndex] = dataPaths.getFileName()[fileIndex]+ "_#"+sigAdcNum;
+        this.signalFullPath[signalIndex] = Paths.get(dataPaths.getDataFilePath()[fileIndex].getParent() +System.getProperty("file.separator")+ dataPaths.getFileName()[fileIndex] + "_#" + sigAdcNum);
+        this.signalIndex = signalIndex;
+        this.fileNumbers[signalIndex] = fileIndex;
     }
 
     /**

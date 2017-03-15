@@ -280,12 +280,13 @@ public class CanvasDataDrawing extends Canvas {
          double zeroShift = 0;
          int nextSignalLength =0;
          int nextSignalIndex = signalMarker.getSignalIndex();
-         double [] nextSignal = allSignals.getSignals()[nextSignalIndex].clone();
+//         double [] nextSignal = allSignals.getSignals()[nextSignalIndex].clone();
+         double [] nextSignal = signalMarker.getSignalData();
          String label = mainApp.getDataParser().getSignalLabels()[nextSignalIndex];
          int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 //dt,dtCadre in milliseconds
-         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignalIndex).getFileNumber()]);
-         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignalIndex).getFileNumber()];
+         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignalIndex).getFileIndex()]);
+         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignalIndex).getFileIndex()];
          nextSignalLength = nextSignal.length;
          int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
          int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);

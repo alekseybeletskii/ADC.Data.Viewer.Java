@@ -267,8 +267,8 @@ yMaxBasic= Integer.MIN_VALUE;
 
     public void selectedSignalMargins(SignalMarker signalMarker) {
         double dt;
-        dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileNumber()]);
-        mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileNumber()];
+        dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileIndex()]);
+        mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileIndex()];
 
         if (mostSamples *dt > xMaxBasic) {
             xMaxBasic = mostSamples *dt;

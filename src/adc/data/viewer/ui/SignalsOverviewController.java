@@ -175,15 +175,15 @@ public class SignalsOverviewController {
     private void showSignalDetails(SignalMarker signal) {
         if (signal != null){
 
-            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileNumber()]);
-            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileNumber()]);
-            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileNumber()]));
-            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileNumber()]));
+            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileIndex()]);
+            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileIndex()]);
+            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileIndex()]));
+            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileIndex()]));
             channelNumberLabel.setText(signal.getSignalLabel().substring(signal.getSignalLabel().lastIndexOf("#")+1));
-            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileNumber()]));
+            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileIndex()]));
             channelDurationLabel.setText(String.format("%.2f",
-                    mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileNumber()]
-                            /mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileNumber()]));
+                    mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileIndex()]
+                            /mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileIndex()]));
         }
         else{
             deviceNameLabel.setText("-----");

@@ -46,7 +46,7 @@ package adc.data.viewer.parser;
   interface DataTypes {
 
     void setDataParser(DataParser dataParser);
-    void setData (int fnum, int sigCount);
-    void setParam(int fnum);
+    void setData (int fileIndex, int signalIndex);
+    void setParam(int fileIndex);
 }
 

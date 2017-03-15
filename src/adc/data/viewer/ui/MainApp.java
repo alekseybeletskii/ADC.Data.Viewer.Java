@@ -289,7 +289,7 @@ public  class MainApp extends Application {
             final float brightness = 0.8f; //1.0 for brighter, 0.0 for black
             Color color = Color.hsb(hue, saturation, brightness);
             if(siglabel!=null&&!siglabel.isEmpty()) {
-                SignalMarker sigmrk =new SignalMarker(ii, isChecked, color, siglabel, dataParser.getFileNumbers()[ii]);
+                SignalMarker sigmrk =new SignalMarker(ii, isChecked, color, siglabel, dataParser.getFileNumbers()[ii], dataParser.getSignals()[ii]);
                 signalMarkerAddListeners(sigmrk);
                 signalList.add(sigmrk);
             }
@@ -380,7 +380,7 @@ public  class MainApp extends Application {
         }
     }
 
-    public void setTextFileParams(int fnum) {
+    public void setTextFileParams(int fileIndex) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("textFileParams.fxml"));
@@ -393,7 +393,7 @@ public  class MainApp extends Application {
             textFileDataController.setMainApp(this);
             textFileDataController.setDataParser(dataParser);
             textFileDataController.setTextFileParamsStage(textFileParamsStage);
-            textFileDataController.setFileNumber(fnum);
+            textFileDataController.setFileNumber(fileIndex);
             textFileParamsStage.setTitle("Set siganl parameters");
             Scene scene = new Scene(textFileParams);
             textFileParamsStage.setScene(scene);

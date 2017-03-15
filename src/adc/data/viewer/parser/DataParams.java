@@ -173,71 +173,71 @@ public class DataParams  {
     public void setDataParamsValid(boolean dataParamsValid) {
         this.dataParamsValid = dataParamsValid;
     }
-    public void setDataFormatStr(String dataFormatSt, int fnum) {
-        dataFormatStr[fnum] = dataFormatSt;
+    public void setDataFormatStr(String dataFormatSt, int fileIndex) {
+        dataFormatStr[fileIndex] = dataFormatSt;
     }
-    public void setDeviceName(String deviceName, int fnum) {
-        this.deviceName[fnum] = deviceName;
+    public void setDeviceName(String deviceName, int fileIndex) {
+        this.deviceName[fileIndex] = deviceName;
     }
-    public void setCreateDateTime(String CreateDateTime, int fnum) {
-        this.CreateDateTime[fnum] = CreateDateTime;
+    public void setCreateDateTime(String CreateDateTime, int fileIndex) {
+        this.CreateDateTime[fileIndex] = CreateDateTime;
     }
-    public void setChannelsMax(int channelsMax, int fnum) {
-        ChannelsMax[fnum] = channelsMax;
+    public void setChannelsMax(int channelsMax, int fileIndex) {
+        ChannelsMax[fileIndex] = channelsMax;
     }
-    public void setRealChannelsQuantity(int realChannelsQuantity, int fnum) {
-        RealChannelsQuantity[fnum] = realChannelsQuantity;
+    public void setRealChannelsQuantity(int realChannelsQuantity, int fileIndex) {
+        RealChannelsQuantity[fileIndex] = realChannelsQuantity;
     }
-    public void setRealCadresQuantity(long realCadresQuantity, int fnum) {
-        RealCadresQuantity[fnum] = realCadresQuantity;
+    public void setRealCadresQuantity(long realCadresQuantity, int fileIndex) {
+        RealCadresQuantity[fileIndex] = realCadresQuantity;
     }
-    public void setRealSamplesQuantity(long realSamplesQuantity, int fnum) {
-        RealSamplesQuantity[fnum] = realSamplesQuantity;
+    public void setRealSamplesQuantity(long realSamplesQuantity, int fileIndex) {
+        RealSamplesQuantity[fileIndex] = realSamplesQuantity;
     }
-    public void setTotalTime(double totalTime, int fnum) {
-        TotalTime[fnum] = totalTime;
+    public void setTotalTime(double totalTime, int fileIndex) {
+        TotalTime[fileIndex] = totalTime;
     }
-    public void setAdcRate(double adcRate, int fnum) {
-        AdcRate[fnum] = adcRate;
+    public void setAdcRate(double adcRate, int fileIndex) {
+        AdcRate[fileIndex] = adcRate;
     }
-    public void setInterCadreDelay(double interCadreDelay, int fnum) {
-        InterCadreDelay[fnum] = interCadreDelay;
+    public void setInterCadreDelay(double interCadreDelay, int fileIndex) {
+        InterCadreDelay[fileIndex] = interCadreDelay;
     }
-    public void setChannelRate(double channelRate, int fnum) {
-        ChannelRate[fnum] = channelRate;
+    public void setChannelRate(double channelRate, int fileIndex) {
+        ChannelRate[fileIndex] = channelRate;
     }
-    public void setActiveAdcChannelArray(byte[] activeAdcChannelArray, int fnum) {
-        ActiveAdcChannelArray[fnum] = activeAdcChannelArray.clone();
+    public void setActiveAdcChannelArray(byte[] activeAdcChannelArray, int fileIndex) {
+        ActiveAdcChannelArray[fileIndex] = activeAdcChannelArray.clone();
     }
-    public void setAdcChannelArray(byte[] adcChannelArray, int fnum) {
-        AdcChannelArray[fnum] = adcChannelArray.clone();
+    public void setAdcChannelArray(byte[] adcChannelArray, int fileIndex) {
+        AdcChannelArray[fileIndex] = adcChannelArray.clone();
     }
-    public void setAdcGainArray(byte[] adcGainArray, int fnum) {
-        AdcGainArray[fnum] = adcGainArray.clone();
+    public void setAdcGainArray(byte[] adcGainArray, int fileIndex) {
+        AdcGainArray[fileIndex] = adcGainArray.clone();
     }
-    public void setIsSignalArray(byte[] isSignalArray, int fnum) {
-        IsSignalArray[fnum] = isSignalArray.clone();
+    public void setIsSignalArray(byte[] isSignalArray, int fileIndex) {
+        IsSignalArray[fileIndex] = isSignalArray.clone();
     }
-    public void setDataFormat(int dataFormat, int fnum) {
-        DataFormat[fnum] = dataFormat;
+    public void setDataFormat(int dataFormat, int fileIndex) {
+        DataFormat[fileIndex] = dataFormat;
     }
-    public void setRealCadres64(long realCadres64, int fnum) {
-        RealCadres64[fnum] = realCadres64;
+    public void setRealCadres64(long realCadres64, int fileIndex) {
+        RealCadres64[fileIndex] = realCadres64;
     }
-    public void setAdcOffset(double[] adcOffset, int fnum) {
-        AdcOffset[fnum] = adcOffset.clone();
+    public void setAdcOffset(double[] adcOffset, int fileIndex) {
+        AdcOffset[fileIndex] = adcOffset.clone();
     }
-    public void setAdcScale(double[] adcScale, int fnum) {
-        AdcScale[fnum] = adcScale.clone();
+    public void setAdcScale(double[] adcScale, int fileIndex) {
+        AdcScale[fileIndex] = adcScale.clone();
     }
-    public void setCalibrScale(double[] calibrScale, int fnum) {
-        CalibrScale[fnum] = calibrScale.clone();
+    public void setCalibrScale(double[] calibrScale, int fileIndex) {
+        CalibrScale[fileIndex] = calibrScale.clone();
     }
-    public void setCalibrOffset(double[] calibrOffset, int fnum) {
-        CalibrOffset[fnum] = calibrOffset.clone();
+    public void setCalibrOffset(double[] calibrOffset, int fileIndex) {
+        CalibrOffset[fileIndex] = calibrOffset.clone();
     }
-    public void setSegments(int segments, int fnum) {
-        Segments[fnum] = segments;
+    public void setSegments(int segments, int fileIndex) {
+        Segments[fileIndex] = segments;
     }
 
 }

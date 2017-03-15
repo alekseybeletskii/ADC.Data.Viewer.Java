@@ -75,13 +75,13 @@ class LGraph1_2008 implements DataTypes {
         this.parFilePath = dataData.getDataPaths().getParFilePath();
     }
 
-    public void setParam(int fnum) {
+    public void setParam(int fileIndex) {
 
-        if (!Files.exists(parFilePath[fnum])) {
-            parFilePath[fnum] = dataFilePath[fnum];
+        if (!Files.exists(parFilePath[fileIndex])) {
+            parFilePath[fileIndex] = dataFilePath[fileIndex];
         }
 
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fileIndex])) {
 
             long fSize = fChan.size();
             MappedByteBuffer parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
@@ -100,28 +100,28 @@ class LGraph1_2008 implements DataTypes {
         parBuf.rewind();
 
 
-        dataParams.setDeviceName(new String(deviceNameByte, Charset.forName("UTF-8")).trim(), fnum);
-        dataParams.setCreateDateTime(new String(creatDateTimeByte, Charset.forName("UTF-8")).trim(), fnum);
-        dataParams.setChannelsMax(parBuf.getShort(63), fnum);
-        dataParams.setRealChannelsQuantity(parBuf.getShort(65), fnum);
-        dataParams.setRealCadresQuantity(parBuf.getLong(67), fnum);
-        dataParams.setRealSamplesQuantity(parBuf.getLong(75), fnum);
-//            setTotalTime(parBuf.getDouble(83),fnum) ; 10-bytes-number??
-        dataParams.setAdcRate(parBuf.getDouble(93), fnum);
-        dataParams.setInterCadreDelay(parBuf.getDouble(101), fnum);
-        dataParams.setChannelRate(parBuf.getDouble(109), fnum);
+        dataParams.setDeviceName(new String(deviceNameByte, Charset.forName("UTF-8")).trim(), fileIndex);
+        dataParams.setCreateDateTime(new String(creatDateTimeByte, Charset.forName("UTF-8")).trim(), fileIndex);
+        dataParams.setChannelsMax(parBuf.getShort(63), fileIndex);
+        dataParams.setRealChannelsQuantity(parBuf.getShort(65), fileIndex);
+        dataParams.setRealCadresQuantity(parBuf.getLong(67), fileIndex);
+        dataParams.setRealSamplesQuantity(parBuf.getLong(75), fileIndex);
+//            setTotalTime(parBuf.getDouble(83),fileIndex) ; 10-bytes-number??
+        dataParams.setAdcRate(parBuf.getDouble(93), fileIndex);
+        dataParams.setInterCadreDelay(parBuf.getDouble(101), fileIndex);
+        dataParams.setChannelRate(parBuf.getDouble(109), fileIndex);
         parBuf.position(117);
 
         for (int i = 0; i < 32; i++) {
             arrayByte[i] = (byte) parBuf.getInt();
         }
-        dataParams.setActiveAdcChannelArray(arrayByte, fnum);
+        dataParams.setActiveAdcChannelArray(arrayByte, fileIndex);
         parBuf.get(arrayByte);
-        dataParams.setAdcChannelArray(arrayByte, fnum);
+        dataParams.setAdcChannelArray(arrayByte, fileIndex);
         parBuf.get(arrayByte);
-        dataParams.setAdcGainArray(arrayByte, fnum);
+        dataParams.setAdcGainArray(arrayByte, fileIndex);
         parBuf.get(arrayByte);
-        dataParams.setIsSignalArray(arrayByte, fnum);
+        dataParams.setIsSignalArray(arrayByte, fileIndex);
 
 
         } catch (InvalidPathException e) {
@@ -133,17 +133,17 @@ class LGraph1_2008 implements DataTypes {
         }
     }
 
-    public void setData(int fnum, int sigCount) {
+    public void setData(int fileIndex, int signalIndex) {
         MappedByteBuffer dataBuf;
-        double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fnum]];
-        int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fnum]];
-        int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fnum]];
+        double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fileIndex]];
+        int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
+        int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
         int activeCh=0, allCh =0;
-        while (allCh< dataParams.getActiveAdcChannelArray()[fnum].length)
+        while (allCh< dataParams.getActiveAdcChannelArray()[fileIndex].length)
         {
-            if(dataParams.getActiveAdcChannelArray()[fnum][allCh]==1){
+            if(dataParams.getActiveAdcChannelArray()[fileIndex][allCh]==1){
                 chanAdcNum[activeCh] = allCh+1;
-                switch (dataParams.getAdcGainArray()[fnum][allCh]){
+                switch (dataParams.getAdcGainArray()[fileIndex][allCh]){
                     case 0: chanAdcGain[activeCh]=1;
                         break;
                     case 1: chanAdcGain[activeCh]=2;
@@ -157,20 +157,20 @@ class LGraph1_2008 implements DataTypes {
                 activeCh++;}
             allCh++;
         }
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fnum])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fileIndex])) {
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);
             int jj = 0;
-            while (jj < dataParams.getRealChannelsQuantity()[fnum])
+            while (jj < dataParams.getRealChannelsQuantity()[fileIndex])
             {
                 int i = 0;
-                while (i < dataParams.getRealCadresQuantity()[fnum]) {
-                    oneSignal[i] = ((double)dataBuf.getShort ( i* dataParams.getRealChannelsQuantity()[fnum]*2+jj*2) * 5d / 2000d)/chanAdcGain[jj];
+                while (i < dataParams.getRealCadresQuantity()[fileIndex]) {
+                    oneSignal[i] = ((double)dataBuf.getShort ( i* dataParams.getRealChannelsQuantity()[fileIndex]*2+jj*2) * 5d / 2000d)/chanAdcGain[jj];
                     i++;
                 }
-                sigCount++;
-                dataData.setSignals(oneSignal,sigCount,fnum,chanAdcNum[jj]);
+                signalIndex++;
+                dataData.setSignals(oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
                 jj++;
             }
         } catch (InvalidPathException e) {

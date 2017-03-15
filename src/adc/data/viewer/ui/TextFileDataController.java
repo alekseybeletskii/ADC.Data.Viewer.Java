@@ -71,7 +71,7 @@ public class TextFileDataController {
     private static String deviceName;
     private static int channelNum;
     private static double channelRate;
-    private int fnum;
+    private int fileIndex;
 
     private MainApp mainApp;
     public void setMainApp(MainApp mainApp) {
@@ -83,8 +83,8 @@ public class TextFileDataController {
         this.textFileParamsStage = textFileParamsStage;
     }
 
-    public void setFileNumber(int fnum) {
-        this.fnum = fnum;
+    public void setFileNumber(int fileIndex) {
+        this.fileIndex = fileIndex;
     }
 
 
@@ -127,7 +127,7 @@ public class TextFileDataController {
             channelRate = Double.parseDouble(txtChannelRate.getText());
 
             setParamInteractive(txtCreationDate.getText(),txtDeviceName.getText(),
-                               Double.parseDouble(txtChannelRate.getText()), fnum);
+                               Double.parseDouble(txtChannelRate.getText()), fileIndex);
 
             dataParser.getDataParams().setDataParamsValid(true);
             textFileParamsStage.close();
@@ -143,41 +143,41 @@ public class TextFileDataController {
         textFileParamsStage.close();
     }
 
-    private void  setParamInteractive(String recordCreationDate, String deviceName, double channelRate,int fnum) {
+    private void  setParamInteractive(String recordCreationDate, String deviceName, double channelRate,int fileIndex) {
         
         byte[] arrayByte = {(byte) 1};
-        dataParser.getDataParams().setChannelsMax(1, fnum) ; //int
-        dataParser.getDataParams().setRealChannelsQuantity(1, fnum); //int
-        dataParser.getDataParams().setInterCadreDelay(0.0,fnum) ; //Double
-        dataParser.getDataParams().setActiveAdcChannelArray(arrayByte,fnum) ; //Byte
-        dataParser.getDataParams().setAdcChannelArray(arrayByte,fnum) ; //Byte
-        dataParser.getDataParams().setAdcGainArray(arrayByte,fnum) ; //Byte
-        dataParser.getDataParams().setIsSignalArray(arrayByte,fnum) ; //Byte
-        dataParser.getDataParams().setAdcRate(0.0,fnum) ; //Double
+        dataParser.getDataParams().setChannelsMax(1, fileIndex) ; //int
+        dataParser.getDataParams().setRealChannelsQuantity(1, fileIndex); //int
+        dataParser.getDataParams().setInterCadreDelay(0.0,fileIndex) ; //Double
+        dataParser.getDataParams().setActiveAdcChannelArray(arrayByte,fileIndex) ; //Byte
+        dataParser.getDataParams().setAdcChannelArray(arrayByte,fileIndex) ; //Byte
+        dataParser.getDataParams().setAdcGainArray(arrayByte,fileIndex) ; //Byte
+        dataParser.getDataParams().setIsSignalArray(arrayByte,fileIndex) ; //Byte
+        dataParser.getDataParams().setAdcRate(0.0,fileIndex) ; //Double
 
         //get this from user:
-        dataParser.getDataParams().setDeviceName(deviceName,fnum); //string
-        dataParser.getDataParams().setCreateDateTime(recordCreationDate,fnum) ; //string
-        dataParser.getDataParams().setChannelRate(channelRate,fnum) ; //Double
-        dataParser.getDataParams().setRealCadresQuantity(0, fnum) ; //long
-        dataParser.getDataParams().setRealSamplesQuantity(dataParser.getDataParams().getRealCadresQuantity()[fnum], fnum) ; //long
-        dataParser.getDataParams().setTotalTime(0.0,fnum) ; //Double
+        dataParser.getDataParams().setDeviceName(deviceName,fileIndex); //string
+        dataParser.getDataParams().setCreateDateTime(recordCreationDate,fileIndex) ; //string
+        dataParser.getDataParams().setChannelRate(channelRate,fileIndex) ; //Double
+        dataParser.getDataParams().setRealCadresQuantity(0, fileIndex) ; //long
+        dataParser.getDataParams().setRealSamplesQuantity(dataParser.getDataParams().getRealCadresQuantity()[fileIndex], fileIndex) ; //long
+        dataParser.getDataParams().setTotalTime(0.0,fileIndex) ; //Double
 
     }
 
-    public void setData( int fnum, int sigCount) {
+    public void setData( int fileIndex, int signalIndex) {
         String line;
         List<Double> allLines = new ArrayList<>();
         DataParams dataParams = dataParser.getDataParams();
 
-        try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataPaths().getDataFilePath()[fnum], Charset.forName("US-ASCII"))) {
+        try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataPaths().getDataFilePath()[fileIndex], Charset.forName("US-ASCII"))) {
             try {
                 while ((line = signalDataFromText.readLine()) != null) {
                     allLines.add(Double.parseDouble(line));
                 }
 
-                dataParams.setRealCadresQuantity(allLines.size(), fnum);
-                dataParams.setTotalTime(allLines.size() / dataParams.getChannelRate()[fnum], fnum);
+                dataParams.setRealCadresQuantity(allLines.size(), fileIndex);
+                dataParams.setTotalTime(allLines.size() / dataParams.getChannelRate()[fileIndex], fileIndex);
 
                 double[] oneSignal = new double[allLines.size()];
                 int i = 0;
@@ -185,8 +185,8 @@ public class TextFileDataController {
                     oneSignal[i] = d;
                     i++;
                 }
-                sigCount++;
-                dataParser.setSignals(oneSignal, sigCount, fnum, channelNum);
+                signalIndex++;
+                dataParser.setSignals(oneSignal, signalIndex, fileIndex, channelNum);
             }
             catch (NumberFormatException e){
                 Alert alert = new Alert(WARNING);
