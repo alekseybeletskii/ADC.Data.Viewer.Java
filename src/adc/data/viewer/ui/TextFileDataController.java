@@ -170,7 +170,7 @@ public class TextFileDataController {
         List<Double> allLines = new ArrayList<>();
         DataParams dataParams = dataParser.getDataParams();
 
-        try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataPaths().getDataFilePath()[fileIndex], Charset.forName("US-ASCII"))) {
+        try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataFilePath()[fileIndex], Charset.forName("US-ASCII"))) {
             try {
                 while ((line = signalDataFromText.readLine()) != null) {
                     allLines.add(Double.parseDouble(line));

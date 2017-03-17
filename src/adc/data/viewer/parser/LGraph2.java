@@ -70,8 +70,8 @@ class LGraph2  implements DataTypes {
 
         this.dataData = dataData;
         this.dataParams = dataData.getDataParams();
-        this.dataFilePath = dataData.getDataPaths().getDataFilePath();
-        this.parFilePath = dataData.getDataPaths().getParFilePath();
+        this.dataFilePath = dataData.getDataFilePath();
+        this.parFilePath = dataData.getParFilePath();
     }
 
     public void setParam(int fileIndex) {
@@ -172,7 +172,7 @@ class LGraph2  implements DataTypes {
                 activeCh++;}
             allCh++;
         }
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataPaths().getDataFilePath()[fileIndex])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataFilePath()[fileIndex])) {
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);

@@ -150,8 +150,8 @@ public class WatchDirectory implements Runnable {
     private void processNewFile(WatchEvent.Kind<?> watchEventKind, Path newPath) {
 
         if (watchEventKind == ENTRY_CREATE ||watchEventKind == ENTRY_MODIFY) {
-            List<File> inpList = new ArrayList<>();
-            inpList.add(newPath.toFile());
+            List<Path> inpList = new ArrayList<>();
+            inpList.add(newPath);
             Platform.runLater(() -> {
                 mainApp.parse(inpList);
             });

@@ -53,8 +53,10 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class MainLayoutController {
@@ -77,7 +79,7 @@ public class MainLayoutController {
 
         mainApp.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(0.2);
         mainApp.getPlotterControllerlist().clear();
-        List<File> inpList = new ArrayList<>();
+        List<Path> inpList = new ArrayList<>();
 //        List<File> chosenFiles;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(initDir);
@@ -102,7 +104,7 @@ public class MainLayoutController {
             }
             else {
                 if (!inpList.isEmpty()) {
-                    initDir = inpList.get(inpList.size()-1).getParentFile();
+                    initDir = inpList.get(inpList.size()-1).getParent().toFile();
                     mainApp.parse(inpList);
                 }
                 morefiles=false;
@@ -129,12 +131,19 @@ public class MainLayoutController {
         }
 
 
-    private void getMoreFiles(List<File> inpList, FileChooser fileChooser) {
-        List<File> chosenFiles;
-        chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-        if(!(chosenFiles==null)&&!chosenFiles.isEmpty()) {
-            inpList.addAll(chosenFiles);
-            initDir = inpList.get(inpList.size()-1).getParentFile();
+    private void getMoreFiles(List<Path> inpList, FileChooser fileChooser) {
+//        List<File> chosenFiles;
+
+//        chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
+
+        List<Path> chosenPaths =new ArrayList<>();
+        for (File f :fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage())){
+            chosenPaths.add(f.toPath());
+        }
+
+        if(!(chosenPaths==null)&&!chosenPaths.isEmpty()) {
+            inpList.addAll(chosenPaths);
+            initDir = inpList.get(inpList.size()-1).getParent().toFile();
             fileChooser.setInitialDirectory(initDir);
         }
     }

@@ -67,8 +67,8 @@ class DataFormatsDetect {
 
     public synchronized void detectFormat() {
 
-        Path[] dataFilePath = mainApp.getDataParser().getDataPaths().getDataFilePath();
-        Path[]   parFilePath = mainApp.getDataParser().getDataPaths().getParFilePath();
+        Path[] dataFilePath = mainApp.getDataParser().getDataFilePath();
+        Path[]   parFilePath = mainApp.getDataParser().getParFilePath();
         DataParams dataParams = mainApp.getDataParser().getDataParams();
         int fileIndex = 0;
         while (fileIndex < dataFilePath.length) {

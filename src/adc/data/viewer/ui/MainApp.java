@@ -63,6 +63,7 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -289,7 +290,7 @@ public  class MainApp extends Application {
             final float brightness = 0.8f; //1.0 for brighter, 0.0 for black
             Color color = Color.hsb(hue, saturation, brightness);
             if(siglabel!=null&&!siglabel.isEmpty()) {
-                SignalMarker sigmrk =new SignalMarker(ii, isChecked, color, siglabel, dataParser.getFileNumbers()[ii], dataParser.getSignals()[ii]);
+                SignalMarker sigmrk =new SignalMarker(ii, isChecked, color, siglabel, dataParser.getFileIndex()[ii], dataParser.getSignals()[ii]);
                 signalMarkerAddListeners(sigmrk);
                 signalList.add(sigmrk);
             }
@@ -569,15 +570,15 @@ public  class MainApp extends Application {
 
 
 
-    public synchronized void parse (List<File> inpList) {
+    public synchronized void parse (List<Path> inpList) {
 
         synchronized (this){
             if(directoryWatcher!=null)directoryWatcher.suspendWatcher();
         }
-        int dotIndex = inpList.get(0).getName().lastIndexOf(".");
-        String fileExtension = inpList.get(0).getName().substring(dotIndex + 1).toLowerCase();
+        int dotIndex = inpList.get(0).getFileName().toString().lastIndexOf(".");
+        String fileExtension = inpList.get(0).getFileName().toString().substring(dotIndex + 1).toLowerCase();
 
-        if ((fileExtension.equals("dat") || fileExtension.equals("txt")) && inpList.get(0).length() > 0) {
+        if ((fileExtension.equals("dat") || fileExtension.equals("txt")) && inpList.get(0).toFile().length() > 0) {
             dataParser.parseNewList(inpList);
             fillSignalList(true);
             setDefaultPlotsLayoutType("AllPlots");

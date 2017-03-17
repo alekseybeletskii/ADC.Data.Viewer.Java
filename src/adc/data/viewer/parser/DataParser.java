@@ -46,7 +46,6 @@ package adc.data.viewer.parser;
 
 import adc.data.viewer.ui.MainApp;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -66,17 +65,20 @@ import java.util.stream.IntStream;
 
 
 public class DataParser {
-    private DataPaths dataPaths;
+
     private DataParams dataParams;
     private DataFormatsDetect dataFormatsDetect;
     private double[] [] signals;
     private int signalIndex;
     private String [] signalLabels;
     private Path [] signalFullPath;
-    private int [] fileNumbers;
+    private int [] fileIndex;
     private MainApp mainApp;
 
 
+    private Path[] dataFilePath;
+    private Path[] parFilePath;
+    private String[] fileName;
 
 
     public DataParser( MainApp mainApp) {
@@ -84,11 +86,10 @@ public class DataParser {
         dataFormatsDetect = new DataFormatsDetect(mainApp);
     }
 
-    public synchronized void parseNewList(List<File> filesList) {
+    public synchronized void parseNewList(List<Path> dataPath) {
+        makePaths(dataPath);
         signalIndex =-1;
-        File[] filesListToProcess = filesList.toArray(new File[filesList.size()]);
-        dataPaths = new DataPaths(filesListToProcess);  //produce Paths from an input list of files
-        dataParams = new DataParams(filesListToProcess.length); //This object will contain parameters from all files that have been opened
+        dataParams = new DataParams(dataPath.size()); //This object will contain parameters from all files that have been opened
         for ( DataTypesList frmt : DataTypesList.values()) frmt.getDataType().setDataParser(this);
 
 
@@ -101,16 +102,37 @@ public class DataParser {
         signals = new double[IntStream.of(dataParams.getRealChannelsQuantity()).sum()] [];
         signalLabels = new String[signals.length];
         signalFullPath = new Path[signals.length];
-        fileNumbers = new int[signals.length];
+        fileIndex = new int[signals.length];
 
         if(dataParams.isDataParamsValid()) setData();
+    }
+
+    private void makePaths(List<Path> pathes) {
+        int count = 0;
+        dataFilePath = new Path[pathes.size()];
+        parFilePath = new Path[pathes.size()];
+        fileName = new String[pathes.size()];
+
+        for (Path p : pathes) {
+            try {
+                dataFilePath[count] = p;
+                fileName[count] = dataFilePath[count].getFileName().toString();
+                fileName[count] = fileName[count].substring(0, fileName[count].lastIndexOf('.'));
+                parFilePath[count] = dataFilePath[count].getParent().resolve(fileName[count] + ".par");
+            } catch (InvalidPathException e) {
+                System.out.println("Path Error " + e);
+                return;
+            }
+            count++;
+        }
+
     }
 
     private void setParam() {
 
         String formatName;
         int i=0;
-        while (i < dataPaths.getFileName().length)
+        while (i < dataFilePath.length)
 
         {
             formatName = dataParams.getDataFormatStr()[i].toUpperCase();
@@ -127,7 +149,7 @@ public class DataParser {
     private  void setData (){
         String formatName;
         int i=0;
-        while (i < dataPaths.getFileName().length)
+        while (i < dataFilePath.length)
 
         {
             formatName = dataParams.getDataFormatStr()[i].toUpperCase();
@@ -158,11 +180,12 @@ public class DataParser {
      */
 
     public void setSignals(double [] signal, int signalIndex, int fileIndex, int sigAdcNum) {
+
         this.signals[signalIndex] = signal.clone();
-        this.signalLabels[signalIndex] = dataPaths.getFileName()[fileIndex]+ "_#"+sigAdcNum;
-        this.signalFullPath[signalIndex] = Paths.get(dataPaths.getDataFilePath()[fileIndex].getParent() +System.getProperty("file.separator")+ dataPaths.getFileName()[fileIndex] + "_#" + sigAdcNum);
+        this.signalLabels[signalIndex] = fileName[fileIndex]+ "_#"+sigAdcNum;
+        this.signalFullPath[signalIndex] = Paths.get(dataFilePath[fileIndex].getParent() +System.getProperty("file.separator")+ fileName[fileIndex] + "_#" + sigAdcNum);
         this.signalIndex = signalIndex;
-        this.fileNumbers[signalIndex] = fileIndex;
+        this.fileIndex[signalIndex] = fileIndex;
     }
 
     /**
@@ -209,49 +232,47 @@ public class DataParser {
         return dataParams;
     }
 
-    public void setDataParams(DataParams dataParams) {
-        this.dataParams = dataParams;
+    public int[] getFileIndex() {
+        return fileIndex;
     }
 
-    public DataPaths getDataPaths() {
-        return dataPaths;
-    }
 
-    public void setDataPaths(DataPaths dataPaths) {
-        this.dataPaths = dataPaths;
-    }
-
-    /**
-     *
-     * @return
-     * return array of file numbers
-     */
-    public int[] getFileNumbers() {
-        return fileNumbers;
-    }
-
-    /**
-     * @return
-     * return array of signals
-     */
     public double[][] getSignals() {
         return signals;
     }
 
-    /**
-     * @return
-     *  return an array of labels as strings to be shown in table view
-     */
+
     public String[] getSignalLabels() {
         return signalLabels;
     }
 
-    /**
-     * @return
-     * return an array of signals' full paths as strings to be used when saving as text files
-     */
+
     private Path[] getSignalFullPath() {
         return signalFullPath;
+    }
+
+    public Path[] getDataFilePath() {
+        return dataFilePath;
+    }
+
+    public void setDataFilePath(Path[] dataFilePath) {
+        this.dataFilePath = dataFilePath;
+    }
+
+    public Path[] getParFilePath() {
+        return parFilePath;
+    }
+
+    public void setParFilePath(Path[] parFilePath) {
+        this.parFilePath = parFilePath;
+    }
+
+    public String[] getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String[] fileName) {
+        this.fileName = fileName;
     }
 }
 
