@@ -51,13 +51,11 @@ import javafx.scene.paint.Color;
  */
 
 
-public class SignalMarker {
-
+public class ADCDataRecords {
 
     public double[] getSignalData() {
         return signalData;
     }
-
     private final double [] signalData;
     private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
@@ -65,8 +63,7 @@ public class SignalMarker {
     private final ObjectProperty<Color> signalColor;
     private final IntegerProperty fileIndex;
 
-
-    public SignalMarker(int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalData) {
+    public ADCDataRecords(int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalData) {
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);

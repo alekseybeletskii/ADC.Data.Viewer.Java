@@ -53,6 +53,8 @@
 
 .myDialog{
     -fx-background-color: #f9d900;
+    /*-fx-min-width: 400;*/
+    /*-fx-min-height: 300;*/
 }
 .myDialog > *.button-bar > *.container{
     -fx-background-color: coral;

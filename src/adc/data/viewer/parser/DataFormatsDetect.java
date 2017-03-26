@@ -57,18 +57,17 @@ import java.nio.file.*;
  */
 class DataFormatsDetect {
 
-    private int adcTypeLen;
+    private int adcSignatureLength;
     private MainApp mainApp;
 
-    DataFormatsDetect( MainApp mainApp){
+    DataFormatsDetect( MainApp mainApp) {
         this.mainApp = mainApp;
-        adcTypeLen = 20;
+        adcSignatureLength = 20;//bytes from *.par file beginning
     }
 
-    public synchronized void detectFormat() {
-
+    public  void detectFormat() {
         Path[] dataFilePath = mainApp.getDataParser().getDataFilePath();
-        Path[]   parFilePath = mainApp.getDataParser().getParFilePath();
+        Path[] parFilePath = mainApp.getDataParser().getParFilePath();
         DataParams dataParams = mainApp.getDataParser().getDataParams();
         int fileIndex = 0;
         while (fileIndex < dataFilePath.length) {
@@ -76,30 +75,15 @@ class DataFormatsDetect {
             if (!Files.exists(parFilePath[fileIndex])) {
                 parFilePath[fileIndex] = dataFilePath[fileIndex];
             }
-            if(dataFilePath[fileIndex].getFileName().toString().substring(dataFilePath[fileIndex].getFileName().toString().lastIndexOf('.')+1).toLowerCase().equals("txt"))
-            {
-                dataParams.setDataFormatStr("TextFile", fileIndex);
-                mainApp.setTextFileParams(fileIndex);
-                fileIndex++;
-                continue;
-            }
 
             try (FileChannel fChan = (FileChannel) Files.newByteChannel(parFilePath[fileIndex])) {
-
                 long fSize = fChan.size();
-
                 MappedByteBuffer parBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
-
                 parBuf.order(ByteOrder.LITTLE_ENDIAN);
-
-                byte[] adcTypeByte = new byte[adcTypeLen];
-
+                byte[] adcTypeByte = new byte[adcSignatureLength];
                 parBuf.get(adcTypeByte);
-
                 String dataFormat = new String(adcTypeByte, Charset.forName("UTF-8")).trim();
-
                 parBuf.rewind();
-
                 if (dataFormat.equals("2571090,1618190")) {
                     dataParams.setDataFormatStr("LGraph1", fileIndex);
                 } else if (dataFormat.equals("2571090,1618190 A")) {
@@ -108,8 +92,9 @@ class DataFormatsDetect {
                     dataParams.setDataFormatStr("Saturn", fileIndex);
                 } else if (dataFormat.equals("3571090,7859525")) {
                     dataParams.setDataFormatStr("LGraph2", fileIndex);
+                } else {
+                    dataParams.setDataFormatStr("UnknownADC", fileIndex);
                 }
-
                 dataParams.setDataParamsValid(true);
 
             } catch (InvalidPathException e) {

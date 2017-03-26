@@ -43,7 +43,7 @@
 
 package adc.data.viewer.plotter;
 
-import adc.data.viewer.model.SignalMarker;
+import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.processing.SavitzkyGolayFilter;
 import adc.data.viewer.processing.SimpleMath;
@@ -70,11 +70,11 @@ import static java.lang.Math.round;
   */
 public class CanvasDataDrawing extends Canvas {
 
-     public void setNextSignalToDraw(SignalMarker nextSignalToDraw) {
+     public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
          this.nextSignalToDraw = nextSignalToDraw;
      }
 
-     public SignalMarker getNextSignalToDraw() {
+     public ADCDataRecords getNextSignalToDraw() {
          return nextSignalToDraw;
      }
 
@@ -101,7 +101,7 @@ public class CanvasDataDrawing extends Canvas {
      private double xTheMIN,xTheMAX,yTheMIN,yTheMAX;
 
      private PlotterController plotterController;
-     private SignalMarker nextSignalToDraw;
+     private ADCDataRecords nextSignalToDraw;
      private final DataParser allSignals;
      private final Axes axes;
      private final MainApp mainApp;
@@ -236,7 +236,7 @@ public class CanvasDataDrawing extends Canvas {
          switch (mainApp.getDefaultPlotsLayoutType()) {
              case "AllPlots":
                  int i=0;
-                 for (SignalMarker sigMarc : mainApp.getSignalList()) {
+                 for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
                      if (sigMarc.getSignalSelected()) {
                          i++;
                          nextSignalToDraw=sigMarc;
@@ -276,17 +276,16 @@ public class CanvasDataDrawing extends Canvas {
      }
 
 
-     public void drawNextSignal(SignalMarker signalMarker) {
+     public void drawNextSignal(ADCDataRecords adcDataRecords) {
          double zeroShift = 0;
          int nextSignalLength =0;
-         int nextSignalIndex = signalMarker.getSignalIndex();
-//         double [] nextSignal = allSignals.getSignals()[nextSignalIndex].clone();
-         double [] nextSignal = signalMarker.getSignalData();
-         String label = mainApp.getDataParser().getSignalLabels()[nextSignalIndex];
+         int nextSignalIndex = adcDataRecords.getSignalIndex();
+         double [] nextSignal = adcDataRecords.getSignalData();
+         String label = adcDataRecords.getSignalLabel();
          int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 //dt,dtCadre in milliseconds
-         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[mainApp.getSignalList().get(nextSignalIndex).getFileIndex()]);
-         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[mainApp.getSignalList().get(nextSignalIndex).getFileIndex()];
+         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileIndex()]);
+         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[adcDataRecords.getFileIndex()];
          nextSignalLength = nextSignal.length;
          int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
          int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
@@ -324,15 +323,15 @@ public class CanvasDataDrawing extends Canvas {
 
              switch (plotType) {
                  case "Raw":
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      break;
                  case "SGFiltered":
                      sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      int i = 0;
                      for (double yy : sgfilter.filterData(sigSubarray)) {
@@ -344,8 +343,8 @@ public class CanvasDataDrawing extends Canvas {
                  case "RawAndSGFilter":
                      sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
 
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      sigSubarray = sgfilter.filterData(sigSubarray);
@@ -358,8 +357,8 @@ public class CanvasDataDrawing extends Canvas {
                      sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, sgFilterSettings[2]);
 
                      sigSubarray = sgfilter.filterData(sigSubarray);
-                     graphicContext.setStroke(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
-                     graphicContext.setFill(mainApp.getSignalList().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
+                     graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
                      graphicContext.beginPath();
                      decimator(graphicContext, ADCChannelNum, dt, dtCadre, sigSubarray);
                      break;

@@ -46,7 +46,6 @@ package adc.data.viewer.ui;
 
 import javafx.application.Platform;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -109,18 +108,12 @@ public class WatchDirectory implements Runnable {
                         Thread.yield();
                         continue;
                     }
-                    synchronized(this) {
-                        while (suspendFlag) {
-//                                    System.out.println("waiting...");
-                            wait();
-                        }
-                    }
+
                 } catch (InterruptedException e) {
                     return;
                 }
 
                 for (WatchEvent<?> watchEvent : key.pollEvents()) {
-
                     WatchEvent.Kind<?> watchEventKind = watchEvent.kind();
                     @SuppressWarnings("unchecked")
                     WatchEvent<Path> pathEvent = (WatchEvent<Path>) watchEvent;
@@ -129,12 +122,28 @@ public class WatchDirectory implements Runnable {
                         Thread.yield();
                         return;
                     }
+
+                    if (watchEventKind == ENTRY_MODIFY&&newPath.toFile().length()!=0) {
+                        List<Path> inpList = new ArrayList<>();
+                        inpList.add(newPath);
+                        suspendFlag=true;
+                        Platform.runLater(() -> {
+                            mainApp.parse(inpList);
+                        });
+                    }
+
                     try {
                         Thread.sleep(1000);
+                        synchronized(this) {
+                            while (suspendFlag) {
+//                                System.out.println("waiting...");
+                                wait();
+                            }
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    processNewFile(watchEventKind, newPath);
+
 
                 }
                 boolean valid = key.reset();
@@ -147,14 +156,5 @@ public class WatchDirectory implements Runnable {
             e.printStackTrace();                }
     }
 
-    private void processNewFile(WatchEvent.Kind<?> watchEventKind, Path newPath) {
 
-        if (watchEventKind == ENTRY_CREATE ||watchEventKind == ENTRY_MODIFY) {
-            List<Path> inpList = new ArrayList<>();
-            inpList.add(newPath);
-            Platform.runLater(() -> {
-                mainApp.parse(inpList);
-            });
-        }
-    }
 }

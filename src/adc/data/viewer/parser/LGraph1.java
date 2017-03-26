@@ -60,17 +60,17 @@ class LGraph1 implements DataTypes {
 
 //    LGraph1 (DataParser dataData){}
 
-    private DataParser dataData;
+    private DataParser dataParser;
     private DataParams dataParams;
     private Path[] dataFilePath;
     private Path[] parFilePath;
 
-    public void setDataParser(DataParser dataData) {
+    public void setDataParser(DataParser dataParser) {
 
-        this.dataData = dataData;
-        this.dataParams = dataData.getDataParams();
-        this.dataFilePath = dataData.getDataFilePath();
-        this.parFilePath = dataData.getParFilePath();
+        this.dataParser = dataParser;
+        this.dataParams = dataParser.getDataParams();
+        this.dataFilePath = dataParser.getDataFilePath();
+        this.parFilePath = dataParser.getParFilePath();
     }
 
     public void setParam(int fileIndex) {
@@ -152,7 +152,7 @@ class LGraph1 implements DataTypes {
                 activeCh++;}
             allCh++;
         }
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataFilePath()[fileIndex])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataParser.getDataFilePath()[fileIndex])) {
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);
@@ -165,7 +165,7 @@ class LGraph1 implements DataTypes {
                     i++;
                 }
                 signalIndex++;
-                dataData.setSignals(oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
+                dataParser.setSignalsMarkers(oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
                 jj++;
             }
         } catch (InvalidPathException e) {

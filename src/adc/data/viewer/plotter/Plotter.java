@@ -194,7 +194,7 @@ import javafx.scene.shape.StrokeType;
 
         setOnMouseReleased(mreleased -> {
             if(mreleased.getButton()== MouseButton.PRIMARY) {
-                if ((zoomRectangle.getWidth() <= 0.0 | zoomRectangle.getHeight() <= 0.0) & !mainApp.getSignalList().isEmpty()) {
+                if ((zoomRectangle.getWidth() <= 0.0 | zoomRectangle.getHeight() <= 0.0) & !mainApp.getAdcDataRecords().isEmpty()) {
 //                    axes.obtainDataAndTimeMargins(canvasData.getNextSignalToDraw());
 //                    axes.setAxesBasicSetup();
                     axes.setAxesBounds(canvasData.getxTheMIN(),canvasData.getxTheMAX(),canvasData.getyTheMIN(),canvasData.getyTheMAX());

@@ -44,67 +44,58 @@
 package adc.data.viewer.parser;
 
 
+import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.ui.MainApp;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-
-
-
-/**
- * This class produces an object that will incapsulate three output arrays:
- * -"signals" with all signals
- * -"signalLabels" with labels to be shown in table view for convenient signals selection
- * -"signalFullPath" full paths to every signal used when saving as separate text files
- * "saveToText" method to convert data from the binary to the text format
- */
 
 
 public class DataParser {
 
     private DataParams dataParams;
     private DataFormatsDetect dataFormatsDetect;
-    private double[] [] signals;
     private int signalIndex;
-    private String [] signalLabels;
-    private Path [] signalFullPath;
-    private int [] fileIndex;
-    private MainApp mainApp;
+    private Path [] signalPath;
 
+    private MainApp mainApp;
+    private List<ADCDataRecords> signalList = new ArrayList<>();
 
     private Path[] dataFilePath;
     private Path[] parFilePath;
     private String[] fileName;
 
+    private  int totalFiles;
+    private  int totalSignals;
+    private Color[] signalColors;
 
+    private boolean drawAllSignals;
     public DataParser( MainApp mainApp) {
         this.mainApp=mainApp;
         dataFormatsDetect = new DataFormatsDetect(mainApp);
     }
 
-    public synchronized void parseNewList(List<Path> dataPath) {
-        makePaths(dataPath);
+    public  void parseNewList(List<Path> dataPath) {
+        drawAllSignals=true;
         signalIndex =-1;
-        dataParams = new DataParams(dataPath.size()); //This object will contain parameters from all files that have been opened
-        for ( DataTypesList frmt : DataTypesList.values()) frmt.getDataType().setDataParser(this);
-
-
-
-        dataFormatsDetect.detectFormat();
-
-
+        signalList.clear();
+        totalFiles=dataPath.size();
+        makePaths(dataPath);
         setParam();
+        makeSignalColors();
+        signalPath = new Path[totalSignals];
+        setData();
+        mainApp.getAdcDataRecords().addAll(signalList);
+    }
 
-        signals = new double[IntStream.of(dataParams.getRealChannelsQuantity()).sum()] [];
-        signalLabels = new String[signals.length];
-        signalFullPath = new Path[signals.length];
-        fileIndex = new int[signals.length];
-
-        if(dataParams.isDataParamsValid()) setData();
+    public String[] getFileName() {
+        return fileName;
     }
 
     private void makePaths(List<Path> pathes) {
@@ -129,45 +120,41 @@ public class DataParser {
     }
 
     private void setParam() {
+        dataParams = new DataParams(totalFiles);
+        for ( DataTypesList frmt : DataTypesList.values()) frmt.getDataType().setDataParser(this);
+        dataFormatsDetect.detectFormat();
 
         String formatName;
         int i=0;
         while (i < dataFilePath.length)
-
         {
             formatName = dataParams.getDataFormatStr()[i].toUpperCase();
-
-            if (!formatName.equals("TEXTFILE"))
-
+//            if (!formatName.equals("TEXTFILE"))
                 DataTypesList.valueOf(formatName).getDataType().setParam(i);
-
             i++;
         }
+        totalSignals= IntStream.of(dataParams.getRealChannelsQuantity()).sum();
     }
 
 
     private  void setData (){
+        if(!dataParams.isDataParamsValid()) return;
         String formatName;
         int i=0;
         while (i < dataFilePath.length)
-
         {
             formatName = dataParams.getDataFormatStr()[i].toUpperCase();
-
-            if (formatName.equals("TEXTFILE"))
-            {mainApp.getTextFileDataController().setData(i,signalIndex);
-                i++;
-                continue;}
-
+//            if (formatName.equals("TEXTFILE"))
+//            {mainApp.getTextFileParamController().setData(i,signalIndex);
+//                i++;
+//                continue;}
             DataTypesList.valueOf(formatName).getDataType().setData(i,signalIndex);
-
             i++;
-
         }
     }
 
     /**
-     * This method fills all the output arrays and will be invoked by a corresponding ADC-type class
+     * This method produce ADC data records from source files and will be invoked by a corresponding ADC-type class
      *
      * @param signal
      * a signal extracted from binary file by corresponding ADC-type-class
@@ -175,18 +162,32 @@ public class DataParser {
      * an extracted signal's sequence number in the "signals" array
      * @param fileIndex
      * a number of a processed source file
-     * @param sigAdcNum
+     * @param adcChannelNumber
      * an ADC channel number of extracted signal
      */
 
-    public void setSignals(double [] signal, int signalIndex, int fileIndex, int sigAdcNum) {
-
-        this.signals[signalIndex] = signal.clone();
-        this.signalLabels[signalIndex] = fileName[fileIndex]+ "_#"+sigAdcNum;
-        this.signalFullPath[signalIndex] = Paths.get(dataFilePath[fileIndex].getParent() +System.getProperty("file.separator")+ fileName[fileIndex] + "_#" + sigAdcNum);
+    public void setSignalsMarkers(double [] signal, int signalIndex, int fileIndex, int adcChannelNumber) {
+        String nextSignalLabel = fileName[fileIndex]+ "_#"+ adcChannelNumber;
+        Path nextSignalPath = dataFilePath[fileIndex].getParent();
+        this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-        this.fileIndex[signalIndex] = fileIndex;
+        ADCDataRecords sigmrk =new ADCDataRecords(signalIndex, drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex, signal.clone());
+        signalList.add(sigmrk);
     }
+
+    private  void makeSignalColors() {
+        Color [] signalColors = new Color[totalSignals];
+        final float saturation = 1f;//1.0 for brilliant, 0.0 for dull
+        final float brightness = 0.8f; //1.0 for brighter, 0.0 for black
+        int hue=0;
+        for (int jj = 0; jj< totalSignals; jj++) {
+            signalColors[jj] = Color.hsb(hue, saturation, brightness);
+            hue+=40;
+            if(hue>360) {hue=40;}
+        }
+        this.signalColors = signalColors;
+    }
+
 
     /**
      * The method saves avery signal as a separate text file to the "txt" subdirectory
@@ -194,85 +195,47 @@ public class DataParser {
     public void saveToText(){
         int i=0;
         byte [] stringBytes;
-        while (i< signalLabels.length){
+        while (i< signalList.size()){
 
-            Path   outTxtPath =    getSignalFullPath()[i].getParent().resolve(Paths.get("txt"));
+            Path outTxtPath = signalPath[i].resolve(Paths.get("txt"));
+
             try {
                 Files.createDirectories(outTxtPath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(signalLabels[i] +".txt"),StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
-
+            try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(signalList.get(i).getSignalLabel() +".txt"),StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
             {
-                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, signals[i].length*16);
+                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, signalList.get(i).getSignalData().length*16);
                 int j=0;
-                while(j<signals[i].length) {
-                    stringBytes = String.format("%15.7f", signals[i][j]).getBytes("UTF-8");
+                while(j<signalList.get(i).getSignalData().length) {
+                    stringBytes = String.format("%15.7f", signalList.get(i).getSignalData()[j]).getBytes("UTF-8");
                     wrBuf.put(stringBytes);
                     wrBuf.put((byte)System.getProperty("line.separator").charAt(0));
-
                     j++;
                 }
-
-
             } catch(InvalidPathException e) {
                 System.out.println("Path Error " + e);
             } catch (IOException e) {
                 System.out.println("I/O Error " + e);
             }
-
             i++;
         }
-
     }
 
     public DataParams getDataParams() {
         return dataParams;
     }
 
-    public int[] getFileIndex() {
-        return fileIndex;
-    }
-
-
-    public double[][] getSignals() {
-        return signals;
-    }
-
-
-    public String[] getSignalLabels() {
-        return signalLabels;
-    }
-
-
-    private Path[] getSignalFullPath() {
-        return signalFullPath;
-    }
-
     public Path[] getDataFilePath() {
         return dataFilePath;
     }
-
-    public void setDataFilePath(Path[] dataFilePath) {
-        this.dataFilePath = dataFilePath;
-    }
-
     public Path[] getParFilePath() {
         return parFilePath;
     }
-
-    public void setParFilePath(Path[] parFilePath) {
-        this.parFilePath = parFilePath;
-    }
-
-    public String[] getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String[] fileName) {
-        this.fileName = fileName;
+    public MainApp getMainApp() {
+        return mainApp;
     }
 }
 

@@ -43,7 +43,7 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.model.SignalMarker;
+import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.plotter.Plotter;
 import javafx.application.Application;
@@ -57,7 +57,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -84,8 +83,6 @@ public  class MainApp extends Application {
         launch(args);
     }
 
-    private Stage plotsStage;
-
     public void setListOfFiles(List<File> listOfFiles) {
         this.listOfFiles = listOfFiles;
     }
@@ -103,17 +100,19 @@ public  class MainApp extends Application {
     private boolean newFileCreated;
     private  boolean redrawAllowed;
 
-    public void setNextSignalToDraw(SignalMarker nextSignalToDraw) {
+    public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
         this.nextSignalToDraw = nextSignalToDraw;
     }
 
-    private SignalMarker nextSignalToDraw;
+    private final Image logo = new Image("images/logo.png");
+    private ADCDataRecords nextSignalToDraw;
     private String defaultPlotsLayoutType;
     private Stage primaryStage;
     private BorderPane mainLayout;
     private DataParser dataParser;
-    private ObservableList<SignalMarker> signalList = FXCollections.observableArrayList();
-    private TextFileDataController textFileDataController;
+
+    private ObservableList<ADCDataRecords> adcDataRecords = FXCollections.observableArrayList();
+    private TextFileParamController textFileParamController;
     private int nextSignalToDrawIndex;
     private int howManyPlots;
     private double defaultWidthOfLine;
@@ -136,17 +135,20 @@ public  class MainApp extends Application {
     public void setDefaultPlotsLayoutType(String defaultPlotsLayoutType) {
         this.defaultPlotsLayoutType = defaultPlotsLayoutType;
     }
-    public SignalMarker getNextSignalToDraw() {
+    public ADCDataRecords getNextSignalToDraw() {
         return nextSignalToDraw;
     }
     public SignalsOverviewController getSignalsOverviewController() {
         return signalsOverviewController;
     }
-    public TextFileDataController getTextFileDataController() {
-        return textFileDataController;
+    public TextFileParamController getTextFileParamController() {
+        return textFileParamController;
     }
-    public ObservableList<SignalMarker> getSignalList() {
-        return signalList;
+    public ObservableList<ADCDataRecords> getAdcDataRecords() {
+        return adcDataRecords;
+    }
+    public void setAdcDataRecords(ObservableList<ADCDataRecords> adcDataRecords) {
+        this.adcDataRecords = adcDataRecords;
     }
     Stage getPrimaryStage() {
         return primaryStage;
@@ -154,12 +156,8 @@ public  class MainApp extends Application {
     public DataParser getDataParser() {
         return dataParser;
     }
-
     public double getHowManyPlots() {
         return howManyPlots;
-    }
-    Stage getPlotsStage() {
-        return plotsStage;
     }
     public String getDefaultPlotType() {
         return defaultPlotType;
@@ -217,11 +215,11 @@ public  class MainApp extends Application {
         primaryStage.setOnCloseRequest(e ->
         {Platform.exit();
          System.exit(0);});
-        this.dataParser =new DataParser(this);
 
+        this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ADC Signal Viewer");
-        this.primaryStage.getIcons().add(new Image("images/IPP-logo.png"));
+        this.primaryStage.getIcons().add(logo);
         initMainLayout();
         showSignalsOverview();
         defaultWidthOfLine =1.0;
@@ -273,36 +271,8 @@ public  class MainApp extends Application {
         }
     }
 
-     void fillSignalList(boolean isChecked) {
-        clearAll();
-         redrawAllowed=true;
-        int i=0;
-        float []  hueArray = new float[dataParser.getSignalLabels().length];
-        for (int jj = 0; jj< dataParser.getSignalLabels().length; jj++) {
-            hueArray[jj]=i;
-            i+=40;
-            if(i>360) {i=40;}
-        }
-        int ii =0;
-        for (String siglabel : dataParser.getSignalLabels()){
-            final float hue = hueArray[ii];
-            final float saturation = 1f;//1.0 for brilliant, 0.0 for dull
-            final float brightness = 0.8f; //1.0 for brighter, 0.0 for black
-            Color color = Color.hsb(hue, saturation, brightness);
-            if(siglabel!=null&&!siglabel.isEmpty()) {
-                SignalMarker sigmrk =new SignalMarker(ii, isChecked, color, siglabel, dataParser.getFileIndex()[ii], dataParser.getSignals()[ii]);
-                signalMarkerAddListeners(sigmrk);
-                signalList.add(sigmrk);
-            }
-            ii++;
-        }
-         signalsOverviewController.getSignalsOverviewSplitPane().setVisible(true);
 
-     }
-
-
-
-    void drawPlots() {
+    synchronized void drawPlots() {
         Plotter.setPlotterObjectsCounter(0);
 
         clearPlots();
@@ -317,7 +287,7 @@ public  class MainApp extends Application {
                 break;
             case "AllPlotsByOne":
                 signalsOverviewController.getPlotsScrollPane().setFitToHeight(true);
-                for (SignalMarker sm:signalList) {
+                for (ADCDataRecords sm: adcDataRecords) {
                     if (sm.getSignalSelected()) {
                         nextSignalToDraw=sm;
                         layoutLoader();
@@ -329,7 +299,7 @@ public  class MainApp extends Application {
                 break;
             case "AllPlotsByOneScroll":
                 signalsOverviewController.getPlotsScrollPane().setFitToHeight(false);
-                for (SignalMarker sm:signalList) {
+                for (ADCDataRecords sm: adcDataRecords) {
                     if (sm.getSignalSelected()) {
                         nextSignalToDraw=sm;
                         layoutLoader();
@@ -384,17 +354,20 @@ public  class MainApp extends Application {
     public void setTextFileParams(int fileIndex) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("textFileParams.fxml"));
+            loader.setLocation(MainApp.class.getResource("TextFileParam.fxml"));
             BorderPane textFileParams = loader.load();
-            textFileDataController = loader.getController();
+            textFileParamController = loader.getController();
+            textFileParamController.getNextFileName().setText(dataParser.getFileName()[fileIndex]);
             Stage textFileParamsStage = new Stage();
             textFileParamsStage.initStyle(StageStyle.UNDECORATED);
+            textFileParamsStage.getIcons().add(logo);
+            textFileParamsStage.initOwner(primaryStage);
             textFileParamsStage.setResizable(false);
             textFileParamsStage.toFront();
-            textFileDataController.setMainApp(this);
-            textFileDataController.setDataParser(dataParser);
-            textFileDataController.setTextFileParamsStage(textFileParamsStage);
-            textFileDataController.setFileNumber(fileIndex);
+            textFileParamController.setMainApp(this);
+            textFileParamController.setDataParser(dataParser);
+            textFileParamController.setTextFileParamsStage(textFileParamsStage);
+            textFileParamController.setFileNumber(fileIndex);
             textFileParamsStage.setTitle("Set siganl parameters");
             Scene scene = new Scene(textFileParams);
             textFileParamsStage.setScene(scene);
@@ -446,7 +419,7 @@ public  class MainApp extends Application {
 
      void clearAll(){
          nextSignalToDrawIndex=-1;
-             signalList.clear();
+             adcDataRecords.clear();
              signalsOverviewController.getPlotsVBox().getChildren().clear();
              plotterControllerlist.clear();
              signalsOverviewController.getPlotsScrollPane().setVisible(false);
@@ -473,20 +446,23 @@ public  class MainApp extends Application {
         }
     }
 
-    private void signalMarkerAddListeners(SignalMarker sigmrk) {
-        sigmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
-                    if(!plotterControllerlist.isEmpty()&&redrawAllowed) {
-                        plotterControllerlist.get(0).getPlotter().getCanvasData().drawData();
-                    }
-                }
-        );
+    private void signalMarkerAddListeners() {
 
-        sigmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
-                    if(!plotterControllerlist.isEmpty()&&redrawAllowed) {
+        for (ADCDataRecords sgmrk : adcDataRecords){
+            sgmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
+                        if (!plotterControllerlist.isEmpty() && redrawAllowed) {
+                            plotterControllerlist.get(0).getPlotter().getCanvasData().drawData();
+                        }
+                    }
+            );
+
+            sgmrk.signalColorProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!plotterControllerlist.isEmpty() && redrawAllowed) {
                         plotterControllerlist.get(0).getPlotter().getCanvasData().drawData();
                     }
                 }
         );
+    }
     }
 
     private void setKeyPressedAction(){
@@ -508,7 +484,7 @@ public  class MainApp extends Application {
                 if (k.getCode() == KeyCode.HOME && k.isShortcutDown()) {
                     nextSignalToDraw=null;
                     redrawAllowed=false;
-                    signalList.forEach(sig -> sig.setSignalSelected(true));
+                    adcDataRecords.forEach(sig -> sig.setSignalSelected(true));
                     plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
                     plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
                     nextSignalToDrawIndex = -1;
@@ -517,42 +493,42 @@ public  class MainApp extends Application {
                 } else
                     switch (k.getCode()) {
                         case HOME:
-                            signalList.forEach(sig -> sig.setSignalSelected(false));
+                            adcDataRecords.forEach(sig -> sig.setSignalSelected(false));
                             nextSignalToDrawIndex = 0;
-                            nextSignalToDraw=signalList.get(nextSignalToDrawIndex);
+                            nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         case END:
-                            signalList.forEach(sig -> sig.setSignalSelected(false));
-                            nextSignalToDrawIndex = signalList.size() - 1;
-                            nextSignalToDraw=signalList.get(nextSignalToDrawIndex);
+                            adcDataRecords.forEach(sig -> sig.setSignalSelected(false));
+                            nextSignalToDrawIndex = adcDataRecords.size() - 1;
+                            nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         case DOWN:
-                            signalList.forEach(sig -> sig.setSignalSelected(false));
+                            adcDataRecords.forEach(sig -> sig.setSignalSelected(false));
                             nextSignalToDrawIndex++;
-                            nextSignalToDrawIndex = nextSignalToDrawIndex > signalList.size() - 1 ? 0 : nextSignalToDrawIndex;
-                            nextSignalToDraw=signalList.get(nextSignalToDrawIndex);
+                            nextSignalToDrawIndex = nextSignalToDrawIndex > adcDataRecords.size() - 1 ? 0 : nextSignalToDrawIndex;
+                            nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         case UP:
-                            signalList.forEach(sig -> sig.setSignalSelected(false));
+                            adcDataRecords.forEach(sig -> sig.setSignalSelected(false));
                             nextSignalToDrawIndex--;
-                            nextSignalToDrawIndex = nextSignalToDrawIndex < 0 ? signalList.size() - 1 : nextSignalToDrawIndex;
-                            nextSignalToDraw=signalList.get(nextSignalToDrawIndex);
+                            nextSignalToDrawIndex = nextSignalToDrawIndex < 0 ? adcDataRecords.size() - 1 : nextSignalToDrawIndex;
+                            nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            signalList.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         default:
                             break;
@@ -570,29 +546,21 @@ public  class MainApp extends Application {
 
 
 
-    public synchronized void parse (List<Path> inpList) {
+    public  void parse (List<Path> inpList) {
 
-        synchronized (this){
-            if(directoryWatcher!=null)directoryWatcher.suspendWatcher();
-        }
         int dotIndex = inpList.get(0).getFileName().toString().lastIndexOf(".");
         String fileExtension = inpList.get(0).getFileName().toString().substring(dotIndex + 1).toLowerCase();
 
         if ((fileExtension.equals("dat") || fileExtension.equals("txt")) && inpList.get(0).toFile().length() > 0) {
-            dataParser.parseNewList(inpList);
-            fillSignalList(true);
+            clearAll();
             setDefaultPlotsLayoutType("AllPlots");
-            if (!getSignalList().isEmpty()) {
-                drawPlots();
-            }
-
+            redrawAllowed=true;
+            dataParser.parseNewList(inpList);
+            signalMarkerAddListeners();
+            signalsOverviewController.getSignalsOverviewSplitPane().setVisible(true);
+            drawPlots();
         }
         synchronized (this){
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             if(directoryWatcher!=null)directoryWatcher.resumeWatcher();
         }
     }

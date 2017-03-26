@@ -49,6 +49,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import static javafx.scene.control.Alert.AlertType.WARNING;
@@ -183,8 +184,9 @@ public class PlotterSettingController {
         DialogPane dialogPane = alertInvalidParam.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
         dialogPane.getStyleClass().add("myDialog");
-        alertInvalidParam.setWidth(700);
-        alertInvalidParam.setHeight(700);
+        dialogPane.setMinHeight(Region.USE_PREF_SIZE);
+        dialogPane.setMinWidth(Region.USE_PREF_SIZE);
+        dialogPane.toFront();
         alertInvalidParam.setTitle("Warning");
         alertInvalidParam.setHeaderText("Invalid data format!");
         alertInvalidParam.setContentText("all axes parameters should be of type float,\nother pframeters should be Integer\nand \"FFTWindowType\" of type String\n\n");

@@ -43,7 +43,7 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.model.SignalMarker;
+import adc.data.viewer.model.ADCDataRecords;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -85,14 +85,14 @@ public class SignalsOverviewController {
     private GridPane signalFeaturesGrid;
 
     @FXML
-    private TableView<SignalMarker> signalsTable;
+    private TableView<ADCDataRecords> signalsTable;
 
     @FXML
-    private TableColumn<SignalMarker, Boolean> signalSelectedColumn;
+    private TableColumn<ADCDataRecords, Boolean> signalSelectedColumn;
     @FXML
-    private TableColumn<SignalMarker, Color> signalColorColumn;
+    private TableColumn<ADCDataRecords, Color> signalColorColumn;
     @FXML
-    private TableColumn<SignalMarker, String> signalLabelColumn;
+    private TableColumn<ADCDataRecords, String> signalLabelColumn;
     @FXML
     private Label deviceNameLabel;
     @FXML
@@ -118,7 +118,7 @@ public class SignalsOverviewController {
 
 
 
-    public TableView<SignalMarker> getSignalsTable() {
+    public TableView<ADCDataRecords> getSignalsTable() {
         return signalsTable;
     }
     public AnchorPane getSignalsOverviewRightPane() {
@@ -139,7 +139,7 @@ public class SignalsOverviewController {
         signalColorColumn.setCellFactory(c->new TableCellColoredView<>(signalColorColumn));
 //        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(signalSelectedColumn));
         signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(param ->
-         mainApp.getSignalList().get(param).signalSelectedProperty()
+         mainApp.getAdcDataRecords().get(param).signalSelectedProperty()
         ));
 
 
@@ -172,7 +172,7 @@ public class SignalsOverviewController {
 
 
 
-    private void showSignalDetails(SignalMarker signal) {
+    private void showSignalDetails(ADCDataRecords signal) {
         if (signal != null){
 
             deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileIndex()]);
@@ -202,7 +202,7 @@ public class SignalsOverviewController {
 
     public void setTableItems() {
         // Add observable list data to the table
-        signalsTable.itemsProperty().setValue(mainApp.getSignalList());
+        signalsTable.itemsProperty().setValue(mainApp.getAdcDataRecords());
     }
 
 
@@ -210,7 +210,7 @@ public class SignalsOverviewController {
     @FXML
     private void handleClickedOnTable(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount()==2){
-            for(SignalMarker sigM : mainApp.getSignalList())
+            for(ADCDataRecords sigM : mainApp.getAdcDataRecords())
             {
                 sigM.setSignalSelected(checkedFlag);
             }

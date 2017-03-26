@@ -53,10 +53,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 public class MainLayoutController {
@@ -132,16 +130,16 @@ public class MainLayoutController {
 
 
     private void getMoreFiles(List<Path> inpList, FileChooser fileChooser) {
-//        List<File> chosenFiles;
-
-//        chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-
+        List<File> chosenFiles = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
         List<Path> chosenPaths =new ArrayList<>();
-        for (File f :fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage())){
-            chosenPaths.add(f.toPath());
+
+        if(chosenFiles!=null&& !chosenFiles.isEmpty()) {
+            for (File f : chosenFiles) {
+                chosenPaths.add(f.toPath());
+            }
         }
 
-        if(!(chosenPaths==null)&&!chosenPaths.isEmpty()) {
+        if(!chosenPaths.isEmpty()) {
             inpList.addAll(chosenPaths);
             initDir = inpList.get(inpList.size()-1).getParent().toFile();
             fileChooser.setInitialDirectory(initDir);
@@ -151,7 +149,7 @@ public class MainLayoutController {
     @FXML
     private void handleSignalsToText() {
 
-        if (mainApp.getSignalList().size() != 0) {
+        if (mainApp.getAdcDataRecords().size() != 0) {
             mainApp.getDataParser().saveToText();
         }
     }
@@ -167,11 +165,7 @@ public class MainLayoutController {
 
     @FXML
     private void handleExit() {
-        if(mainApp.getPlotsStage()!=null) {
-            mainApp.getPlotsStage().close();
-        }
         System.exit(0);
-//        mainApp.getPlotsStage().setOnCloseRequest(e -> Platform.exit());
     }
 
     @FXML
@@ -182,21 +176,21 @@ public class MainLayoutController {
     @FXML
     private void handleDrawPlots() {
         mainApp.setDefaultPlotsLayoutType("AllPlots");
-        if (!mainApp.getSignalList().isEmpty()) {
+        if (!mainApp.getAdcDataRecords().isEmpty()) {
             mainApp.drawPlots();
         }
     }
     @FXML
     private void handleDrawPlotsByOne(){
         mainApp.setDefaultPlotsLayoutType("AllPlotsByOne");
-        if (!mainApp.getSignalList().isEmpty()) {
+        if (!mainApp.getAdcDataRecords().isEmpty()) {
             mainApp.drawPlots();
         }
     }
     @FXML
     private void handleDrawPlotsByOneScroll(){
         mainApp.setDefaultPlotsLayoutType("AllPlotsByOneScroll");
-        if (!mainApp.getSignalList().isEmpty()) {
+        if (!mainApp.getAdcDataRecords().isEmpty()) {
             mainApp.drawPlots();
         }
     }

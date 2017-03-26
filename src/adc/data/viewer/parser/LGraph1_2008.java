@@ -170,7 +170,7 @@ class LGraph1_2008 implements DataTypes {
                     i++;
                 }
                 signalIndex++;
-                dataData.setSignals(oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
+                dataData.setSignalsMarkers(oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
                 jj++;
             }
         } catch (InvalidPathException e) {

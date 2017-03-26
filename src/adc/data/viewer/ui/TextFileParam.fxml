@@ -54,7 +54,7 @@
   ~ 	********************* END LICENSE BLOCK ***********************************
   -->
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" styleClass="BorderPane" stylesheets="/css/dialog.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.TextFileDataController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="BorderPane" stylesheets="/css/dialog.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.TextFileParamController">
    <center>
       <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -115,4 +115,11 @@
          </padding>
       </ButtonBar>
    </bottom>
+   <top>
+      <Label fx:id="nextFileName" text="file name" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+      </Label>
+   </top>
 </BorderPane>

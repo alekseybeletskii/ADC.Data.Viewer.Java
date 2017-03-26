@@ -45,7 +45,7 @@ package adc.data.viewer.plotter;
 
 
 //import adc.data.viewer.ui.PlotterSettingController;
-import adc.data.viewer.model.SignalMarker;
+import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterSettingController;
@@ -220,7 +220,7 @@ public class Axes extends Pane {
 
     }
 
-    public void obtainDataAndTimeMargins(SignalMarker nextSignalToDraw) {
+    public void obtainDataAndTimeMargins(ADCDataRecords nextSignalToDraw) {
 
 xMinBasic= Integer.MAX_VALUE;
 xMaxBasic= Integer.MIN_VALUE;
@@ -231,11 +231,11 @@ yMaxBasic= Integer.MIN_VALUE;
 
         switch(mainApp.getDefaultPlotsLayoutType()){
             case "AllPlots":
-                if(nextSignalToDraw==null)for (SignalMarker signalMarker : mainApp.getSignalList()){
-                    if (signalMarker.getSignalSelected())
+                if(nextSignalToDraw==null)for (ADCDataRecords adcDataRecords : mainApp.getAdcDataRecords()){
+                    if (adcDataRecords.getSignalSelected())
                     {
                         isAnySelected =true;
-                        selectedSignalMargins(signalMarker);
+                        selectedSignalMargins(adcDataRecords);
                     }
                 }
                 else {selectedSignalMargins(nextSignalToDraw);
@@ -265,15 +265,16 @@ yMaxBasic= Integer.MIN_VALUE;
         }
     }
 
-    public void selectedSignalMargins(SignalMarker signalMarker) {
+    public void selectedSignalMargins(ADCDataRecords adcDataRecords) {
         double dt;
-        dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[signalMarker.getFileIndex()]);
-        mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signalMarker.getFileIndex()];
+        dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileIndex()]);
+        mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[adcDataRecords.getFileIndex()];
 
         if (mostSamples *dt > xMaxBasic) {
             xMaxBasic = mostSamples *dt;
         }
-        double[] testSignal = mainApp.getDataParser().getSignals()[signalMarker.getSignalIndex()];
+//        double[] testSignal = mainApp.getDataParser().getSignals()[adcDataRecords.getSignalIndex()];
+        double[] testSignal = adcDataRecords.getSignalData();
         double maximum = SimpleMath.getMax(testSignal);
         double minimum = SimpleMath.getMin(testSignal);
         if (maximum> yMaxBasic) yMaxBasic =maximum;

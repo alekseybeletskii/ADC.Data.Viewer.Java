@@ -45,7 +45,7 @@ package adc.data.viewer.parser;
 
 
   enum DataTypesList {
-    LGRAPH1("LGraph1"), LGRAPH1_2008("LGraph1_2008"), LGRAPH2("LGraph2"), SATURN("Saturn");
+    LGRAPH1("LGraph1"), LGRAPH1_2008("LGraph1_2008"), LGRAPH2("LGraph2"), SATURN("Saturn"),UNKNOWNADC("UnknownADC");
 
     private DataTypes dataType;
 
@@ -67,6 +67,9 @@ package adc.data.viewer.parser;
                 break;
             case "Saturn":
                 this.dataType = new Saturn();
+                break;
+            case "UnknownADC":
+                this.dataType = new UnknownADC();
                 break;
         }
 

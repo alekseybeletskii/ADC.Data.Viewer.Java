@@ -43,35 +43,35 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.parser.DataParams;
 import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.processing.TestDataType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
-public class TextFileDataController {
+public class TextFileParamController {
+    static{
+        creationDate = "a date...";
+        deviceName = "an ADC name...";
+        channelNum = -1;
+        channelRate =-1.0;
+    }
 
     private Alert alertInvalidParam;
     private Stage textFileParamsStage;
     private DataParser dataParser;
-    private static String creationDate;
-    private static String deviceName;
-    private static int channelNum;
-    private static double channelRate;
     private int fileIndex;
+    public static double channelRate;
+    public static String creationDate;
+    public static String deviceName;
+    public static int channelNum;
 
     private MainApp mainApp;
     public void setMainApp(MainApp mainApp) {
@@ -88,6 +88,13 @@ public class TextFileDataController {
     }
 
 
+    public Label getNextFileName() {
+        return nextFileName;
+    }
+
+    @FXML
+    private Label nextFileName;
+
     @FXML
     private TextField txtCreationDate;
 
@@ -103,37 +110,46 @@ public class TextFileDataController {
     @FXML
     public void initialize() {
 
-        alertInvalidParam = new Alert(WARNING);
-        DialogPane dialogPane = alertInvalidParam.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        alertInvalidParam.setTitle("Warning");
-        alertInvalidParam.setHeaderText("Invalid data format!");
-        alertInvalidParam.setContentText("channel number: integer;\nchannel rate: float\n ");
+
 
         txtCreationDate.setText(creationDate);
         txtDeviceName.setText(deviceName);
         txtChannelNum.setText(String.valueOf(channelNum));
         txtChannelRate.setText(String.valueOf(channelRate));
+
+    }
+
+    public void makeAlert() {
+        alertInvalidParam = new Alert(WARNING);
+        alertInvalidParam.initOwner(textFileParamsStage);
+        DialogPane dialogPane = alertInvalidParam.getDialogPane();
+        dialogPane.setMinHeight(Region.USE_PREF_SIZE);
+        dialogPane.setMinWidth(Region.USE_PREF_SIZE);
+        dialogPane.getStyleClass().add("myDialog");
+        dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
         dialogPane.toFront();
+        alertInvalidParam.setTitle("Warning");
+        alertInvalidParam.setHeaderText("Invalid data format!");
+        alertInvalidParam.setContentText("channel number: integer, >0     \nchannel rate: float, >0     \n   ");
+        alertInvalidParam.showAndWait();
     }
 
     @FXML
     private void handleOk(ActionEvent actionEvent)  {
-        if(TestDataType.isInteger(txtChannelNum.getText(),10)&&TestDataType.isDouble(txtChannelRate.getText())){
+        if(TestDataType.isInteger(txtChannelNum.getText(),10)&&
+           TestDataType.isDouble(txtChannelRate.getText())&&
+           Integer.parseInt(txtChannelNum.getText())>=0&&
+           Double.parseDouble(txtChannelRate.getText())>0){
             creationDate = txtCreationDate.getText();
             deviceName = txtDeviceName.getText();
             channelNum = Integer.parseInt(txtChannelNum.getText());
             channelRate = Double.parseDouble(txtChannelRate.getText());
 
-            setParamInteractive(txtCreationDate.getText(),txtDeviceName.getText(),
-                               Double.parseDouble(txtChannelRate.getText()), fileIndex);
-
             dataParser.getDataParams().setDataParamsValid(true);
             textFileParamsStage.close();
         }
         else{
-            alertInvalidParam.showAndWait();
+            makeAlert();
         }
     }
 
@@ -141,63 +157,6 @@ public class TextFileDataController {
     private void handleCancel(ActionEvent actionEvent) {
         dataParser.getDataParams().setDataParamsValid(false);
         textFileParamsStage.close();
-    }
-
-    private void  setParamInteractive(String recordCreationDate, String deviceName, double channelRate,int fileIndex) {
-        
-        byte[] arrayByte = {(byte) 1};
-        dataParser.getDataParams().setChannelsMax(1, fileIndex) ; //int
-        dataParser.getDataParams().setRealChannelsQuantity(1, fileIndex); //int
-        dataParser.getDataParams().setInterCadreDelay(0.0,fileIndex) ; //Double
-        dataParser.getDataParams().setActiveAdcChannelArray(arrayByte,fileIndex) ; //Byte
-        dataParser.getDataParams().setAdcChannelArray(arrayByte,fileIndex) ; //Byte
-        dataParser.getDataParams().setAdcGainArray(arrayByte,fileIndex) ; //Byte
-        dataParser.getDataParams().setIsSignalArray(arrayByte,fileIndex) ; //Byte
-        dataParser.getDataParams().setAdcRate(0.0,fileIndex) ; //Double
-
-        //get this from user:
-        dataParser.getDataParams().setDeviceName(deviceName,fileIndex); //string
-        dataParser.getDataParams().setCreateDateTime(recordCreationDate,fileIndex) ; //string
-        dataParser.getDataParams().setChannelRate(channelRate,fileIndex) ; //Double
-        dataParser.getDataParams().setRealCadresQuantity(0, fileIndex) ; //long
-        dataParser.getDataParams().setRealSamplesQuantity(dataParser.getDataParams().getRealCadresQuantity()[fileIndex], fileIndex) ; //long
-        dataParser.getDataParams().setTotalTime(0.0,fileIndex) ; //Double
-
-    }
-
-    public void setData( int fileIndex, int signalIndex) {
-        String line;
-        List<Double> allLines = new ArrayList<>();
-        DataParams dataParams = dataParser.getDataParams();
-
-        try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataFilePath()[fileIndex], Charset.forName("US-ASCII"))) {
-            try {
-                while ((line = signalDataFromText.readLine()) != null) {
-                    allLines.add(Double.parseDouble(line));
-                }
-
-                dataParams.setRealCadresQuantity(allLines.size(), fileIndex);
-                dataParams.setTotalTime(allLines.size() / dataParams.getChannelRate()[fileIndex], fileIndex);
-
-                double[] oneSignal = new double[allLines.size()];
-                int i = 0;
-                for (Double d : allLines) {
-                    oneSignal[i] = d;
-                    i++;
-                }
-                signalIndex++;
-                dataParser.setSignals(oneSignal, signalIndex, fileIndex, channelNum);
-            }
-            catch (NumberFormatException e){
-                Alert alert = new Alert(WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Invalid data format!");
-                alert.setContentText("*.txt file should contain only one column of float");
-                alert.showAndWait();
-            }
-        } catch (IOException x) {
-            System.err.format("IOException: %s%n", x);
-        }
     }
 
 }
