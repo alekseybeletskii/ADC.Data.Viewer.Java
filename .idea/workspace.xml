@@ -9,30 +9,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="761bc6f6-e47b-486b-8440-3e8ab610204d" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/images/IPP-logo.png" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/model/SignalMarker.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/model/ADCDataRecords.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/TextFileDataController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/TextFileParamController.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/textFileParams.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/TextFileParam.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/css/dialog.css" afterPath="$PROJECT_DIR$/resources/css/dialog.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataFormatsDetect.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataFormatsDetect.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataParser.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataParser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypesList.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/DataTypesList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1_2008.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph1_2008.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph2.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/LGraph2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/parser/Saturn.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/parser/Saturn.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/plotter/Axes.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/plotter/Axes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/plotter/CanvasDataDrawing.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/plotter/CanvasDataDrawing.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/plotter/Plotter.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/plotter/Plotter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainApp.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainApp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayoutController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/MainLayoutController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSettingController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/PlotterSettingController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/Readme.fxml" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/Readme.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverviewController.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/SignalsOverviewController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adc/data/viewer/ui/WatchDirectory.java" afterPath="$PROJECT_DIR$/src/adc/data/viewer/ui/WatchDirectory.java" />
-    </list>
+    <list default="true" id="761bc6f6-e47b-486b-8440-3e8ab610204d" name="Default" comment="" />
     <ignored path="ADCDataViewer.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -1116,12 +1093,12 @@
       <workItem from="1490421623974" duration="34700000" />
       <workItem from="1490462616458" duration="7517000" />
       <workItem from="1490472176129" duration="3456000" />
-      <workItem from="1490510377129" duration="5525000" />
+      <workItem from="1490510377129" duration="5928000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="865585000" />
+    <option name="totallyTimeSpent" value="865988000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
