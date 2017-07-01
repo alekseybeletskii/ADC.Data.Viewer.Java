@@ -219,6 +219,7 @@ public class CanvasDataDrawing extends Canvas {
 
      public void drawData() {
 
+//         System.out.println(getxTheMIN()+"\n"+getxTheMAX()+"\n"+getyTheMIN()+"\n"+getyTheMAX()+"\n");
 //         axes.obtainDataAndTimeMargins();
 //         axes.setAxesBasicSetup();
 //         System.out.println("drawing..");
@@ -364,6 +365,7 @@ public class CanvasDataDrawing extends Canvas {
                      break;
              }
          }
+
      }
 
      private void drawZeroLines() {

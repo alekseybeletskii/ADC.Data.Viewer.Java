@@ -197,7 +197,12 @@ import javafx.scene.shape.StrokeType;
                 if ((zoomRectangle.getWidth() <= 0.0 | zoomRectangle.getHeight() <= 0.0) & !mainApp.getAdcDataRecords().isEmpty()) {
 //                    axes.obtainDataAndTimeMargins(canvasData.getNextSignalToDraw());
 //                    axes.setAxesBasicSetup();
-                    axes.setAxesBounds(canvasData.getxTheMIN(),canvasData.getxTheMAX(),canvasData.getyTheMIN(),canvasData.getyTheMAX());
+                    axes.setAxesBounds
+                            (canvasData.getxTheMIN()==Integer.MAX_VALUE?-1:canvasData.getxTheMIN(),
+                            canvasData.getxTheMAX()==Integer.MIN_VALUE?1:canvasData.getxTheMAX(),
+                            canvasData.getyTheMIN()==Integer.MAX_VALUE?-1:canvasData.getyTheMIN(),
+                            canvasData.getyTheMAX()==Integer.MIN_VALUE?1:canvasData.getyTheMAX());
+
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;
 
@@ -208,10 +213,13 @@ import javafx.scene.shape.StrokeType;
                     zoomRectangle = null;
                 }
                 else {
+                    axes.setAxesBounds(-1,1,-1,1);
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;}
             }
             getScene().setCursor(Cursor.DEFAULT);
+
+
 
             canvasData.drawData();
         });
