@@ -51,8 +51,12 @@ import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterSettingController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Side;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import static java.lang.Math.abs;
@@ -74,6 +78,12 @@ public class Axes extends Pane {
     private double yMinBasic;
     private double yMaxBasic;
     private Rectangle axesBoxRectangle;
+    private Canvas meshCanvas;
+    private GraphicsContext graphicContext;
+    private DoubleProperty dx = new SimpleDoubleProperty();
+    private DoubleProperty dy = new SimpleDoubleProperty();
+    private DoubleProperty shiftXZero = new SimpleDoubleProperty();
+    private DoubleProperty shiftYZero = new SimpleDoubleProperty();
 
 
     public double getXAxisOffset() {
@@ -94,10 +104,13 @@ public class Axes extends Pane {
 
     Axes(MainApp mainApp) {
 
+
         this.mainApp= mainApp;
+        this.meshCanvas= new Canvas();
 
 
         axesBoxRectangle = new Rectangle(0,0);
+
 
         obtainDataAndTimeMargins(mainApp.getNextSignalToDraw());
 
@@ -143,8 +156,56 @@ public class Axes extends Pane {
 
         axesBoxRectangle.getStyleClass().add("axesBorder");
 
-        getChildren().setAll(axesBoxRectangle,xAxis, yAxis);
 
+        meshCanvas.widthProperty().bind(xAxis.widthProperty());
+        meshCanvas.heightProperty().bind(yAxis.heightProperty());
+        graphicContext = meshCanvas.getGraphicsContext2D();
+
+        getChildren().setAll(axesBoxRectangle,xAxis, yAxis, meshCanvas);
+
+
+    }
+
+
+
+    public void drawmesh() {
+        dx.bind(Bindings.divide(widthProperty(), Bindings.subtract(getXAxis().upperBoundProperty(), getXAxis().lowerBoundProperty())));
+        dy.bind(Bindings.divide(heightProperty(), Bindings.subtract(getYAxis().upperBoundProperty(), getYAxis().lowerBoundProperty())));
+        shiftXZero.bind(Bindings.multiply(getXAxis().lowerBoundProperty(), dx));
+        shiftYZero.bind(Bindings.multiply(getYAxis().upperBoundProperty(), dy));
+
+        graphicContext.clearRect(0, 0, getWidth(), getHeight());
+        graphicContext.setFill(Color.TRANSPARENT);
+        graphicContext.fillRect(0, 0, getWidth(), getHeight());
+        graphicContext.setStroke(Color.DARKGRAY);
+        graphicContext.setLineWidth(1.0);
+        graphicContext.setLineDashes(3);
+
+        //drawData X axis mesh
+        double tickXNext = getXAxis().getAxisFirstTick().get();
+        double tickXUnit = getXAxis().getTickUnit().get();
+
+        while (tickXNext < getXAxis().getUpperBound()) {
+            tickXNext = tickXNext+tickXUnit;
+            graphicContext.beginPath();
+            graphicContext.moveTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, getHeight());
+            graphicContext.lineTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, 0);
+            graphicContext.stroke();
+
+        }
+
+        //drawData Y axis mesh
+        double tickYNext = getYAxis().getAxisFirstTick().get();
+        double tickYUnit = getYAxis().getTickUnit().get();
+
+        while (tickYNext < getYAxis().getUpperBound()) {
+            tickYNext = tickYNext+tickYUnit;
+            graphicContext.beginPath();
+            graphicContext.moveTo(0, (int)( -tickYNext * dy.get() + shiftYZero.get()) + 0.5);
+            graphicContext.lineTo(getWidth(), (int)(-tickYNext * dy.get() + shiftYZero.get()) + 0.5);
+            graphicContext.stroke();
+
+        }
 
     }
 

@@ -229,7 +229,8 @@ public class CanvasDataDrawing extends Canvas {
          yTheMAX=Integer.MIN_VALUE;
 
          cleanCanvas();
-         drawmesh();
+//         drawmesh();
+         axes.drawmesh();
 
          graphicContext.setLineWidth(widthOfLine);
          graphicContext.setLineDashes(0);
@@ -268,7 +269,6 @@ public class CanvasDataDrawing extends Canvas {
              default:
                  break;
          }
-
 
 
          drawZeroLines();

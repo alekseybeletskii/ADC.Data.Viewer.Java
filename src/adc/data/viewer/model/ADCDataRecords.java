@@ -53,16 +53,12 @@ import javafx.scene.paint.Color;
 
 public class ADCDataRecords {
 
-    public double[] getSignalData() {
-        return signalData;
-    }
     private final double [] signalData;
     private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
     private final ObjectProperty<Color> signalColor;
     private final IntegerProperty fileIndex;
-
     public ADCDataRecords(int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalData) {
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
@@ -72,7 +68,9 @@ public class ADCDataRecords {
         this.signalData = signalData;
     }
 
-
+    public double[] getSignalData() {
+        return signalData;
+    }
 
     public int getSignalIndex() {
         return signalIndex.get();

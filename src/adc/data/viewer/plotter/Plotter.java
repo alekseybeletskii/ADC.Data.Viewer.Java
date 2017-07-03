@@ -64,16 +64,16 @@ import javafx.scene.shape.StrokeType;
     private Rectangle zoomRectangle;
     private MainApp mainApp;
 
+    private DoubleProperty zoomWidth;
+    private DoubleProperty zoomHeight;
+
     public CanvasDataDrawing getCanvasData() {
         return canvasData;
     }
     public static void setPlotterObjectsCounter(int plotterObjectsCounter) {
             Plotter.plotterObjectsCounter = plotterObjectsCounter;
         }
-
-
-
-        public Axes getAxes() {
+    public Axes getAxes() {
         return axes;
     }
 
@@ -84,18 +84,12 @@ import javafx.scene.shape.StrokeType;
         this.plotterController=plotterController;
         this.mainApp = mainApp;
         this.zoomRectangle =null;
-
+this.zoomHeight = new SimpleDoubleProperty();
+this.zoomWidth = new SimpleDoubleProperty();
 //        PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
 //        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
 
         this.axes = new Axes(mainApp);
-
-        getChildren().add(axes);
-        AnchorPane.setLeftAnchor(axes, 0.0);
-        AnchorPane.setRightAnchor(axes, 0.0);
-        AnchorPane.setBottomAnchor(axes, 0.0);
-        AnchorPane.setTopAnchor(axes, 0.0);
-
 
         canvasData = new CanvasDataDrawing(mainApp, axes);
         canvasData.widthProperty().bind(axes.getXAxis().widthProperty());
@@ -105,6 +99,12 @@ import javafx.scene.shape.StrokeType;
         AnchorPane.setRightAnchor(canvasData, 0.0);
         AnchorPane.setBottomAnchor(canvasData, 0.0);
         AnchorPane.setTopAnchor(canvasData, 0.0);
+
+        getChildren().add(axes);
+        AnchorPane.setLeftAnchor(axes, 0.0);
+        AnchorPane.setRightAnchor(axes, 0.0);
+        AnchorPane.setBottomAnchor(axes, 0.0);
+        AnchorPane.setTopAnchor(axes, 0.0);
 
 
         plotterLayout.getChildren().add(this);
@@ -187,8 +187,11 @@ import javafx.scene.shape.StrokeType;
                 panStartY.set(mdragged.getY());
 
                 this.getScene().setCursor(Cursor.OPEN_HAND);
-                canvasData.drawData();
+//                canvasData.drawData();
+                axes.drawmesh();
 
+                canvasData.setTranslateX(canvasData.getLayoutX()+canvasData.getTranslateX()+dxPan);
+                canvasData.setTranslateY(canvasData.getLayoutY()+canvasData.getTranslateY()+dyPan);
             }
         });
 
@@ -213,15 +216,14 @@ import javafx.scene.shape.StrokeType;
                     zoomRectangle = null;
                 }
                 else {
-                    axes.setAxesBounds(-1,1,-1,1);
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;}
+                canvasData.drawData();
             }
             getScene().setCursor(Cursor.DEFAULT);
 
 
 
-            canvasData.drawData();
         });
     }
 
