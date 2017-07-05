@@ -45,6 +45,7 @@ package adc.data.viewer.plotter;
 
 import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterController;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Cursor;
@@ -64,8 +65,8 @@ import javafx.scene.shape.StrokeType;
     private Rectangle zoomRectangle;
     private MainApp mainApp;
 
-    private DoubleProperty zoomWidth;
-    private DoubleProperty zoomHeight;
+    private DoubleProperty zoomWidth= new SimpleDoubleProperty();
+    private DoubleProperty zoomHeight= new SimpleDoubleProperty();
 
     public CanvasDataDrawing getCanvasData() {
         return canvasData;
@@ -84,27 +85,30 @@ import javafx.scene.shape.StrokeType;
         this.plotterController=plotterController;
         this.mainApp = mainApp;
         this.zoomRectangle =null;
-this.zoomHeight = new SimpleDoubleProperty();
-this.zoomWidth = new SimpleDoubleProperty();
+        zoomWidth.set(1.0);
+        zoomHeight.set(1.0);
 //        PlotterSettingController.setSGFilterSettingsDefault(50,50,1);
 //        PlotterSettingController.setSpectrogramSettingsDefault(256,"Hanning",50);
 
         this.axes = new Axes(mainApp);
 
         canvasData = new CanvasDataDrawing(mainApp, axes);
-        canvasData.widthProperty().bind(axes.getXAxis().widthProperty());
-        canvasData.heightProperty().bind(axes.getYAxis().heightProperty());
-        getChildren().add(canvasData);
-        AnchorPane.setLeftAnchor(canvasData, 0.0);
-        AnchorPane.setRightAnchor(canvasData, 0.0);
-        AnchorPane.setBottomAnchor(canvasData, 0.0);
-        AnchorPane.setTopAnchor(canvasData, 0.0);
+        canvasData.widthProperty().bind(Bindings.multiply(axes.getXAxis().widthProperty(),zoomWidth));
+        canvasData.heightProperty().bind(Bindings.multiply(axes.getYAxis().heightProperty(),zoomHeight));
 
         getChildren().add(axes);
         AnchorPane.setLeftAnchor(axes, 0.0);
         AnchorPane.setRightAnchor(axes, 0.0);
         AnchorPane.setBottomAnchor(axes, 0.0);
         AnchorPane.setTopAnchor(axes, 0.0);
+
+
+        getChildren().add(canvasData);
+        AnchorPane.setLeftAnchor(canvasData, 0.0);
+        AnchorPane.setRightAnchor(canvasData, 0.0);
+        AnchorPane.setBottomAnchor(canvasData, 0.0);
+        AnchorPane.setTopAnchor(canvasData, 0.0);
+
 
 
         plotterLayout.getChildren().add(this);
@@ -207,22 +211,36 @@ this.zoomWidth = new SimpleDoubleProperty();
                             canvasData.getyTheMAX()==Integer.MIN_VALUE?1:canvasData.getyTheMAX());
 
                     getChildren().remove(zoomRectangle);
-                    zoomRectangle = null;
 
+                    canvasData.setTranslateX(canvasData.getLayoutX());
+                    canvasData.setTranslateY(canvasData.getLayoutY());
+                    zoomHeight.set(1.0);
+                    zoomWidth.set(1.0);
+
+                    zoomRectangle = null;
 
                 } else if (zoomRectangle.getWidth() > 1 && zoomRectangle.getHeight() > 1) {
                     axes.axesZoomRescale(zoomTopLeftX, zoomTopLeftY, zoomBottomRightX, zoomBottomRightY);
                     getChildren().remove(zoomRectangle);
+
+                    zoomWidth.set(zoomWidth.get()*axes.getXAxis().widthProperty().get()/zoomRectangle.widthProperty().get());
+                    zoomHeight.set(zoomHeight.get()*axes.getYAxis().heightProperty().get()/zoomRectangle.heightProperty().get());
+//                    canvasData.setTranslateX(canvasData.getLayoutX()+canvasData.getTranslateX()-zoomTopLeftX.get()*zoomWidth.get());
+//                    canvasData.setTranslateY(canvasData.getLayoutY()+canvasData.getTranslateY()-zoomTopLeftY.get()*zoomHeight.get());
+
                     zoomRectangle = null;
+
                 }
                 else {
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;}
-                canvasData.drawData();
+
+//                canvasData.drawData();
             }
+
+            System.out.println("canvasData.getTranslateX()"+canvasData.getTranslateX()+"\n"+ "canvasData.getTranslateY()"+canvasData.getTranslateY() +"\n");
+            System.out.println("zoomWidth"+zoomWidth.get()+"\n"+ "zoomHeight"+zoomHeight.get());
             getScene().setCursor(Cursor.DEFAULT);
-
-
 
         });
     }

@@ -322,8 +322,8 @@ public  class MainApp extends Application {
             }
             howManyPlots++;
 ;
-            pc.getPlotter().getCanvasData().widthProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
-            pc.getPlotter().getCanvasData().heightProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
+//            pc.getPlotter().getCanvasData().widthProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
+//            pc.getPlotter().getCanvasData().heightProperty().addListener(it -> pc.getPlotter().getCanvasData().drawData());
             signalsOverviewController.getPlotsVBox().getChildren().add(pc.getPlotsLayout());
         }
 

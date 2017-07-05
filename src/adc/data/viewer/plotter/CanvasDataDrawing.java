@@ -167,10 +167,7 @@ public class CanvasDataDrawing extends Canvas {
          sgFilterSettings = mainApp.getDefaultSGFilterSettings();
          fixZeroShiftRange =mainApp.getDefaultFixZeroShiftRange();
          isFixZeroShift = mainApp.getDefaultFixZeroShift();
-         dx.bind(Bindings.divide(widthProperty(), Bindings.subtract(axes.getXAxis().upperBoundProperty(), axes.getXAxis().lowerBoundProperty())));
-         dy.bind(Bindings.divide(heightProperty(), Bindings.subtract(axes.getYAxis().upperBoundProperty(), axes.getYAxis().lowerBoundProperty())));
-         shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(), dx));
-         shiftYZero.bind(Bindings.multiply(axes.getYAxis().upperBoundProperty(), dy));
+
          graphicContext = getGraphicsContext2D();
          maxZeroShift=0;
 
@@ -199,21 +196,21 @@ public class CanvasDataDrawing extends Canvas {
      public void drawDataMeshZerolines() {
 
          cleanCanvas();
-         drawmesh();
+//         drawmesh();
          drawData();
-         drawZeroLines();
+//         drawZeroLines();
 
      }
 
      public void drawMeshZeroLines() {
          cleanCanvas();
-         drawmesh();
+//         drawmesh();
 
      }
 
      public void cleanCanvas() {
          graphicContext.clearRect(0, 0, getWidth(), getHeight());
-         graphicContext.setFill(Color.TRANSPARENT);
+         graphicContext.setFill(Color.rgb(200, 200, 200, 0.5));
          graphicContext.fillRect(0, 0, getWidth(), getHeight());
      }
 
@@ -271,7 +268,7 @@ public class CanvasDataDrawing extends Canvas {
          }
 
 
-         drawZeroLines();
+//         drawZeroLines();
 
 
      }
@@ -288,8 +285,6 @@ public class CanvasDataDrawing extends Canvas {
          double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileIndex()]);
          double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[adcDataRecords.getFileIndex()];
          nextSignalLength = nextSignal.length;
-         int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
-         int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
 
          if(isFixZeroShift){
              int zeroStart = (int) round(fixZeroShiftRange[0] / dt);
@@ -310,6 +305,16 @@ public class CanvasDataDrawing extends Canvas {
          ymin=SimpleMath.getMin(nextSignal);
          yTheMIN=ymin<yTheMIN?ymin:yTheMIN;
          yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
+
+
+//         int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
+//         int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
+         int xLeft = (int)(xTheMIN/dt);
+         int xRight = (int) (xTheMAX/dt);
+         dx.bind(Bindings.divide(widthProperty(), Bindings.subtract(axes.getXAxis().upperBoundProperty(), axes.getXAxis().lowerBoundProperty())));
+         dy.bind(Bindings.divide(heightProperty(), Bindings.subtract(axes.getYAxis().upperBoundProperty(), axes.getYAxis().lowerBoundProperty())));
+         shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(), dx));
+         shiftYZero.bind(Bindings.multiply(axes.getYAxis().upperBoundProperty(), dy));
 
 
          if((xRight>0)&&(xLeft<nextSignalLength)) {
@@ -368,56 +373,56 @@ public class CanvasDataDrawing extends Canvas {
 
      }
 
-     private void drawZeroLines() {
-        //drawData X-Y zero lines
-        graphicContext.setStroke(Color.BLACK);
-        graphicContext.setLineWidth(1);
-        graphicContext.setLineDashes(5);
+//     private void drawZeroLines() {
+//        //drawData X-Y zero lines
+//        graphicContext.setStroke(Color.BLACK);
+//        graphicContext.setLineWidth(1);
+//        graphicContext.setLineDashes(5);
+//
+//        graphicContext.beginPath();
+//        graphicContext.moveTo(0,(int) shiftYZero.get() +0.5);
+//        graphicContext.lineTo(getWidth(),(int) shiftYZero.get() +0.5);
+//        graphicContext.stroke();
+//
+//        graphicContext.beginPath();
+//        graphicContext.moveTo(-(int) shiftXZero.get() +0.5,0);
+//        graphicContext.lineTo(-(int) shiftXZero.get() +0.5,getHeight());
+//        if (shiftXZero.get()!=0.0)graphicContext.stroke();
+//    }
 
-        graphicContext.beginPath();
-        graphicContext.moveTo(0,(int) shiftYZero.get() +0.5);
-        graphicContext.lineTo(getWidth(),(int) shiftYZero.get() +0.5);
-        graphicContext.stroke();
-
-        graphicContext.beginPath();
-        graphicContext.moveTo(-(int) shiftXZero.get() +0.5,0);
-        graphicContext.lineTo(-(int) shiftXZero.get() +0.5,getHeight());
-        if (shiftXZero.get()!=0.0)graphicContext.stroke();
-    }
-
-    public void drawmesh() {
-
-            graphicContext.setStroke(Color.DARKGRAY);
-            graphicContext.setLineWidth(1.0);
-            graphicContext.setLineDashes(3);
-
-            //drawData X axis mesh
-            double tickXNext = axes.getXAxis().getAxisFirstTick().get();
-            double tickXUnit = axes.getXAxis().getTickUnit().get();
-
-            while (tickXNext < axes.getXAxis().getUpperBound()) {
-                tickXNext = tickXNext+tickXUnit;
-                graphicContext.beginPath();
-                graphicContext.moveTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, getHeight());
-                graphicContext.lineTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, 0);
-                graphicContext.stroke();
-
-            }
-
-            //drawData Y axis mesh
-            double tickYNext = axes.getYAxis().getAxisFirstTick().get();
-            double tickYUnit = axes.getYAxis().getTickUnit().get();
-
-            while (tickYNext < axes.getYAxis().getUpperBound()) {
-                tickYNext = tickYNext+tickYUnit;
-                graphicContext.beginPath();
-                graphicContext.moveTo(0, (int)( -tickYNext * dy.get() + shiftYZero.get()) + 0.5);
-                graphicContext.lineTo(getWidth(), (int)(-tickYNext * dy.get() + shiftYZero.get()) + 0.5);
-                graphicContext.stroke();
-
-            }
-
-    }
+//    public void drawmesh() {
+//
+//            graphicContext.setStroke(Color.DARKGRAY);
+//            graphicContext.setLineWidth(1.0);
+//            graphicContext.setLineDashes(3);
+//
+//            //drawData X axis mesh
+//            double tickXNext = axes.getXAxis().getAxisFirstTick().get();
+//            double tickXUnit = axes.getXAxis().getTickUnit().get();
+//
+//            while (tickXNext < axes.getXAxis().getUpperBound()) {
+//                tickXNext = tickXNext+tickXUnit;
+//                graphicContext.beginPath();
+//                graphicContext.moveTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, getHeight());
+//                graphicContext.lineTo((int)(tickXNext * dx.get() - shiftXZero.get()) + 0.5, 0);
+//                graphicContext.stroke();
+//
+//            }
+//
+//            //drawData Y axis mesh
+//            double tickYNext = axes.getYAxis().getAxisFirstTick().get();
+//            double tickYUnit = axes.getYAxis().getTickUnit().get();
+//
+//            while (tickYNext < axes.getYAxis().getUpperBound()) {
+//                tickYNext = tickYNext+tickYUnit;
+//                graphicContext.beginPath();
+//                graphicContext.moveTo(0, (int)( -tickYNext * dy.get() + shiftYZero.get()) + 0.5);
+//                graphicContext.lineTo(getWidth(), (int)(-tickYNext * dy.get() + shiftYZero.get()) + 0.5);
+//                graphicContext.stroke();
+//
+//            }
+//
+//    }
 
     private void decimator(GraphicsContext graphicContext, int ADCChannelNum, double dt, double dtCadre, double[] sigSubarray) {
         int step = (int)(sigSubarray.length/widthProperty().get());
@@ -469,9 +474,11 @@ public class CanvasDataDrawing extends Canvas {
         graphicContext.stroke();
     }
     private double mapX(double x, double dt) {
-        return (shiftXZero.get()<0? x*dx.get()*dt-shiftXZero.get():x*dx.get()*dt);
+//        return (shiftXZero.get()<0? x*dx.get()*dt-shiftXZero.get():x*dx.get()*dt);
+        return (x*dx.get()*dt);
     }
     private double mapY(double y) {
+//        return -y * dy.get();
         return -y * dy.get()+ shiftYZero.get();
     }
 

@@ -207,6 +207,27 @@ public class Axes extends Pane {
 
         }
 
+        drawZeroLines();
+    }
+
+
+
+
+    public void drawZeroLines() {
+        //drawData X-Y zero lines
+        graphicContext.setStroke(Color.BLACK);
+        graphicContext.setLineWidth(1);
+        graphicContext.setLineDashes(5);
+
+        graphicContext.beginPath();
+        graphicContext.moveTo(0,(int) shiftYZero.get() +0.5);
+        graphicContext.lineTo(getWidth(),(int) shiftYZero.get() +0.5);
+        graphicContext.stroke();
+
+        graphicContext.beginPath();
+        graphicContext.moveTo(-(int) shiftXZero.get() +0.5,0);
+        graphicContext.lineTo(-(int) shiftXZero.get() +0.5,getHeight());
+        if (shiftXZero.get()!=0.0)graphicContext.stroke();
     }
 
     private void setSavedAxesBounds ( double xmn, double xmx, double ymn, double ymx)
