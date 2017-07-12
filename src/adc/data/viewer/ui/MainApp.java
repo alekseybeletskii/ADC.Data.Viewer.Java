@@ -65,6 +65,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public  class MainApp extends Application {
 
@@ -110,11 +111,13 @@ public  class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane mainLayout;
     private DataParser dataParser;
+    private static final Preferences appPreferences = Preferences.userRoot().node(MainApp.class.getName());
 
     private ObservableList<ADCDataRecords> adcDataRecords = FXCollections.observableArrayList();
     private TextFileParamController textFileParamController;
     private int nextSignalToDrawIndex;
     private int howManyPlots;
+
     private double defaultWidthOfLine;
     private String defaultPlotStyle;
     private String defaultPlotType;
@@ -216,6 +219,7 @@ public  class MainApp extends Application {
         {Platform.exit();
          System.exit(0);});
 
+        nextSignalToDrawIndex =-1;
         this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ADC Signal Viewer");
@@ -226,7 +230,6 @@ public  class MainApp extends Application {
         defaultPlotType="Raw";
         defaultPlotStyle = "line";
         defaultPlotsLayoutType = "AllPlots";
-        nextSignalToDrawIndex =-1;
         defaultSGFilterSettings = new int [] {50,50,1};
         defaultFixZeroShiftRange = new double [] {0,0};
         savedAxesRange = new double [] {0.0,1.0,-1.0,1.0};
@@ -433,7 +436,7 @@ public  class MainApp extends Application {
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
         }
         if(defaultPlotsLayoutType.equals("AllPlotsByOne")){
-            redrawAllowed=true;
+            redrawAllowed=false;
             signalsOverviewController.getPlotsVBox().getChildren().clear();
             plotterControllerlist.clear();
             signalsOverviewController.getPlotsScrollPane().setVisible(false);

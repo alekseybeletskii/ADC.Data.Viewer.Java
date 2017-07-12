@@ -123,19 +123,14 @@ public class PlotterSettingController {
 
 
 
-//        xmin =pc.getPlotter().getAxes().getXAxis().getLowerBound();
-//        xmax =pc.getPlotter().getAxes().getXAxis().getUpperBound();
-//        ymin =pc.getPlotter().getAxes().getXAxis().getLowerBound();
-//        ymax =pc.getPlotter().getAxes().getXAxis().getUpperBound();
-
-
-
     public void setPlotterController(PlotterController plotterController) {
         this.plotterController = plotterController;
     }
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
+
+
     public static void setChosenLineOrScatter(String chosenLineOrScatter) {
         PlotterSettingController.chosenLineOrScatter = chosenLineOrScatter;
     }
@@ -178,7 +173,7 @@ public class PlotterSettingController {
 
     @FXML
     public void initialize() {
-
+        System.out.println("next");
 
         alertInvalidParam = new Alert(WARNING);
         DialogPane dialogPane = alertInvalidParam.getDialogPane();
@@ -253,6 +248,7 @@ public class PlotterSettingController {
             endZero=Double.parseDouble(zeroShiftEnd.getText());
             fixZero=fixZeroShift.isSelected();
             isUseSavedAxesRange = useSavedAxesRange.isSelected();
+
             if ((xmin>xmax)|(ymin>ymax)) plotterController.getPlotter().getAxes().setAxesBasicSetup();
             else plotterController.getPlotter().getAxes().setAxesBounds(xmin,xmax,ymin,ymax);
 
