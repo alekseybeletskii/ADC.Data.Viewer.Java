@@ -52,6 +52,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
+import java.util.prefs.Preferences;
+
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
 
@@ -62,6 +64,8 @@ public class PlotterSettingController {
     private Stage plotterSettingsStage;
     private Alert alertInvalidParam;
     private PlotterController plotterController;
+    private Preferences appPreferencesRootNode = MainApp.appPreferencesRootNode;
+
 
     public static Double ymin;
     public static Double xmin;
@@ -174,6 +178,7 @@ public class PlotterSettingController {
     @FXML
     public void initialize() {
         System.out.println("next");
+        System.out.println(MainApp.appPreferencesRootNode);
 
         alertInvalidParam = new Alert(WARNING);
         DialogPane dialogPane = alertInvalidParam.getDialogPane();
@@ -257,6 +262,7 @@ public class PlotterSettingController {
             plotterController.getPlotter().getCanvasData().setSgFilterSettings(new int[]{sgleft,sgright,sgorder});
             plotterController.getPlotter().getCanvasData().setFixZeroShiftRange(new double[]{startZero,endZero});
             plotterController.getPlotter().getCanvasData().setIsFixZeroShift(fixZero);
+
             mainApp.setDefaultPlotStyle(chosenLineOrScatter);
             mainApp.setDefaultWidthOfLine(widthOfLine);
             mainApp.setDefaultSGFilterSettings(new int[]{sgleft,sgright,sgorder});
@@ -275,6 +281,9 @@ public class PlotterSettingController {
             alertInvalidParam.showAndWait();
         }
 
+    }
+
+    public void setDefaults() {
     }
 }
 

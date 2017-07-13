@@ -294,7 +294,7 @@ public class CanvasDataDrawing extends Canvas {
          if(isFixZeroShift){
              int zeroStart = (int) round(fixZeroShiftRange[0] / dt);
              int zeroEnd = (int) round(fixZeroShiftRange[1] / dt);
-             if(zeroEnd-zeroStart>0&&zeroStart>0&&zeroEnd<nextSignalLength) {
+             if(zeroEnd-zeroStart>0&&zeroStart>=0&&zeroEnd<nextSignalLength) {
                  zeroShift =SimpleMath.findAverage(Arrays.copyOfRange(nextSignal,zeroStart,zeroEnd));
                  for(int i=0; i<nextSignal.length; i++)
                      nextSignal[i]=nextSignal[i]- zeroShift;

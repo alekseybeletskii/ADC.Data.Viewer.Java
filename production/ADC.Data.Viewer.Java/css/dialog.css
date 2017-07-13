@@ -41,10 +41,45 @@
  * 	********************* END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.util;
+.BorderPane{
+-fx-background-color: darkseagreen;
+}
+
+.BorderPane .label {
+    -fx-text-fill: darkgreen;
+}
 
 
-public class SavePreferences {
+
+.myDialog{
+    -fx-background-color: #f9d900;
+    /*-fx-min-width: 400;*/
+    /*-fx-min-height: 300;*/
+}
+.myDialog > *.button-bar > *.container{
+    -fx-background-color: coral;
+}
+.myDialog > *.label.content{
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+.myDialog *.header-panel{
+    -fx-background-color: coral;
+}
+.myDialog *.header-panel *.label{
+    -fx-font-size: 18px;
+    -fx-font-style: italic;
+    -fx-fill: #292929;
+}
 
 
+
+.text-area {
+    -fx-font-family: Consolas;
+    -fx-font-size: 14;
+    -fx-text-fill: #ffffff;
+    -fx-display-caret:true;
+}
+.text-area .content {
+    -fx-background-color: #618f8b;
 }
