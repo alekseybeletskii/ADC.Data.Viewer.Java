@@ -82,7 +82,7 @@ public class DataParser {
     }
 
     public  void parseNewList(List<Path> dataPath) {
-        drawAllSignals=true;
+        drawAllSignals=false;
         signalIndex =-1;
         signalList.clear();
         totalFiles=dataPath.size();
@@ -167,7 +167,7 @@ public class DataParser {
      */
 
     public void setSignalsMarkers(double [] signal, int signalIndex, int fileIndex, int adcChannelNumber) {
-        String nextSignalLabel = fileName[fileIndex]+ "_#"+ adcChannelNumber;
+        String nextSignalLabel = signalIndex+"@"+fileName[fileIndex]+ "_#"+ adcChannelNumber;
         Path nextSignalPath = dataFilePath[fileIndex].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;

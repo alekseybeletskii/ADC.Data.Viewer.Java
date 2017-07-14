@@ -96,20 +96,19 @@ public class Axes extends Pane {
 
         this.mainApp= mainApp;
 
-
         axesBoxRectangle = new Rectangle(0,0);
 
         obtainDataAndTimeMargins(mainApp.getNextSignalToDraw());
 
 
-        if (mainApp.isUseSavedAxesRange()) {
-            PlotterSettingController.setCurrentAxesSettings(mainApp.getSavedAxesRange()[0], mainApp.getSavedAxesRange()[1], mainApp.getSavedAxesRange()[2], mainApp.getSavedAxesRange()[3],true);
-            setSavedAxesBounds(mainApp.getSavedAxesRange()[0], mainApp.getSavedAxesRange()[1], mainApp.getSavedAxesRange()[2], mainApp.getSavedAxesRange()[3]);
+        if (MainApp.appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false)) {
+            setSavedAxesBounds(MainApp.appPreferencesRootNode.getDouble("defaultXAxisMin",-1),
+                    MainApp.appPreferencesRootNode.getDouble("defaultXAxisMax",1),
+                    MainApp.appPreferencesRootNode.getDouble("defaultYAxisMin",-1),
+                    MainApp.appPreferencesRootNode.getDouble("defaultYAxisMax",1));
         }
-        else PlotterSettingController.setCurrentAxesSettings(xMinBasic,xMaxBasic,yMinBasic,yMaxBasic,false);
 
         xAxis = new StableTicksAxis(xMinBasic, xMaxBasic);
-
         xAxis.setLabel("time, ms");
         xAxis.setSide(Side.BOTTOM);
         xAxis.setMinorTickVisible(true);
@@ -117,7 +116,6 @@ public class Axes extends Pane {
         xAxis.setAnimated(false);
 
         yAxis = new StableTicksAxis(yMinBasic, yMaxBasic);
-
 
         yAxis.setLabel("a.u.");
         yAxis.setSide(Side.LEFT);
@@ -164,7 +162,6 @@ public class Axes extends Pane {
         yAxis.setUpperBound(yMaxBasic-fixYZeroShift);
         xAxisOffset = xMinBasic;
         yAxisOffset = yMinBasic-fixYZeroShift;
-        PlotterSettingController.setCurrentAxesSettings( xMinBasic,xMaxBasic,yMinBasic-fixYZeroShift,yMaxBasic-fixYZeroShift,false);
     }
 
     public StableTicksAxis getXAxis() {
@@ -191,7 +188,6 @@ public class Axes extends Pane {
 
     void axesZoomRescale(DoubleProperty zoomTopLeftX, DoubleProperty zoomTopLeftY, DoubleProperty zoomBottomRightX, DoubleProperty zoomBottomRightY)
     {
-
         double xOffset = (zoomTopLeftX.get())/xAxis.getScale();
         xAxis.setLowerBound(xAxis.getLowerBound()+ xOffset);
         xAxis.setUpperBound(xAxis.getLowerBound()+ (zoomBottomRightX.get()- zoomTopLeftX.get())/xAxis.getScale());
@@ -200,9 +196,6 @@ public class Axes extends Pane {
         yAxis.setLowerBound(yAxis.getLowerBound()-yOffset);
         yAxis.setUpperBound(yAxis.getLowerBound()+(zoomBottomRightY.get()- zoomTopLeftY.get())/-yAxis.getScale());
         setYAxisOffset(yAxis.getLowerBound());
-
-        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound(),false);
-
     }
 
 
@@ -215,8 +208,6 @@ public class Axes extends Pane {
         yAxis.setUpperBound(yAxis.getUpperBound()+ dyPan/-yAxis.getScale());
         setXAxisOffset(xAxis.getLowerBound());
         setYAxisOffset(yAxis.getLowerBound());
-
-        PlotterSettingController.setCurrentAxesSettings(xAxis.getLowerBound(),xAxis.getUpperBound(),yAxis.getLowerBound(),yAxis.getUpperBound(),false);
 
     }
 
@@ -258,7 +249,7 @@ yMaxBasic= Integer.MIN_VALUE;
 //        yMaxBasic=absMaxYValue;
 //        yMinBasic=-absMaxYValue;
         if(!isAnySelected){
-            xMinBasic= 0.0;
+            xMinBasic= -1.0;
             xMaxBasic= 1.0;
             yMinBasic= -1.0;
             yMaxBasic= 1.0;
@@ -273,7 +264,6 @@ yMaxBasic= Integer.MIN_VALUE;
         if (mostSamples *dt > xMaxBasic) {
             xMaxBasic = mostSamples *dt;
         }
-//        double[] testSignal = mainApp.getDataParser().getSignals()[adcDataRecords.getSignalIndex()];
         double[] testSignal = adcDataRecords.getSignalData();
         double maximum = SimpleMath.getMax(testSignal);
         double minimum = SimpleMath.getMin(testSignal);

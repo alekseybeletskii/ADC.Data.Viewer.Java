@@ -67,22 +67,22 @@ public class PlotterSettingController {
     private Preferences appPreferencesRootNode = MainApp.appPreferencesRootNode;
 
 
-    public static Double ymin;
-    public static Double xmin;
-    public static Double ymax;
-    public static Double xmax;
-    public static int sgleft;
-    public static int sgright;
-    public static int sgorder;
-    public static int fftsize;
-    public static String fftwindow;
-    public static int fftoverlap;
-    public static double startZero;
-    public static double endZero;
-    public static boolean fixZero;
-    public static boolean isUseSavedAxesRange;
-    public static double widthOfLine;
-    static String chosenLineOrScatter;
+     private Double ymin;
+     private Double xmin;
+     private Double ymax;
+     private Double xmax;
+     private int sgleft;
+     private int sgright;
+     private int sgorder;
+     private int fftsize;
+     private String fftwindow;
+     private int fftoverlap;
+     private double startZero;
+     private double endZero;
+     private boolean fixZero;
+     private boolean isUseNewDefaults;
+     private double widthOfLine;
+     private String plotStyle;
 
     private ObservableList<String> lineOrScatter = FXCollections.observableArrayList();
 
@@ -93,12 +93,8 @@ public class PlotterSettingController {
     @FXML
     private TextField zeroShiftEnd;
 
-//
-//    public void setIsFixZeroShift(boolean fixZeroShift) {
-//        this.fixZeroShift.setSelected(fixZeroShift);
-//    }
     @FXML
-    private CheckBox useSavedAxesRange;
+    private CheckBox UseNewDefaults;
     @FXML
     private CheckBox fixZeroShift;
     @FXML
@@ -130,45 +126,6 @@ public class PlotterSettingController {
     public void setPlotterController(PlotterController plotterController) {
         this.plotterController = plotterController;
     }
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
-
-
-    public static void setChosenLineOrScatter(String chosenLineOrScatter) {
-        PlotterSettingController.chosenLineOrScatter = chosenLineOrScatter;
-    }
-    public static void setWidthOfLineDefault(double widthOfLine) {
-        PlotterSettingController.widthOfLine = widthOfLine;
-    }
-
-
-    public static void setCurrentAxesSettings(Double xmn, Double xmx,  Double ymn, Double ymx,boolean useSavedAxesRange){
-        xmin=xmn;
-        xmax=xmx;
-        ymin=ymn;
-        ymax=ymx;
-        isUseSavedAxesRange = useSavedAxesRange;
-    }
-
-
-    public static void setSGFilterSettingsDefault(int sglft,int sgrt,int ord){
-        sgleft=sglft;
-        sgright=sgrt;
-        sgorder=ord;
-    }
-
-    public static void setSpectrogramSettingsDefault(int ftsize,String ftwindow,int ftoverlap){
-        fftsize=ftsize;
-        fftwindow=ftwindow;
-        fftoverlap=ftoverlap;
-    }
-
-    public  static void setFixZeroShiftDefault(double startZ, double endZ, boolean fixZ){
-        startZero =startZ;
-        endZero =endZ;
-        fixZero = fixZ;
-    }
 
 
     public void setPlotterSettingStage(Stage plotterSettingsStage) {
@@ -177,8 +134,6 @@ public class PlotterSettingController {
 
     @FXML
     public void initialize() {
-        System.out.println("next");
-        System.out.println(MainApp.appPreferencesRootNode);
 
         alertInvalidParam = new Alert(WARNING);
         DialogPane dialogPane = alertInvalidParam.getDialogPane();
@@ -188,30 +143,10 @@ public class PlotterSettingController {
         dialogPane.setMinWidth(Region.USE_PREF_SIZE);
         dialogPane.toFront();
         alertInvalidParam.setTitle("Warning");
-        alertInvalidParam.setHeaderText("Invalid data format!");
+        alertInvalidParam.setHeaderText("Invalid data format or axes ranges!");
         alertInvalidParam.setContentText("all axes parameters should be of type float,\nother pframeters should be Integer\nand \"FFTWindowType\" of type String\n\n");
-        manualYmax.setText(String.valueOf(ymax));
-        manualYmin.setText(String.valueOf(ymin));
-        manualXmax.setText(String.valueOf(xmax));
-        manualXmin.setText(String.valueOf(xmin));
-        manualSGFilterLeft.setText(String.valueOf(sgleft));
-        manualSGFilterRight.setText(String.valueOf(sgright));
-        manualSGFilterOrder.setText(String.valueOf(sgorder));
-        FFTSize.setText(String.valueOf(fftsize));
-        FFTWindowType.setText(fftwindow);
-        FFTWindowOverlap.setText(String.valueOf(fftoverlap));
-        lineWidth.setText(String.valueOf(widthOfLine));
-        zeroShiftStart.setText(String.valueOf(startZero));
-        zeroShiftEnd.setText(String.valueOf(endZero));
-        fixZeroShift.setSelected(fixZero);
-        lineOrScatter.addAll("line+scatter","line","scatter");
-        chooseLineOrScatter.itemsProperty().setValue(lineOrScatter);
-        chooseLineOrScatter.setValue(chosenLineOrScatter);
-        useSavedAxesRange.setSelected(isUseSavedAxesRange);
-        chooseLineOrScatter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            plotterController.getPlotter().getCanvasData().setPlotStyle(newValue);
-            chosenLineOrScatter=newValue;
-        });
+
+
 
     }
 
@@ -242,34 +177,27 @@ public class PlotterSettingController {
             xmax=Double.parseDouble(manualXmax.getText());
             ymin=Double.parseDouble(manualYmin.getText());
             ymax=Double.parseDouble(manualYmax.getText());
+
+            if ((xmin>xmax)|(ymin>ymax)) {alertInvalidParam.showAndWait();
+            return;
+            }
+
             sgleft=Integer.parseInt(manualSGFilterLeft.getText());
             sgright=Integer.parseInt(manualSGFilterRight.getText());
             sgorder=Integer.parseInt(manualSGFilterOrder.getText());
+
             fftsize=Integer.parseInt(FFTSize.getText());
-            fftoverlap=Integer.parseInt(FFTWindowOverlap.getText());
             fftwindow=FFTWindowType.getText();
+            fftoverlap=Integer.parseInt(FFTWindowOverlap.getText());
             widthOfLine=Double.parseDouble(lineWidth.getText());
             startZero=Double.parseDouble(zeroShiftStart.getText());
             endZero=Double.parseDouble(zeroShiftEnd.getText());
             fixZero=fixZeroShift.isSelected();
-            isUseSavedAxesRange = useSavedAxesRange.isSelected();
+            isUseNewDefaults = UseNewDefaults.isSelected();
 
-            if ((xmin>xmax)|(ymin>ymax)) plotterController.getPlotter().getAxes().setAxesBasicSetup();
-            else plotterController.getPlotter().getAxes().setAxesBounds(xmin,xmax,ymin,ymax);
+            plotterController.getPlotter().getAxes().setAxesBounds(xmin,xmax,ymin,ymax);
+            if(isUseNewDefaults)setAllPreferencesToNewDefaults();
 
-            plotterController.getPlotter().getCanvasData().setWidthOfLine(widthOfLine);
-            plotterController.getPlotter().getCanvasData().setPlotStyle(chosenLineOrScatter);
-            plotterController.getPlotter().getCanvasData().setSgFilterSettings(new int[]{sgleft,sgright,sgorder});
-            plotterController.getPlotter().getCanvasData().setFixZeroShiftRange(new double[]{startZero,endZero});
-            plotterController.getPlotter().getCanvasData().setIsFixZeroShift(fixZero);
-
-            mainApp.setDefaultPlotStyle(chosenLineOrScatter);
-            mainApp.setDefaultWidthOfLine(widthOfLine);
-            mainApp.setDefaultSGFilterSettings(new int[]{sgleft,sgright,sgorder});
-            mainApp.setDefaultFixZeroShift(fixZero);
-            mainApp.setDefaultFixZeroShiftRange(new double [] {startZero,endZero});
-            mainApp.setSavedAxesRange(new double [] {xmin,xmax,ymin,ymax});
-            mainApp.setUseSavedAxesRange(isUseSavedAxesRange);
             plotterSettingsStage.close();
 
             plotterController.getPlotter().getCanvasData().drawData();
@@ -283,7 +211,55 @@ public class PlotterSettingController {
 
     }
 
-    public void setDefaults() {
+    private void setAllPreferencesToNewDefaults() {
+        appPreferencesRootNode.put("defaultPlotStyle",plotStyle);
+        appPreferencesRootNode.putDouble("defaultWidthOfLine",widthOfLine);
+        appPreferencesRootNode.putInt("defaultSGFilterLeft",sgleft); //points
+        appPreferencesRootNode.putInt("defaultSGFilterRight",sgright); //points
+        appPreferencesRootNode.putInt("defaultSGFilterLeftOrder",sgorder);
+        appPreferencesRootNode.putDouble("defaultFixZeroShiftStart",startZero); //ms
+        appPreferencesRootNode.putDouble("defaultFixZeroShiftEnd",endZero);
+        appPreferencesRootNode.putBoolean("defaultFixZeroShift",fixZero);
+        appPreferencesRootNode.putDouble("defaultXAxisMin",xmin);
+        appPreferencesRootNode.putDouble("defaultXAxisMax",xmax);
+        appPreferencesRootNode.putDouble("defaultYAxisMin",ymin);
+        appPreferencesRootNode.putDouble("defaultYAxisMax",ymax);
+        appPreferencesRootNode.putInt("defaultSpectrogramFFTSize",fftsize);
+        appPreferencesRootNode.put("defaultSpectrogramFFTWindow",fftwindow);
+        appPreferencesRootNode.putInt("defaultSpectrogramFFTOverlap",fftoverlap);
+        appPreferencesRootNode.putBoolean("defaultUseNewDefaults",isUseNewDefaults);
+    }
+
+    public void initializeSettings (){
+        manualYmax.setText(String.valueOf(plotterController.getPlotter().getAxes().getYAxis().getUpperBound()));
+        manualYmin.setText(String.valueOf(plotterController.getPlotter().getAxes().getYAxis().getLowerBound()));
+        manualXmax.setText(String.valueOf(plotterController.getPlotter().getAxes().getXAxis().getUpperBound()));
+        manualXmin.setText(String.valueOf(plotterController.getPlotter().getAxes().getXAxis().getLowerBound()));
+
+        manualSGFilterLeft.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSGFilterLeft",50)));
+        manualSGFilterRight.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSGFilterRight",50)));
+        manualSGFilterOrder.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSGFilterOrder",1)));
+
+        FFTSize.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSpectrogramFFTSize",256)));
+        FFTWindowType.setText(appPreferencesRootNode.get("defaultSpectrogramFFTWindow","Hunning"));
+        FFTWindowOverlap.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSpectrogramFFTOverlap",50)));
+
+        lineWidth.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultWidthOfLine",1.0)));
+
+        zeroShiftStart.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultFixZeroShiftStart",0)));
+        zeroShiftEnd.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",0)));
+        fixZeroShift.setSelected(appPreferencesRootNode.getBoolean("defaultFixZeroShift",false));
+
+        plotStyle =appPreferencesRootNode.get("defaultPlotStyle","line");
+        lineOrScatter.addAll("line+scatter","line","scatter");
+        chooseLineOrScatter.itemsProperty().setValue(lineOrScatter);
+        chooseLineOrScatter.setValue(plotStyle);
+        chooseLineOrScatter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            plotterController.getPlotter().getCanvasData().setPlotStyle(newValue);
+            plotStyle =newValue;
+        });
+
+        UseNewDefaults.setSelected(appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false));
     }
 }
 
