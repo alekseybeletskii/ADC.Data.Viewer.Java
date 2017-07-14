@@ -99,29 +99,28 @@ public class PlotterController {
 
     @FXML
     public void handleRaw(ActionEvent actionEvent) {
-        plotter.getCanvasData().setPlotType("Raw");
-        mainApp.setDefaultPlotType("Raw");
+        MainApp.appPreferencesRootNode.put("defaultPlotType","Raw");
         plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleRawAndSGFilter(ActionEvent actionEvent) {
-        plotter.getCanvasData().setPlotType("RawAndSGFilter");
-        mainApp.setDefaultPlotType("RawAndSGFilter");
+
+        MainApp.appPreferencesRootNode.put("defaultPlotType","RawAndSGFilter");
         plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleSGFiltered(ActionEvent actionEvent) {
-        plotter.getCanvasData().setPlotType("SGFiltered");
-        mainApp.setDefaultPlotType("SGFiltered");
+
+        MainApp.appPreferencesRootNode.put("defaultPlotType","SGFiltered");
         plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleSGFilter(ActionEvent actionEvent) {
-        plotter.getCanvasData().setPlotType("SGFilter");
-        mainApp.setDefaultPlotType("SGFilter");
+
+        MainApp.appPreferencesRootNode.put("defaultPlotType","SGFilter");
         plotter.getCanvasData().drawData();
     }
 

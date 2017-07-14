@@ -131,7 +131,7 @@ public class SignalsOverviewController {
     @FXML
     private void initialize() {
 
-        checkedFlag =true;
+        checkedFlag =false;
         signalsTable.setPlaceholder(new Label("Check \"Help->How to use\" for instructions"));
         signalSelectedColumn.setCellValueFactory(cellData -> cellData.getValue().signalSelectedProperty() );
         signalColorColumn.setCellValueFactory(cellData -> cellData.getValue().signalColorProperty());
