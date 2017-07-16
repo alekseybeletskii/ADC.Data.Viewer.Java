@@ -47,10 +47,7 @@ import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.processing.TestDataType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
@@ -62,7 +59,11 @@ public class TextFileParamController {
         deviceName = "an ADC name...";
         channelNum = -1;
         channelRate =-1.0;
+        columnNum = -1;
+        isRememberCurrentFileSettings = false;
     }
+
+
 
     private Alert alertInvalidParam;
     private Stage textFileParamsStage;
@@ -72,6 +73,8 @@ public class TextFileParamController {
     public static String creationDate;
     public static String deviceName;
     public static int channelNum;
+    public static int columnNum;
+    public static boolean isRememberCurrentFileSettings;
 
     private MainApp mainApp;
     public void setMainApp(MainApp mainApp) {
@@ -88,12 +91,12 @@ public class TextFileParamController {
     }
 
 
-    public Label getNextFileName() {
-        return nextFileName;
+    public Label getTxtNextFileName() {
+        return txtNextFileName;
     }
 
     @FXML
-    private Label nextFileName;
+    private Label txtNextFileName;
 
     @FXML
     private TextField txtCreationDate;
@@ -108,6 +111,15 @@ public class TextFileParamController {
     private TextField txtChannelNum;
 
     @FXML
+    public TextField txtDataColumnNum;
+
+    @FXML
+    CheckBox rememberCurrentFileSettings;
+
+    @FXML
+    Button OkButton;
+
+    @FXML
     public void initialize() {
 
 
@@ -116,6 +128,9 @@ public class TextFileParamController {
         txtDeviceName.setText(deviceName);
         txtChannelNum.setText(String.valueOf(channelNum));
         txtChannelRate.setText(String.valueOf(channelRate));
+        txtDataColumnNum.setText(String.valueOf(columnNum));
+        rememberCurrentFileSettings.setSelected(isRememberCurrentFileSettings);
+
 
     }
 
@@ -130,8 +145,12 @@ public class TextFileParamController {
         dialogPane.toFront();
         alertInvalidParam.setTitle("Warning");
         alertInvalidParam.setHeaderText("Invalid data format!");
-        alertInvalidParam.setContentText("channel number: integer, >0     \nchannel rate: float, >0     \n   ");
+        alertInvalidParam.setContentText("channel number: integer, >0     \nchannel rate: float, >0     \ncolumn number: int, >0 \n   ");
         alertInvalidParam.showAndWait();
+    }
+
+    public void pushOk(){
+        OkButton.fire();
     }
 
     @FXML
@@ -139,12 +158,14 @@ public class TextFileParamController {
         if(TestDataType.isInteger(txtChannelNum.getText(),10)&&
            TestDataType.isDouble(txtChannelRate.getText())&&
            Integer.parseInt(txtChannelNum.getText())>=0&&
-           Double.parseDouble(txtChannelRate.getText())>0){
+           Double.parseDouble(txtChannelRate.getText())>0&&
+           Integer.parseInt(txtDataColumnNum.getText())>=0){
             creationDate = txtCreationDate.getText();
             deviceName = txtDeviceName.getText();
             channelNum = Integer.parseInt(txtChannelNum.getText());
             channelRate = Double.parseDouble(txtChannelRate.getText());
-
+            columnNum = Integer.parseInt(txtDataColumnNum.getText());
+            isRememberCurrentFileSettings = rememberCurrentFileSettings.isSelected();
             dataParser.getDataParams().setDataParamsValid(true);
             textFileParamsStage.close();
         }

@@ -76,6 +76,8 @@ public class DataParser {
     private Color[] signalColors;
 
     private boolean drawAllSignals;
+
+
     public DataParser( MainApp mainApp) {
         this.mainApp=mainApp;
         dataFormatsDetect = new DataFormatsDetect(mainApp);
@@ -166,8 +168,8 @@ public class DataParser {
      * an ADC channel number of extracted signal
      */
 
-    public void setSignalsMarkers(double [] signal, int signalIndex, int fileIndex, int adcChannelNumber) {
-        String nextSignalLabel = signalIndex+"@"+fileName[fileIndex]+ "_#"+ adcChannelNumber;
+    public void PutADCDataRecords(double [] signal, int signalIndex, int fileIndex, int adcChannelNumber) {
+        String nextSignalLabel = adcChannelNumber+"@"+fileName[fileIndex]+ "_#"+ adcChannelNumber;
         Path nextSignalPath = dataFilePath[fileIndex].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;

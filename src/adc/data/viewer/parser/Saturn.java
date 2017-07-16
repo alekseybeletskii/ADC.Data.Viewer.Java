@@ -177,7 +177,7 @@ class Saturn implements DataTypes {
                     i++;
                 }
                 signalIndex++;
-                dataData.setSignalsMarkers(oneSignal,signalIndex,fileIndex,chanAdcNum[jj]);
+                dataData.PutADCDataRecords(oneSignal,signalIndex,fileIndex,chanAdcNum[jj]);
                 jj++;
             }
         } catch (InvalidPathException e) {

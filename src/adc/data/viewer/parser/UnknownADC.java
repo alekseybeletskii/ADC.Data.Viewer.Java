@@ -96,7 +96,10 @@ class UnknownADC implements DataTypes {
          try {
 
             while ((line = signalDataFromText.readLine()) != null) {
-               allLines.add(Double.parseDouble(line));
+            String[] columns = line.split(",");
+
+               if(columns.length>= columnNum+1){allLines.add(Double.parseDouble(columns[columnNum]));}
+               else {throw new NumberFormatException ();}
             }
             dataParams.setRealCadresQuantity(allLines.size(), fileIndex);
             dataParams.setTotalTime(allLines.size() / dataParams.getChannelRate()[fileIndex], fileIndex);
@@ -111,7 +114,7 @@ class UnknownADC implements DataTypes {
             }
 
             signalIndex++;
-            dataParser.setSignalsMarkers(oneSignal, signalIndex, fileIndex, channelNum);
+            dataParser.PutADCDataRecords(oneSignal, signalIndex, fileIndex, channelNum);
          }
          catch (NumberFormatException e){
             Alert alert = new Alert(WARNING);
@@ -119,7 +122,7 @@ class UnknownADC implements DataTypes {
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.setTitle("Warning");
             alert.setHeaderText("Invalid data format!");
-            alert.setContentText("*.txt file should contain only one column of float \n No any header lines !");
+            alert.setContentText("*.txt file should contain at least one column of float\nselect proper column, the first is 0\n No any header lines !");
             alert.showAndWait();
          }
       } catch (IOException x) {
