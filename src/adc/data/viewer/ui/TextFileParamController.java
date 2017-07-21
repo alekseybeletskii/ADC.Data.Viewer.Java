@@ -60,7 +60,7 @@ public class TextFileParamController {
         channelNum = -1;
         channelRate =-1.0;
         columnNum = -1;
-        isRememberCurrentFileSettings = false;
+        isRememberTxtFileSettings = false;
     }
 
 
@@ -74,7 +74,7 @@ public class TextFileParamController {
     public static String deviceName;
     public static int channelNum;
     public static int columnNum;
-    public static boolean isRememberCurrentFileSettings;
+    public static boolean isRememberTxtFileSettings;
 
     private MainApp mainApp;
     public void setMainApp(MainApp mainApp) {
@@ -129,7 +129,7 @@ public class TextFileParamController {
         txtChannelNum.setText(String.valueOf(channelNum));
         txtChannelRate.setText(String.valueOf(channelRate));
         txtDataColumnNum.setText(String.valueOf(columnNum));
-        rememberCurrentFileSettings.setSelected(isRememberCurrentFileSettings);
+        rememberCurrentFileSettings.setSelected(isRememberTxtFileSettings);
 
 
     }
@@ -165,7 +165,7 @@ public class TextFileParamController {
             channelNum = Integer.parseInt(txtChannelNum.getText());
             channelRate = Double.parseDouble(txtChannelRate.getText());
             columnNum = Integer.parseInt(txtDataColumnNum.getText());
-            isRememberCurrentFileSettings = rememberCurrentFileSettings.isSelected();
+            isRememberTxtFileSettings = rememberCurrentFileSettings.isSelected();
             dataParser.getDataParams().setDataParamsValid(true);
             textFileParamsStage.close();
         }
