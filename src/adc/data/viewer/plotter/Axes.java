@@ -94,6 +94,11 @@ public class Axes extends Pane {
 
     Axes(MainApp mainApp) {
 
+        xMinBasic= Integer.MAX_VALUE;
+        xMaxBasic= Integer.MIN_VALUE;
+        yMinBasic= Integer.MAX_VALUE;
+        yMaxBasic= Integer.MIN_VALUE;
+
         this.mainApp= mainApp;
 
         axesBoxRectangle = new Rectangle(0,0);
@@ -213,10 +218,10 @@ public class Axes extends Pane {
 
     public void obtainDataAndTimeMargins(ADCDataRecords nextSignalToDraw) {
 
-xMinBasic= Integer.MAX_VALUE;
-xMaxBasic= Integer.MIN_VALUE;
-yMinBasic= Integer.MAX_VALUE;
-yMaxBasic= Integer.MIN_VALUE;
+//xMinBasic= Integer.MAX_VALUE;
+//xMaxBasic= Integer.MIN_VALUE;
+//yMinBasic= Integer.MAX_VALUE;
+//yMaxBasic= Integer.MIN_VALUE;
 
         boolean isAnySelected =false;
 

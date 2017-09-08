@@ -65,11 +65,11 @@ public class DataParser {
     private Path [] signalPath;
 
     private MainApp mainApp;
-    private List<ADCDataRecords> signalList = new ArrayList<>();
+    private List<ADCDataRecords> ADCDataRecordsList = new ArrayList<>();
 
     private Path[] dataFilePath;
     private Path[] parFilePath;
-    private String[] fileName;
+    private String[] fileNames;
 
     private  int totalFiles;
     private  int totalSignals;
@@ -86,32 +86,32 @@ public class DataParser {
     public  void parseNewList(List<Path> dataPath) {
         drawAllSignals=false;
         signalIndex =-1;
-        signalList.clear();
+        ADCDataRecordsList.clear();
         totalFiles=dataPath.size();
         makePaths(dataPath);
         setParam();
         makeSignalColors();
         signalPath = new Path[totalSignals];
         setData();
-        mainApp.getAdcDataRecords().addAll(signalList);
+        mainApp.getAdcDataRecords().addAll(ADCDataRecordsList);
     }
 
-    public String[] getFileName() {
-        return fileName;
+    public String[] getFileNames() {
+        return fileNames;
     }
 
     private void makePaths(List<Path> pathes) {
         int count = 0;
         dataFilePath = new Path[pathes.size()];
         parFilePath = new Path[pathes.size()];
-        fileName = new String[pathes.size()];
+        fileNames = new String[pathes.size()];
 
         for (Path p : pathes) {
             try {
                 dataFilePath[count] = p;
-                fileName[count] = dataFilePath[count].getFileName().toString();
-                fileName[count] = fileName[count].substring(0, fileName[count].lastIndexOf('.'));
-                parFilePath[count] = dataFilePath[count].getParent().resolve(fileName[count] + ".par");
+                fileNames[count] = dataFilePath[count].getFileName().toString();
+                fileNames[count] = fileNames[count].substring(0, fileNames[count].lastIndexOf('.'));
+                parFilePath[count] = dataFilePath[count].getParent().resolve(fileNames[count] + ".par");
             } catch (InvalidPathException e) {
                 System.out.println("Path Error " + e);
                 return;
@@ -169,12 +169,12 @@ public class DataParser {
      */
 
     public void PutADCDataRecords(double [] signal, int signalIndex, int fileIndex, int adcChannelNumber) {
-        String nextSignalLabel = adcChannelNumber+"@"+fileName[fileIndex]+ "_#"+ adcChannelNumber;
+        String nextSignalLabel = adcChannelNumber+"@"+ fileNames[fileIndex]+ "_#"+ adcChannelNumber;
         Path nextSignalPath = dataFilePath[fileIndex].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-        ADCDataRecords sigmrk =new ADCDataRecords(signalIndex, drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex, signal.clone());
-        signalList.add(sigmrk);
+        ADCDataRecords singleDataRecord =new ADCDataRecords(signalIndex, drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex, signal.clone());
+        ADCDataRecordsList.add(singleDataRecord);
     }
 
     private  void makeSignalColors() {
@@ -197,7 +197,7 @@ public class DataParser {
     public void saveToText(){
         int i=0;
         byte [] stringBytes;
-        while (i< signalList.size()){
+        while (i< ADCDataRecordsList.size()){
 
             Path outTxtPath = signalPath[i].resolve(Paths.get("txt"));
 
@@ -207,12 +207,12 @@ public class DataParser {
                 e.printStackTrace();
             }
 
-            try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(signalList.get(i).getSignalLabel() +".txt"),StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
+            try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(ADCDataRecordsList.get(i).getSignalLabel() +".txt"),StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
             {
-                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, signalList.get(i).getSignalData().length*16);
+                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, ADCDataRecordsList.get(i).getSignalData().length*16);
                 int j=0;
-                while(j<signalList.get(i).getSignalData().length) {
-                    stringBytes = String.format("%15.7f", signalList.get(i).getSignalData()[j]).getBytes("UTF-8");
+                while(j< ADCDataRecordsList.get(i).getSignalData().length) {
+                    stringBytes = String.format("%15.7f", ADCDataRecordsList.get(i).getSignalData()[j]).getBytes("UTF-8");
                     wrBuf.put(stringBytes);
                     wrBuf.put((byte)System.getProperty("line.separator").charAt(0));
                     j++;

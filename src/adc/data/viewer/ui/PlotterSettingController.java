@@ -156,8 +156,15 @@ public class PlotterSettingController {
     }
 
     @FXML
-    private void handleOk(ActionEvent actionEvent)  {
+    private void handleApply(ActionEvent actionEvent){  ApplyNewSettings() ;}
 
+    @FXML
+    private void handleOk(ActionEvent actionEvent) {
+
+        if (ApplyNewSettings()) plotterSettingsStage.close();
+    }
+
+    private boolean ApplyNewSettings() {
         if(
                         TestDataType.isDouble(manualXmin.getText())&&
                         TestDataType.isDouble(manualXmax.getText())&&
@@ -170,7 +177,9 @@ public class PlotterSettingController {
                         TestDataType.isInteger(FFTWindowOverlap.getText(),10)&&
                         TestDataType.isDouble(lineWidth.getText())&&
                         TestDataType.isDouble(zeroShiftStart.getText())&&
-                        TestDataType.isDouble(zeroShiftEnd.getText())
+                        TestDataType.isDouble(zeroShiftEnd.getText())&&
+                                Double.parseDouble(manualXmin.getText())<Double.parseDouble(manualXmax.getText())&&
+                                Double.parseDouble(manualYmin.getText())<Double.parseDouble(manualYmax.getText())
                 )
         {
             xmin=Double.parseDouble(manualXmin.getText());
@@ -179,7 +188,7 @@ public class PlotterSettingController {
             ymax=Double.parseDouble(manualYmax.getText());
 
             if ((xmin>xmax)|(ymin>ymax)) {alertInvalidParam.showAndWait();
-            return;
+
             }
 
             sgleft=Integer.parseInt(manualSGFilterLeft.getText());
@@ -196,17 +205,15 @@ public class PlotterSettingController {
             isUseNewDefaults = UseNewDefaults.isSelected();
 
             plotterController.getPlotter().getAxes().setAxesBounds(xmin,xmax,ymin,ymax);
-            if(isUseNewDefaults)setAllPreferencesToNewDefaults();
-
-            plotterSettingsStage.close();
-
+//            if(isUseNewDefaults)setAllPreferencesToNewDefaults();
+            setAllPreferencesToNewDefaults();
             plotterController.getPlotter().getCanvasData().drawData();
-
+            return true;
         }
 
         else{
-
             alertInvalidParam.showAndWait();
+            return false;
         }
 
     }
@@ -235,6 +242,11 @@ public class PlotterSettingController {
         manualYmin.setText(String.valueOf(plotterController.getPlotter().getAxes().getYAxis().getLowerBound()));
         manualXmax.setText(String.valueOf(plotterController.getPlotter().getAxes().getXAxis().getUpperBound()));
         manualXmin.setText(String.valueOf(plotterController.getPlotter().getAxes().getXAxis().getLowerBound()));
+
+//        manualYmax.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultYAxisMax", plotterController.getPlotter().getAxes().getYAxis().getUpperBound())));
+//        manualYmin.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultYAxisMin", plotterController.getPlotter().getAxes().getYAxis().getLowerBound())));
+//        manualXmax.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultXAxisMax", 1)));
+//        manualXmin.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultXAxisMin", -1)));
 
         manualSGFilterLeft.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSGFilterLeft",50)));
         manualSGFilterRight.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSGFilterRight",50)));

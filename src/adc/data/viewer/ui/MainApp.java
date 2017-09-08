@@ -295,7 +295,7 @@ public  class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("TextFileParam.fxml"));
             BorderPane textFileParams = loader.load();
             textFileParamController = loader.getController();
-            textFileParamController.getTxtNextFileName().setText(dataParser.getFileName()[fileIndex]);
+            textFileParamController.getTxtNextFileName().setText(dataParser.getFileNames()[fileIndex]);
             Stage textFileParamsStage = new Stage();
             textFileParamsStage.initStyle(StageStyle.UNDECORATED);
             textFileParamsStage.getIcons().add(logo);
@@ -327,7 +327,7 @@ public  class MainApp extends Application {
             plotterSettingController = loader.getController();
             Stage plotterSettingStage = new Stage();
             plotterSettingStage.setResizable(false);
-//            plotterSettingStage.setAlwaysOnTop(true);
+            plotterSettingStage.setAlwaysOnTop(true);
             plotterSettingController.setPlotterController(pc);
             plotterSettingController.initializeSettings();
             plotterSettingController.setPlotterSettingStage(plotterSettingStage);
@@ -502,7 +502,8 @@ public  class MainApp extends Application {
         int fullStopIndex = inpList.get(0).getFileName().toString().lastIndexOf(".");
         String fileExtension = inpList.get(0).getFileName().toString().substring(fullStopIndex + 1).toLowerCase();
 
-        if ((fileExtension.equals("dat") || fileExtension.equals("txt")) && inpList.get(0).toFile().length() > 0) {
+        if ((fileExtension.equalsIgnoreCase("dat") || fileExtension.equalsIgnoreCase("txt")
+        || fileExtension.equalsIgnoreCase("csv")) && inpList.get(0).toFile().length() > 0) {
             clearAll();
             setDefaultPlotsLayoutType("AllPlots");
             redrawAllowed=true;

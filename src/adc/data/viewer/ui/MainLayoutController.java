@@ -55,18 +55,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.prefs.Preferences;
 
 
 public class MainLayoutController {
 
-    static {
-        initDir=new File(System.getProperty("user.home"));
-    }
+//    static {
+//        initDir=new File(System.getProperty("user.home"));
+//    }
 
     private MainApp mainApp;
-    private static File initDir;
+    private File initDir;
     private WatchDirectory watcher;
     private Thread watchDirThread;
+    private Preferences appPreferencesRootNode = MainApp.appPreferencesRootNode;
+
 
     void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
@@ -75,6 +78,7 @@ public class MainLayoutController {
     @FXML
     private void handleOpen() {
 
+        initDir=new File(appPreferencesRootNode.get("defaultWorkingDirectory",System.getProperty("user.home")));
         mainApp.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(0.2);
         mainApp.getPlotterControllerlist().clear();
         List<Path> inpList = new ArrayList<>();
@@ -82,7 +86,7 @@ public class MainLayoutController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(initDir);
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-                "data files (*.dat,*.txt)", "*.dat", "*.DAT","*.txt","*.TXT");
+                "data files (*.dat,*.txt, *.csv)", "*.dat", "*.DAT","*.txt","*.TXT", "*.csv","*.CSV");
         fileChooser.getExtensionFilters().add(extFilter);
         getMoreFiles(inpList, fileChooser);
 
@@ -102,7 +106,8 @@ public class MainLayoutController {
             }
             else {
                 if (!inpList.isEmpty()) {
-                    initDir = inpList.get(inpList.size()-1).getParent().toFile();
+//                    initDir = inpList.get(inpList.size()-1).getParent().toFile();
+                    appPreferencesRootNode.put("defaultWorkingDirectory",inpList.get(inpList.size()-1).getParent().toString());
                     mainApp.parse(inpList);
                 }
                 morefiles=false;
@@ -141,8 +146,9 @@ public class MainLayoutController {
 
         if(!chosenPaths.isEmpty()) {
             inpList.addAll(chosenPaths);
-            initDir = inpList.get(inpList.size()-1).getParent().toFile();
-            fileChooser.setInitialDirectory(initDir);
+//            initDir = inpList.get(inpList.size()-1).getParent().toFile();
+            appPreferencesRootNode.put("defaultWorkingDirectory",inpList.get(inpList.size()-1).getParent().toString());
+            fileChooser.setInitialDirectory(inpList.get(inpList.size()-1).getParent().toFile());
         }
     }
 
