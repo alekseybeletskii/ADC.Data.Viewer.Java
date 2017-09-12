@@ -90,7 +90,7 @@ public class MainLayoutController {
         fileChooser.getExtensionFilters().add(extFilter);
         getMoreFiles(inpList, fileChooser);
 
-        boolean morefiles = true;
+        boolean morefiles = false;
         while(morefiles) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("");
@@ -105,13 +105,13 @@ public class MainLayoutController {
                 getMoreFiles(inpList, fileChooser);
             }
             else {
-                if (!inpList.isEmpty()) {
-//                    initDir = inpList.get(inpList.size()-1).getParent().toFile();
-                    appPreferencesRootNode.put("defaultWorkingDirectory",inpList.get(inpList.size()-1).getParent().toString());
-                    mainApp.parse(inpList);
-                }
                 morefiles=false;
             }
+        }
+        if (!inpList.isEmpty()) {
+//                    initDir = inpList.get(inpList.size()-1).getParent().toFile();
+            appPreferencesRootNode.put("defaultWorkingDirectory",inpList.get(inpList.size()-1).getParent().toString());
+            mainApp.parse(inpList);
         }
     }
 

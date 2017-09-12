@@ -48,7 +48,6 @@ package adc.data.viewer.plotter;
 import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.ui.MainApp;
-import adc.data.viewer.ui.PlotterSettingController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Side;
@@ -66,7 +65,7 @@ public class Axes extends Pane {
     private StableTicksAxis xAxis;
     private StableTicksAxis yAxis;
 
-    private double fixYZeroShift=0.0;
+    private double adcZeroShift =0.0;
     private double xAxisOffset;
     private double yAxisOffset;
     private double xMinBasic;
@@ -88,8 +87,8 @@ public class Axes extends Pane {
     public void setYAxisOffset(double yOffset) {
         this.yAxisOffset = yOffset;
     }
-    public void setFixYZeroShift(double fixYZeroShift) {
-        this.fixYZeroShift = fixYZeroShift;
+        public void setADCZeroShift(double adcZeroShift) {
+        this.adcZeroShift = adcZeroShift;
     }
 
     Axes(MainApp mainApp) {
@@ -163,10 +162,10 @@ public class Axes extends Pane {
 
         xAxis.setLowerBound(xMinBasic);
         xAxis.setUpperBound(xMaxBasic);
-        yAxis.setLowerBound(yMinBasic-fixYZeroShift);
-        yAxis.setUpperBound(yMaxBasic-fixYZeroShift);
+        yAxis.setLowerBound(yMinBasic);
+        yAxis.setUpperBound(yMaxBasic);
         xAxisOffset = xMinBasic;
-        yAxisOffset = yMinBasic-fixYZeroShift;
+        yAxisOffset = yMinBasic;
     }
 
     public StableTicksAxis getXAxis() {
@@ -270,8 +269,8 @@ public class Axes extends Pane {
             xMaxBasic = mostSamples *dt;
         }
         double[] testSignal = adcDataRecords.getSignalData();
-        double maximum = SimpleMath.getMax(testSignal);
-        double minimum = SimpleMath.getMin(testSignal);
+        double maximum = SimpleMath.getMax(testSignal)- adcZeroShift;
+        double minimum = SimpleMath.getMin(testSignal)- adcZeroShift;
         if (maximum> yMaxBasic) yMaxBasic =maximum;
         if (minimum< yMinBasic) yMinBasic =minimum;
     }

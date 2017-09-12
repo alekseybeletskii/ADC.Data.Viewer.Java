@@ -212,7 +212,6 @@ public class PlotterSettingController {
             isUseNewDefaults = UseNewDefaults.isSelected();
 
             plotterController.getPlotter().getAxes().setAxesBounds(xmin,xmax,ymin,ymax);
-//            if(isUseNewDefaults)setAllPreferencesToNewDefaults();
             setAllPreferencesToNewDefaults();
             plotterController.getPlotter().getCanvasData().drawData();
             return true;
@@ -249,11 +248,6 @@ public class PlotterSettingController {
         manualYmin.setText(String.valueOf(plotterController.getPlotter().getAxes().getYAxis().getLowerBound()));
         manualXmax.setText(String.valueOf(plotterController.getPlotter().getAxes().getXAxis().getUpperBound()));
         manualXmin.setText(String.valueOf(plotterController.getPlotter().getAxes().getXAxis().getLowerBound()));
-
-//        manualYmax.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultYAxisMax", plotterController.getPlotter().getAxes().getYAxis().getUpperBound())));
-//        manualYmin.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultYAxisMin", plotterController.getPlotter().getAxes().getYAxis().getLowerBound())));
-//        manualXmax.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultXAxisMax", 1)));
-//        manualXmin.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultXAxisMin", -1)));
 
         manualSGFilterLeft.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSGFilterLeft",50)));
         manualSGFilterRight.setText(String.valueOf(appPreferencesRootNode.getInt("defaultSGFilterRight",50)));

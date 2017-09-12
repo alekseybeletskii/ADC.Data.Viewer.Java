@@ -68,11 +68,11 @@ import static java.lang.Math.round;
   */
 public class CanvasDataDrawing extends Canvas {
 
-     public double getZeroYShift() {
-         return zeroYShift;
+     public double getAdcZeroShift() {
+         return adcZeroShift;
      }
 
-     private double zeroYShift;
+     private double adcZeroShift;
 
      public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
          this.nextSignalToDraw = nextSignalToDraw;
@@ -120,7 +120,7 @@ public class CanvasDataDrawing extends Canvas {
      private int SGFilterOrder;
      private double FixZeroShiftStart;
      private double FixZeroShiftEnd;
-     private boolean isFixZeroShift;
+     private boolean isFixADCZeroShift;
 
      private double widthOfLine;
      private String plotType;
@@ -157,7 +157,7 @@ public void resetCanvasDefault (){
     SGFilterOrder= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeftOrder",1);
     FixZeroShiftStart=MainApp.appPreferencesRootNode.getDouble("defaultFixZeroShiftStart",0); //ms
     FixZeroShiftEnd= MainApp.appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",0);
-    isFixZeroShift = MainApp.appPreferencesRootNode.getBoolean("defaultFixZeroShift",false);
+    isFixADCZeroShift = MainApp.appPreferencesRootNode.getBoolean("defaultFixZeroShift",false);
 }
 
 
@@ -273,7 +273,7 @@ public void resetCanvasDefault (){
 
 
      public void drawNextSignal(ADCDataRecords nextSignalToDraw) {
-         zeroYShift = 0;
+         adcZeroShift = 0;
          int nextSignalLength =0;
          int nextSignalIndex = nextSignalToDraw.getSignalIndex();
          double [] nextSignal = nextSignalToDraw.getSignalData().clone();
@@ -294,17 +294,19 @@ public void resetCanvasDefault (){
          int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
          int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
 
-         if(isFixZeroShift){
+         if(isFixADCZeroShift){
              int zeroStart = (int) round(FixZeroShiftStart / dt);
              int zeroEnd = (int) round(FixZeroShiftEnd / dt);
              if(zeroEnd-zeroStart>0&&zeroStart>=0&&zeroEnd<nextSignalLength) {
-                 zeroYShift =SimpleMath.findAverage(Arrays.copyOfRange(nextSignal,zeroStart,zeroEnd));
+                 adcZeroShift =SimpleMath.findAverage(Arrays.copyOfRange(nextSignal,zeroStart,zeroEnd));
                  for(int i=0; i<nextSignal.length; i++)
-                     nextSignal[i]=nextSignal[i]- zeroYShift;
-//                 maxZeroShift=abs(maxZeroShift)>abs(zeroYShift)?maxZeroShift:zeroYShift;
+                     nextSignal[i]=nextSignal[i]- adcZeroShift;
+//                 maxZeroShift=abs(maxZeroShift)>abs(adcZeroShift)?maxZeroShift:adcZeroShift;
              }
-//             axes.setFixYZeroShift(zeroYShift);
+         }else{
+             adcZeroShift=0;
          }
+         axes.setADCZeroShift(adcZeroShift);
 
          findMaxMin(nextSignal, dt);
 

@@ -151,6 +151,7 @@ public class PlotterController {
             }
             if(i!=1){
                 SubtractSignal.setSelected(false);
+                MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", false);
                 alertInvalidParam.showAndWait();
             }else if (!signalAsFilter.equals(null)){
                 SavitzkyGolayFilter sgfilter;
