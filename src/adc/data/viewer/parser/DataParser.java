@@ -90,7 +90,7 @@ public class DataParser {
     public  void parseNewList(List<Path> dataPath) {
         drawAllSignals=false;
         signalIndex =-1;
-//        ADCDataRecordsList.clear();
+        ADCDataRecordsList.clear();
         totalFiles=dataPath.size();
         makePaths(dataPath);
         setParam();

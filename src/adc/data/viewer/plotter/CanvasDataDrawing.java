@@ -156,7 +156,7 @@ public void resetCanvasDefault (){
     SGFilterRight= MainApp.appPreferencesRootNode.getInt("defaultSGFilterRight",50); //points
     SGFilterOrder= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeftOrder",1);
     FixZeroShiftStart=MainApp.appPreferencesRootNode.getDouble("defaultFixZeroShiftStart",0); //ms
-    FixZeroShiftEnd= MainApp.appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",0);
+    FixZeroShiftEnd= MainApp.appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",1);
     isFixADCZeroShift = MainApp.appPreferencesRootNode.getBoolean("defaultFixZeroShift",false);
 }
 

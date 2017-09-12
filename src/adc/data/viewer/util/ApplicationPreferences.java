@@ -63,7 +63,7 @@ public static void setAllPreferencesToBasicDefaults(){
     appPreferencesRootNode.putInt("defaultSGFilterRight",50); //points
     appPreferencesRootNode.putInt("defaultSGFilterLeftOrder",1);
     appPreferencesRootNode.putDouble("defaultFixZeroShiftStart",0); //ms
-    appPreferencesRootNode.putDouble("defaultFixZeroShiftEnd",0);
+    appPreferencesRootNode.putDouble("defaultFixZeroShiftEnd",1);
     appPreferencesRootNode.putBoolean("defaultFixZeroShift",false);
     appPreferencesRootNode.putDouble("defaultXAxisMin",-1);
     appPreferencesRootNode.putDouble("defaultXAxisMax",1);

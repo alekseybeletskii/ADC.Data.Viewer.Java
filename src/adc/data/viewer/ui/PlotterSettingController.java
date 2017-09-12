@@ -262,7 +262,7 @@ public class PlotterSettingController {
         lineWidth.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultWidthOfLine",1.0)));
 
         zeroShiftStart.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultFixZeroShiftStart",0)));
-        zeroShiftEnd.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",0)));
+        zeroShiftEnd.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",1)));
         fixZeroShift.setSelected(appPreferencesRootNode.getBoolean("defaultFixZeroShift",false));
 
         plotStyle =appPreferencesRootNode.get("defaultPlotStyle","line");
