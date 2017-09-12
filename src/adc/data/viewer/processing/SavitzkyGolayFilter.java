@@ -292,7 +292,7 @@ public class SavitzkyGolayFilter{
             for(int j = 0; j<order+1; j++){
                 matrix[i][j] = moments[counts - i - j - 1];
             }
-            System.out.println("");
+//            System.out.println("");
         }
         
         Matrix A = new Matrix(matrix);
@@ -366,7 +366,7 @@ public class SavitzkyGolayFilter{
             for(int j = 0; j<order+1; j++){
                 matrix[i][j] = moments[counts - i - j - 1];
             }
-            System.out.println("");
+//            System.out.println("");
         }
 
         Matrix A = new Matrix(matrix);

@@ -49,7 +49,15 @@
 }
 
 .signalLabel{
- -fx-font-size: 12;
+ -fx-font-size: 14;
+}
+
+
+#xyLabel{
+    -fx-background-color: whitesmoke;
+    -fx-font-size: 16;
+    -fx-border-style:  solid;
+    -fx-font-weight: bold;
 }
 
 #Settings{
@@ -58,9 +66,10 @@
     -fx-border-color: darkgreen;
     -fx-text-fill: black;
     -fx-background-radius: 1;
-    -fx-background-color: transparent;
+    -fx-background-color: whitesmoke;
     -fx-padding: 1,1,1,1;
-    -fx-font-size: 10;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
     -fx-border-style:  solid;
 }
 
@@ -78,9 +87,10 @@
     -fx-border-color: darkgreen;
     -fx-text-fill: black;
     -fx-background-radius: 1;
-    -fx-background-color: transparent;
+    -fx-background-color: whitesmoke;
     -fx-padding: 1,1,1,1;
-    -fx-font-size: 10;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
     -fx-border-style:  solid;
 }
 
@@ -102,9 +112,10 @@
     -fx-border-color: darkgreen;
     -fx-text-fill: black;
     -fx-background-radius: 10;
-    -fx-background-color: transparent;
+    -fx-background-color: whitesmoke;
     -fx-padding: 1,1,1,1;
-    -fx-font-size: 10;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
     -fx-border-style:  dashed;
     /*-fx-font-weight: bold;*/
 }
@@ -123,9 +134,10 @@
     -fx-border-color: darkgreen;
     -fx-text-fill: black;
     -fx-background-radius: 10;
-    -fx-background-color: transparent;
+    -fx-background-color: whitesmoke;
     -fx-padding: 1,1,1,1;
-    -fx-font-size: 10;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
     -fx-border-style:  dashed;
     /*-fx-font-weight: bold;*/
 }
@@ -168,7 +180,7 @@
 
 .axis {
     -fx-background-color: transparent;
-    -fx-tick-label-fill: darkmagenta;
+    -fx-tick-label-fill: darkgreen;
 }
 
 .axesBorder{

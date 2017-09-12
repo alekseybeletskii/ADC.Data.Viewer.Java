@@ -183,8 +183,8 @@ public class DataParser {
 
     private  void makeSignalColors() {
         Color [] signalColors = new Color[totalSignals];
-        final float saturation = 1f;//1.0 for brilliant, 0.0 for dull
-        final float brightness = 0.8f; //1.0 for brighter, 0.0 for black
+        final float saturation = 0.7f;//1.0 for brilliant, 0.0 for dull
+        final float brightness = 0.7f; //1.0 for brighter, 0.0 for black
         int hue=0;
         for (int jj = 0; jj< totalSignals; jj++) {
             signalColors[jj] = Color.hsb(hue, saturation, brightness);

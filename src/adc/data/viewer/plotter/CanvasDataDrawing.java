@@ -385,7 +385,7 @@ public void resetCanvasDefault (){
 
     public void drawmesh() {
 
-            graphicContext.setStroke(Color.DARKGRAY);
+            graphicContext.setStroke(Color.LIGHTGRAY);
             graphicContext.setLineWidth(1.0);
             graphicContext.setLineDashes(3);
 

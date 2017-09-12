@@ -124,8 +124,11 @@ public  class MainApp extends Application {
     private List<PlotterController> plotterControllerlist =new ArrayList<>();
     private SignalsOverviewController signalsOverviewController;
     private double [] signalUsedAsFilter;
+    private double splitPaneDivisionPosition;
 
-
+    public double getSplitPaneDivisionPosition() {
+        return splitPaneDivisionPosition;
+    }
     public double[] getSignalUsedAsFilter() {
         return signalUsedAsFilter;
     }
@@ -172,7 +175,7 @@ public  class MainApp extends Application {
         primaryStage.setOnCloseRequest(e ->
         {Platform.exit();
          System.exit(0);});
-
+        splitPaneDivisionPosition =0.12;
         nextSignalToDrawIndex =-1;
         this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;
@@ -213,6 +216,7 @@ public  class MainApp extends Application {
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
             signalsOverviewController.getSignalsOverviewSplitPane().setVisible(false);
             setKeyPressedAction();
+            mainLayout.widthProperty().addListener(observable -> {this.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(splitPaneDivisionPosition);});
         } catch (Exception e) {
             e.printStackTrace();
         }

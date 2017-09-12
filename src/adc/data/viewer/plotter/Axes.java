@@ -182,7 +182,6 @@ public class Axes extends Pane {
     public void setAxesBounds (double xMin, double xMax,  double yMin, double yMax){
         xAxis.setLowerBound(xMin);
         xAxis.setUpperBound(xMax);
-
         yAxis.setLowerBound(yMin);
         yAxis.setUpperBound(yMax);
 

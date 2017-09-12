@@ -58,7 +58,7 @@
          <left>
             <HBox spacing="2.0">
                <children>
-                  <Button fx:id="Settings" defaultButton="true" mnemonicParsing="false" onAction="#handlePlotterSettings" prefHeight="10.0" prefWidth="56.0" text="Settings">
+                  <Button fx:id="Settings" defaultButton="true" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
                      <font>
                         <Font size="10.0" />
                      </font>
@@ -74,19 +74,19 @@
                         <Font size="10.0" />
                      </font>
                     </ToggleButton>
-                    <ToggleButton fx:id="RawAndSGFilter" onAction="#handleRawAndSGFilter" text="&amp;SGfilter">
+                    <ToggleButton fx:id="RawAndSGFilter" onAction="#handleRawAndSGFilter" text="Raw&amp;Filter">
 
                            <font>
                         <Font size="10.0" />
                      </font>
                     </ToggleButton>
-                    <ToggleButton fx:id="SGFilter" onAction="#handleSGFilter" text="SGfilter">
+                    <ToggleButton fx:id="SGFilter" onAction="#handleSGFilter" text="Filter">
 >
                            <font>
                         <Font size="10.0" />
                      </font>
                     </ToggleButton>
-                  <ToggleButton fx:id="subtractSGFilter" onAction="#handleSGFiltered" text="- SGfilter">
+                  <ToggleButton fx:id="subtractSGFilter" onAction="#handleSGFiltered" text="Raw-Filter">
                      <font>
                         <Font size="10.0" />
                      </font>
