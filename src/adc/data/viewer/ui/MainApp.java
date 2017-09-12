@@ -198,6 +198,7 @@ public  class MainApp extends Application {
             primaryStage.setScene(scene);
             MainLayoutController controller = loader.getController();
             controller.setMainApp(this);
+            primaryStage.setMaximized(true);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();

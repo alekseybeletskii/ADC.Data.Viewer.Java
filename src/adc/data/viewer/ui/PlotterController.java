@@ -83,6 +83,12 @@ public class PlotterController {
     @FXML
     private ToggleButton SubtractSignal;
 
+    public ToggleGroup getToggleGroup() {
+        return toggleGroup;
+    }
+
+    private ToggleGroup toggleGroup;
+
     public Plotter getPlotter() {
         return plotter;
     }
@@ -170,10 +176,12 @@ public class PlotterController {
 
                 mainApp.setSignalUsedAsFilter(sigAsFiltData);
             }
+
         }
         else{
             SubtractSignal.setSelected(false);
-            plotter.getCanvasData().drawData();}
+      }
+        plotter.getCanvasData().drawData();
 
     }
 
@@ -184,16 +192,8 @@ public class PlotterController {
         mainApp.setPlotterSetting(this);
     }
 
-    @FXML
-    private void initialize() {
-
-        ToggleGroup toggleGroup = new ToggleGroup();
-        Raw.setToggleGroup(toggleGroup);
-        RawAndSGFilter.setToggleGroup(toggleGroup);
-        SGFilter.setToggleGroup(toggleGroup);
-        subtractSGFilter.setToggleGroup(toggleGroup);
-
-        switch (MainApp.appPreferencesRootNode.get("defaultPlotType","Raw")){
+    public void toggleButton(String toggleName){
+        switch (toggleName){
             case "Raw":
                 toggleGroup.selectToggle(Raw);
                 break;
@@ -204,10 +204,21 @@ public class PlotterController {
                 toggleGroup.selectToggle(SGFilter);
                 break;
             case "SGFiltered":
-            toggleGroup.selectToggle(subtractSGFilter);
-            break;
+                toggleGroup.selectToggle(subtractSGFilter);
+                break;
         }
+    }
 
+    @FXML
+    private void initialize() {
+
+        toggleGroup = new ToggleGroup();
+        Raw.setToggleGroup(toggleGroup);
+        RawAndSGFilter.setToggleGroup(toggleGroup);
+        SGFilter.setToggleGroup(toggleGroup);
+        subtractSGFilter.setToggleGroup(toggleGroup);
+
+        toggleButton(MainApp.appPreferencesRootNode.get("defaultPlotType","Raw"));
 
         subtractSGFilter.setText("\u2013SGfilter");
         SubtractSignal.setText("\u2013Signal");

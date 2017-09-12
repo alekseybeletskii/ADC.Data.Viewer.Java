@@ -194,7 +194,6 @@ public class DataParser {
         this.signalColors = signalColors;
     }
 
-
     /**
      * The method saves avery signal as a separate text file to the "txt" subdirectory
      */

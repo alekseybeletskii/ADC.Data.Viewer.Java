@@ -306,9 +306,9 @@ public void resetCanvasDefault (){
          }else{
              adcZeroShift=0;
          }
-         axes.setADCZeroShift(adcZeroShift);
 
          findMaxMin(nextSignal, dt);
+         axes.setADCZeroShift(adcZeroShift);
 
          if((xRight>0)&&(xLeft<nextSignalLength)) {
              double[] sigSubarray = Arrays.copyOfRange(nextSignal,

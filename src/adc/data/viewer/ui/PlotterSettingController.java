@@ -168,6 +168,8 @@ public class PlotterSettingController {
     @FXML
     private void handleReset(ActionEvent actionEvent){
         ApplicationPreferences.setAllPreferencesToBasicDefaults();
+        plotterController.toggleButton("Raw");
+        plotterController.getPlotter().getCanvasData().drawData();
         plotterSettingsStage.close();
     }
 

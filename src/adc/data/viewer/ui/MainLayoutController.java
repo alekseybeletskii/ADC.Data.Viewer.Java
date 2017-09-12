@@ -80,7 +80,7 @@ public class MainLayoutController {
 
         initDir=new File(appPreferencesRootNode.get("defaultWorkingDirectory",System.getProperty("user.home")));
         mainApp.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(mainApp.getSplitPaneDivisionPosition());
-        mainApp.getPlotterControllerlist().clear();
+//        mainApp.getPlotterControllerlist().clear();
         List<Path> inpList = new ArrayList<>();
 //        List<File> chosenFiles;
         FileChooser fileChooser = new FileChooser();
@@ -109,7 +109,6 @@ public class MainLayoutController {
             }
         }
         if (!inpList.isEmpty()) {
-//                    initDir = inpList.get(inpList.size()-1).getParent().toFile();
             appPreferencesRootNode.put("defaultWorkingDirectory",inpList.get(inpList.size()-1).getParent().toString());
             mainApp.parse(inpList);
         }
@@ -146,7 +145,6 @@ public class MainLayoutController {
 
         if(!chosenPaths.isEmpty()) {
             inpList.addAll(chosenPaths);
-//            initDir = inpList.get(inpList.size()-1).getParent().toFile();
             appPreferencesRootNode.put("defaultWorkingDirectory",inpList.get(inpList.size()-1).getParent().toString());
             fileChooser.setInitialDirectory(inpList.get(inpList.size()-1).getParent().toFile());
         }
@@ -164,7 +162,7 @@ public class MainLayoutController {
     private void handleAbout() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("ADC binary data viewer");
-        alert.setHeaderText("About");
+        alert.setHeaderText("JavaFX8-based application for digital signals visualisation");
         alert.setContentText("Author: \nAleksey Beletskii\n\nWebsite:\nhttps://ua.linkedin.com/in/beletskii-aleksey");
         alert.showAndWait();
     }
