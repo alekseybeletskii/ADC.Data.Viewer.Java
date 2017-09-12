@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -57,31 +58,39 @@
          <left>
             <HBox spacing="2.0">
                <children>
-                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handlePlotterSettings" prefHeight="10.0" prefWidth="56.0" text="Settings">
+                  <Button fx:id="Settings" defaultButton="true" mnemonicParsing="false" onAction="#handlePlotterSettings" prefHeight="10.0" prefWidth="56.0" text="Settings">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Button>
-                <Button mnemonicParsing="false" onAction="#handleRaw" text="RawData">
+                  <ToggleButton fx:id="SubtractSignal" mnemonicParsing="false" onAction="#handleSubtractSignal" text="- Signal">
                      <font>
                         <Font size="10.0" />
                      </font>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#handleRawAndSGFilter" text="&amp;SGfilter">
+                  </ToggleButton>
+                    <ToggleButton fx:id="Raw" onAction="#handleRaw" text="Raw">
+
+                           <font>
+                        <Font size="10.0" />
+                     </font>
+                    </ToggleButton>
+                    <ToggleButton fx:id="RawAndSGFilter" onAction="#handleRawAndSGFilter" text="&amp;SGfilter">
+
+                           <font>
+                        <Font size="10.0" />
+                     </font>
+                    </ToggleButton>
+                    <ToggleButton fx:id="SGFilter" onAction="#handleSGFilter" text="SGfilter">
+>
+                           <font>
+                        <Font size="10.0" />
+                     </font>
+                    </ToggleButton>
+                  <ToggleButton fx:id="subtractSGFilter" onAction="#handleSGFiltered" text="- SGfilter">
                      <font>
                         <Font size="10.0" />
                      </font>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#handleSGFilter" text="SGfilter">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="subtractSGFilter" mnemonicParsing="false" onAction="#handleSGFiltered" text="- SGfilter">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Button>
+                  </ToggleButton>
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" text="x=......; y=......" fx:id="xyLabel">
                      <font>
                         <Font name="System Italic" size="12.0" />

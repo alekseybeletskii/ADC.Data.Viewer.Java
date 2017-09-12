@@ -65,6 +65,7 @@ public class DataParser {
     private Path [] signalPath;
 
     private MainApp mainApp;
+
     private List<ADCDataRecords> ADCDataRecordsList = new ArrayList<>();
 
     private Path[] dataFilePath;
@@ -77,6 +78,9 @@ public class DataParser {
 
     private boolean drawAllSignals;
 
+    public List<ADCDataRecords> getADCDataRecordsList() {
+        return ADCDataRecordsList;
+    }
 
     public DataParser( MainApp mainApp) {
         this.mainApp=mainApp;
@@ -86,7 +90,7 @@ public class DataParser {
     public  void parseNewList(List<Path> dataPath) {
         drawAllSignals=false;
         signalIndex =-1;
-        ADCDataRecordsList.clear();
+//        ADCDataRecordsList.clear();
         totalFiles=dataPath.size();
         makePaths(dataPath);
         setParam();

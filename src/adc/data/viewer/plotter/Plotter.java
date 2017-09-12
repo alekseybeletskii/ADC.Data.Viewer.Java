@@ -197,7 +197,7 @@ import javafx.scene.shape.StrokeType;
                 if ((zoomRectangle.getWidth() <= 0.0 | zoomRectangle.getHeight() <= 0.0) & !mainApp.getAdcDataRecords().isEmpty()) {
 //                    axes.obtainDataAndTimeMargins(canvasData.getNextSignalToDraw());
 //                    axes.setAxesBasicSetup();
-                    axes.setAxesBounds
+                    if(!mainApp.appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false))axes.setAxesBounds
                             (canvasData.getxTheMIN()==Integer.MAX_VALUE?-1:canvasData.getxTheMIN(),
                             canvasData.getxTheMAX()==Integer.MIN_VALUE?1:canvasData.getxTheMAX(),
                             canvasData.getyTheMIN()==Integer.MAX_VALUE?-1:canvasData.getyTheMIN(),

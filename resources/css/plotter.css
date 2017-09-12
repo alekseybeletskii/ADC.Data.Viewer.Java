@@ -52,6 +52,50 @@
  -fx-font-size: 12;
 }
 
+#Settings{
+    -fx-border-width: 1;
+    -fx-border-radius: 1;
+    -fx-border-color: darkgreen;
+    -fx-text-fill: black;
+    -fx-background-radius: 1;
+    -fx-background-color: transparent;
+    -fx-padding: 1,1,1,1;
+    -fx-font-size: 10;
+    -fx-border-style:  solid;
+}
+
+#Settings:hover{
+    -fx-background-color: palegreen;
+}
+
+#Settings:pressed{
+    -fx-text-fill: darkolivegreen;
+}
+
+#SubtractSignal{
+    -fx-border-width: 1;
+    -fx-border-radius: 1;
+    -fx-border-color: darkgreen;
+    -fx-text-fill: black;
+    -fx-background-radius: 1;
+    -fx-background-color: transparent;
+    -fx-padding: 1,1,1,1;
+    -fx-font-size: 10;
+    -fx-border-style:  solid;
+}
+
+#SubtractSignal:hover{
+    -fx-background-color: palegreen;
+}
+
+#SubtractSignal:pressed{
+    -fx-text-fill: darkolivegreen;
+}
+
+#SubtractSignal:selected{
+    -fx-background-color: darkcyan;
+}
+
 .button{
     -fx-border-width: 1;
     -fx-border-radius: 10;
@@ -67,12 +111,36 @@
 
 .button:pressed{
     -fx-text-fill: darkolivegreen;
-
 }
 
 .button:hover{
     -fx-background-color: palegreen;
 }
+
+.toggle-button{
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-border-color: darkgreen;
+    -fx-text-fill: black;
+    -fx-background-radius: 10;
+    -fx-background-color: transparent;
+    -fx-padding: 1,1,1,1;
+    -fx-font-size: 10;
+    -fx-border-style:  dashed;
+    /*-fx-font-weight: bold;*/
+}
+
+.toggle-button:pressed{
+    -fx-text-fill: darkolivegreen;
+}
+
+.toggle-button:hover{
+    -fx-background-color: palegreen;
+}
+.toggle-button:selected{
+    -fx-background-color: palegreen;
+}
+
 
 .AnchorPane{
 -fx-background-color: azure;

@@ -44,6 +44,7 @@
 package adc.data.viewer.ui;
 
 import adc.data.viewer.processing.TestDataType;
+import adc.data.viewer.util.ApplicationPreferences;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -162,6 +163,12 @@ public class PlotterSettingController {
     private void handleOk(ActionEvent actionEvent) {
 
         if (ApplyNewSettings()) plotterSettingsStage.close();
+    }
+
+    @FXML
+    private void handleReset(ActionEvent actionEvent){
+        ApplicationPreferences.setAllPreferencesToBasicDefaults();
+        plotterSettingsStage.close();
     }
 
     private boolean ApplyNewSettings() {

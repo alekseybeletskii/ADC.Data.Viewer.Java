@@ -123,7 +123,15 @@ public  class MainApp extends Application {
     private int howManyPlots;
     private List<PlotterController> plotterControllerlist =new ArrayList<>();
     private SignalsOverviewController signalsOverviewController;
+    private double [] signalUsedAsFilter;
 
+
+    public double[] getSignalUsedAsFilter() {
+        return signalUsedAsFilter;
+    }
+    public void setSignalUsedAsFilter(double[] signalUsedAsFilter) {
+        this.signalUsedAsFilter = signalUsedAsFilter;
+    }
     public List<PlotterController> getPlotterControllerlist() {
         return plotterControllerlist;
     }
@@ -159,7 +167,7 @@ public  class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        ApplicationPreferences.setAllPreferencesToBasicDefaults();
+//        ApplicationPreferences.setAllPreferencesToBasicDefaults();
 
         primaryStage.setOnCloseRequest(e ->
         {Platform.exit();
@@ -173,6 +181,7 @@ public  class MainApp extends Application {
         initMainLayout();
         showSignalsOverview();
         defaultPlotsLayoutType = appPreferencesRootNode.get("defaultPlotsLayoutType","AllPlots");
+        MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal",false);
 
 
     }
@@ -364,6 +373,7 @@ public  class MainApp extends Application {
              signalsOverviewController.getPlotsVBox().getChildren().clear();
              plotterControllerlist.clear();
              signalsOverviewController.getPlotsScrollPane().setVisible(false);
+
     }
 
     private void clearPlots(){
@@ -436,7 +446,8 @@ public  class MainApp extends Application {
                     redrawAllowed=false;
                     adcDataRecords.forEach(sig -> sig.setSignalSelected(true));
                     plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
-                    plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
+                    if(!appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false))
+                        plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
                     nextSignalToDrawIndex = -1;
                     plotterControllerlist.get(0).getPlotter().getCanvasData().drawData();
                     redrawAllowed=true;
@@ -448,8 +459,8 @@ public  class MainApp extends Application {
                             nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
-                            plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            if(!appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false))
+                                plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         case END:
                             adcDataRecords.forEach(sig -> sig.setSignalSelected(false));
@@ -457,8 +468,8 @@ public  class MainApp extends Application {
                             nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
-                            plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            if(!appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false))
+                                plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         case DOWN:
                             adcDataRecords.forEach(sig -> sig.setSignalSelected(false));
@@ -467,8 +478,8 @@ public  class MainApp extends Application {
                             nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
-                            plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            if(!appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false))
+                                plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         case UP:
                             adcDataRecords.forEach(sig -> sig.setSignalSelected(false));
@@ -477,8 +488,8 @@ public  class MainApp extends Application {
                             nextSignalToDraw= adcDataRecords.get(nextSignalToDrawIndex);
                             plotterControllerlist.get(0).getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
                             plotterControllerlist.get(0).getPlotter().getAxes().obtainDataAndTimeMargins(nextSignalToDraw);
-                            plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();
-                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
+                            if(!appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false))
+                                plotterControllerlist.get(0).getPlotter().getAxes().setAxesBasicSetup();                            adcDataRecords.get(nextSignalToDrawIndex).setSignalSelected(true);
                             break;
                         default:
                             break;

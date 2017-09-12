@@ -72,7 +72,7 @@
                 <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
@@ -100,11 +100,11 @@
                   </Label>
                   <Label text="Start, ms" GridPane.rowIndex="8" />
                   <Label text="End, ms" GridPane.rowIndex="9" />
-                  <CheckBox fx:id="fixZeroShift" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <CheckBox fx:id="fixZeroShift" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
                   <TextField fx:id="zeroShiftEnd" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                   <TextField fx:id="zeroShiftStart" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                  <CheckBox fx:id="UseNewDefaults" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label text="use as default" GridPane.rowIndex="5" />
+                  <CheckBox fx:id="UseNewDefaults" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                  <Label text="use as default,&#10;rescale OFF" wrapText="true" GridPane.rowIndex="5" />
                </children>
             </GridPane>
             <GridPane hgap="5.0" layoutX="168.0" layoutY="10.0">
@@ -190,6 +190,7 @@
         <buttons>
            <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOk" prefWidth="50.0" styleClass="label" text="Ok" />
             <Button mnemonicParsing="false" onAction="#handleApply" text="Apply" />
+            <Button mnemonicParsing="false" onAction="#handleReset" text="Reset to default" textFill="#da0a0a" />
            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" styleClass="label" text="Cancel" />
         </buttons>
       </ButtonBar>

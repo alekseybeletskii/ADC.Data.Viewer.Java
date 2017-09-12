@@ -44,18 +44,23 @@
 package adc.data.viewer.ui;
 
 
+import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.plotter.Plotter;
+import adc.data.viewer.processing.SavitzkyGolayFilter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+
+import static javafx.scene.control.Alert.AlertType.WARNING;
 
 public class PlotterController {
 
+
     private MainApp mainApp;
     private Plotter plotter;
-
+    private Alert alertInvalidParam;
 
 
 
@@ -68,7 +73,15 @@ public class PlotterController {
     @FXML
     private Label xyLabel;
     @FXML
-    private Button subtractSGFilter;
+    public ToggleButton Raw;
+    @FXML
+    public ToggleButton RawAndSGFilter;
+    @FXML
+    public ToggleButton SGFilter;
+    @FXML
+    private ToggleButton subtractSGFilter;
+    @FXML
+    private ToggleButton SubtractSignal;
 
     public Plotter getPlotter() {
         return plotter;
@@ -125,15 +138,91 @@ public class PlotterController {
     }
 
     @FXML
-    public void handlePlotterSettings(ActionEvent actionEvent) {
-        mainApp.setPlotterSetting(this);
+    public void handleSubtractSignal(ActionEvent actionEvent) {
+        MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", SubtractSignal.isSelected());
+        if(SubtractSignal.isSelected()) {
+            int i = 0;
+            ADCDataRecords signalAsFilter = null;
+            for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
+                if (sigMarc.getSignalSelected()) {
+                    signalAsFilter =sigMarc;
+                    i++;
+                }
+            }
+            if(i!=1){
+                SubtractSignal.setSelected(false);
+                alertInvalidParam.showAndWait();
+            }else if (!signalAsFilter.equals(null)){
+                SavitzkyGolayFilter sgfilter;
+                double [] sigAsFiltData =signalAsFilter.getSignalData().clone();
+                String plotType = MainApp.appPreferencesRootNode.get("defaultPlotType","Raw");
+                if(!plotType.equals("Raw")){
+
+                    int SGFilterLeft= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeft",50); //points
+                    int  SGFilterRight= MainApp.appPreferencesRootNode.getInt("defaultSGFilterRight",50); //points
+                    int SGFilterOrder= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeftOrder",1);
+                    int sgLeft = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterLeft;
+                    int sgRight = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterRight;
+                    sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, SGFilterOrder);
+                    sigAsFiltData = sgfilter.filterData(sigAsFiltData);
+                }
+
+                mainApp.setSignalUsedAsFilter(sigAsFiltData);
+            }
+        }
+        else{
+            SubtractSignal.setSelected(false);
+            plotter.getCanvasData().drawData();}
+
     }
 
 
 
     @FXML
-    private void initialize() {
-    subtractSGFilter.setText("\u2013SGfilter");
+    public void handlePlotterSettings(ActionEvent actionEvent) {
+        mainApp.setPlotterSetting(this);
     }
 
+    @FXML
+    private void initialize() {
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+        Raw.setToggleGroup(toggleGroup);
+        RawAndSGFilter.setToggleGroup(toggleGroup);
+        SGFilter.setToggleGroup(toggleGroup);
+        subtractSGFilter.setToggleGroup(toggleGroup);
+
+        switch (MainApp.appPreferencesRootNode.get("defaultPlotType","Raw")){
+            case "Raw":
+                toggleGroup.selectToggle(Raw);
+                break;
+            case "RawAndSGFilter":
+                toggleGroup.selectToggle(RawAndSGFilter);
+                break;
+            case "SGFilter":
+                toggleGroup.selectToggle(SGFilter);
+                break;
+            case "SGFiltered":
+            toggleGroup.selectToggle(subtractSGFilter);
+            break;
+        }
+
+
+        subtractSGFilter.setText("\u2013SGfilter");
+        SubtractSignal.setText("\u2013Signal");
+        SubtractSignal.setSelected(MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false));
+
+
+        alertInvalidParam = new Alert(WARNING);
+        DialogPane dialogPane = alertInvalidParam.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
+        dialogPane.getStyleClass().add("myDialog");
+        dialogPane.setMinHeight(Region.USE_PREF_SIZE);
+        dialogPane.setMinWidth(Region.USE_PREF_SIZE);
+        dialogPane.toFront();
+        alertInvalidParam.setTitle("Warning");
+        alertInvalidParam.setHeaderText("Improper selection!");
+        alertInvalidParam.setContentText("In order to use any signal as a filter for all other signals,\n" +
+                "there ought to be one and only one selected signal\n\n");
+    }
 }

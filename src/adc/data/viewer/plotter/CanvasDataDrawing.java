@@ -44,12 +44,10 @@
 package adc.data.viewer.plotter;
 
 import adc.data.viewer.model.ADCDataRecords;
-import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.processing.SavitzkyGolayFilter;
 import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterController;
-import adc.data.viewer.ui.PlotterSettingController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -69,6 +67,12 @@ import static java.lang.Math.round;
   * automatically resize.
   */
 public class CanvasDataDrawing extends Canvas {
+
+     public double getZeroYShift() {
+         return zeroYShift;
+     }
+
+     private double zeroYShift;
 
      public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
          this.nextSignalToDraw = nextSignalToDraw;
@@ -264,23 +268,28 @@ public void resetCanvasDefault (){
              default:
                  break;
          }
-
          drawZeroLines();
-
-
      }
 
 
-     public void drawNextSignal(ADCDataRecords adcDataRecords) {
-         double zeroShift = 0;
+     public void drawNextSignal(ADCDataRecords nextSignalToDraw) {
+         zeroYShift = 0;
          int nextSignalLength =0;
-         int nextSignalIndex = adcDataRecords.getSignalIndex();
-         double [] nextSignal = adcDataRecords.getSignalData().clone();
-         String label = adcDataRecords.getSignalLabel();
+         int nextSignalIndex = nextSignalToDraw.getSignalIndex();
+         double [] nextSignal = nextSignalToDraw.getSignalData().clone();
+         if(MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)&&
+                 !(mainApp.getSignalUsedAsFilter()==null)){
+             int i = 0;
+             for (double yy : mainApp.getSignalUsedAsFilter()) {
+                 nextSignal[i] = nextSignal[i] - yy;
+                 i++;
+             }
+         }
+         String label = nextSignalToDraw.getSignalLabel();
          int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 //dt,dtCadre in milliseconds
-         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileIndex()]);
-         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[adcDataRecords.getFileIndex()];
+         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileIndex()]);
+         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileIndex()];
          nextSignalLength = nextSignal.length;
          int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
          int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
@@ -289,11 +298,12 @@ public void resetCanvasDefault (){
              int zeroStart = (int) round(FixZeroShiftStart / dt);
              int zeroEnd = (int) round(FixZeroShiftEnd / dt);
              if(zeroEnd-zeroStart>0&&zeroStart>=0&&zeroEnd<nextSignalLength) {
-                 zeroShift =SimpleMath.findAverage(Arrays.copyOfRange(nextSignal,zeroStart,zeroEnd));
+                 zeroYShift =SimpleMath.findAverage(Arrays.copyOfRange(nextSignal,zeroStart,zeroEnd));
                  for(int i=0; i<nextSignal.length; i++)
-                     nextSignal[i]=nextSignal[i]- zeroShift;
-//                 maxZeroShift=abs(maxZeroShift)>abs(zeroShift)?maxZeroShift:zeroShift;
+                     nextSignal[i]=nextSignal[i]- zeroYShift;
+//                 maxZeroShift=abs(maxZeroShift)>abs(zeroYShift)?maxZeroShift:zeroYShift;
              }
+//             axes.setFixYZeroShift(zeroYShift);
          }
 
          findMaxMin(nextSignal, dt);

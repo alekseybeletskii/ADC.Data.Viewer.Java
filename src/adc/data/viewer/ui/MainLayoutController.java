@@ -177,6 +177,7 @@ public class MainLayoutController {
     @FXML
     private void handleClear() {
         mainApp.clearAll();
+        mainApp.getDataParser().getADCDataRecordsList().clear();
     }
 
     @FXML
