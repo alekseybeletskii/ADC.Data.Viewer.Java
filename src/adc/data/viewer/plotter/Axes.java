@@ -53,6 +53,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Side;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 import static java.lang.Math.abs;
 
@@ -118,6 +119,7 @@ public class Axes extends Pane {
         xAxis.setMinorTickVisible(true);
         xAxis.setMinorTickCount(1);
         xAxis.setAnimated(false);
+        xAxis.setTickLabelFont(new Font(16));
 
         yAxis = new StableTicksAxis(yMinBasic, yMaxBasic);
 
@@ -126,6 +128,7 @@ public class Axes extends Pane {
         yAxis.setMinorTickVisible(true);
         yAxis.setMinorTickCount(1);
         yAxis.setAnimated(false);
+        yAxis.setTickLabelFont(new Font(16));
 
 
         xAxis.layoutYProperty().bind(heightProperty());

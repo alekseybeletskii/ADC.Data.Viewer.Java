@@ -285,8 +285,9 @@ public void resetCanvasDefault (){
                  i++;
              }
          }
-         String label = nextSignalToDraw.getSignalLabel();
-         int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
+         int ADCChannelNum = Integer.parseInt(nextSignalToDraw.getAdcChannelNumber());
+//         String label = nextSignalToDraw.getSignalLabel();
+//         int ADCChannelNum = Integer.parseInt(label.substring(label.lastIndexOf('\u0023') + 1)) - 1;
 //dt,dtCadre in milliseconds
          double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileIndex()]);
          double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileIndex()];

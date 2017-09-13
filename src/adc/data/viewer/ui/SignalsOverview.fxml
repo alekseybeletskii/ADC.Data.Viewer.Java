@@ -56,15 +56,15 @@
   ~ 	********************* END LICENSE BLOCK ***********************************
   -->
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.SignalsOverviewController">
+<AnchorPane stylesheets="/css/signalsOverview.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.SignalsOverviewController">
    <children>
       <SplitPane fx:id="signalsOverviewSplitPane" dividerPositions="0.5" layoutX="225.0" layoutY="164.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0">
                <children>
-                  <TableView fx:id="signalsTable" editable="true" onMouseClicked="#handleClickedOnTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="signalsTable" editable="true" onMouseClicked="#handleClickedOnTable" stylesheets="/css/signalsOverview.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="signalLabelColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" sortable="false" text="Signal" />
+                        <TableColumn fx:id="signalLabelColumn" maxWidth="1.7976931348623157E308" minWidth="40.0" prefWidth="-1.0" sortable="false" text="#" />
                       <TableColumn fx:id="signalSelectedColumn" maxWidth="-1.0" minWidth="40.0" prefWidth="-1.0" resizable="false" sortable="false" />
                       <TableColumn fx:id="signalColorColumn" maxWidth="-1.0" minWidth="40.0" prefWidth="-1.0" resizable="false" sortable="false" />
                     </columns>

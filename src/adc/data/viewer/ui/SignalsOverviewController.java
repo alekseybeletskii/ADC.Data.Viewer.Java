@@ -135,13 +135,12 @@ public class SignalsOverviewController {
         signalsTable.setPlaceholder(new Label("Check \"Help->How to use\" for instructions"));
         signalSelectedColumn.setCellValueFactory(cellData -> cellData.getValue().signalSelectedProperty() );
         signalColorColumn.setCellValueFactory(cellData -> cellData.getValue().signalColorProperty());
-        signalLabelColumn.setCellValueFactory(cellData -> cellData.getValue().signalLabelProperty());
+        signalLabelColumn.setCellValueFactory(cellData -> cellData.getValue().adcChannelNumberProperty());
         signalColorColumn.setCellFactory(c->new TableCellColoredView<>(signalColorColumn));
 //        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(signalSelectedColumn));
         signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(param ->
          mainApp.getAdcDataRecords().get(param).signalSelectedProperty()
         ));
-
 
         showSignalDetails(null);
 
@@ -179,7 +178,8 @@ public class SignalsOverviewController {
             creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileIndex()]);
             adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileIndex()]));
             channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileIndex()]));
-            channelNumberLabel.setText(signal.getSignalLabel().substring(signal.getSignalLabel().lastIndexOf("#")+1));
+            channelNumberLabel.setText(signal.getAdcChannelNumber());
+//            channelNumberLabel.setText(signal.getSignalLabel().substring(signal.getSignalLabel().lastIndexOf("#")+1));
             channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileIndex()]));
             channelDurationLabel.setText(String.format("%.2f",
                     mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileIndex()]
