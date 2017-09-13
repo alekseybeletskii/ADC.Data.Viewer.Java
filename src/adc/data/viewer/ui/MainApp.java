@@ -217,6 +217,7 @@ public  class MainApp extends Application {
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
             signalsOverviewController.getSignalsOverviewSplitPane().setVisible(false);
             setKeyPressedAction();
+            getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(splitPaneDivisionPosition);
             mainLayout.widthProperty().addListener(observable -> {this.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(splitPaneDivisionPosition);});
         } catch (Exception e) {
             e.printStackTrace();

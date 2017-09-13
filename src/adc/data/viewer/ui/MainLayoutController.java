@@ -85,7 +85,11 @@ public class MainLayoutController {
     @FXML
     private void handleOpen() {
 
-        initDir=new File(appPreferencesRootNode.get("defaultWorkingDirectory",System.getProperty("user.home")));
+
+            initDir = new File(appPreferencesRootNode.get("defaultWorkingDirectory", System.getProperty("user.home")));
+
+            if(!initDir.exists()) initDir =new File (System.getProperty("user.home"));
+
 //        mainApp.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(mainApp.getSplitPaneDivisionPosition());
 //        mainApp.getPlotterControllerlist().clear();
         //        List<File> chosenFiles;
