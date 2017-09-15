@@ -237,22 +237,30 @@ public void resetCanvasDefault (){
          switch (mainApp.getDefaultPlotsLayoutType()) {
              case "AllPlots":
                  int i=0;
+                 plotterController.getLegend().setText("");
+                 plotterController.getSignalIndexLabel().setText("");
                  for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
+
                      if (sigMarc.getSignalSelected()) {
                          i++;
                          nextSignalToDraw=sigMarc;
                          drawNextSignal(nextSignalToDraw);
+
+                         plotterController.getLegend().setText(plotterController.getLegend().getText()+nextSignalToDraw.getSignalLabel()+"="+plotType+"\n");
+                         plotterController.getSignalIndexLabel().setText(plotterController.getSignalIndexLabel().getText()+String.format("%d",(nextSignalToDraw.getSignalIndex()+1))+"\n");
                      }
                  }
 
-                 if(i==1){
-                     plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
-                     plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
-                 }
-                 else{
-                     plotterController.getLegend().setText("="+plotType+"=");
-                     plotterController.getSignalIndexLabel().setText("");
-                 }
+//                 if(i==1){
+//                     plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
+//                     plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
+//                 }
+//                 else{
+//                     plotterController.getLegend().setText(
+//                             nextSignalToDraw.getSignalLabel()+"="+plotType);
+//                     plotterController.getSignalIndexLabel().setText("");
+//                 }
+//                     plotterController.getLegend().setText("="+plotType+"=");
 
                  break;
              case "AllPlotsByOne":

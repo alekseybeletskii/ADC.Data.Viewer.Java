@@ -43,13 +43,13 @@
 
 
 .signalIndexLabel{
-    -fx-font-size: 18;
+    -fx-font-size: 12;
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: darkolivegreen;
 }
 
 .signalLabel{
- -fx-font-size: 14;
+ -fx-font-size: 12;
 }
 
 
