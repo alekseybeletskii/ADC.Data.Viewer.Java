@@ -44,10 +44,14 @@
 package adc.data.viewer.ui;
 
 import adc.data.viewer.model.ADCDataRecords;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -63,17 +67,13 @@ public class SignalsOverviewController {
     // Reference to the main application.
     private MainApp mainApp;
     private boolean checkedFlag;
-
-
-
-
-
-    @FXML
-    VBox plotsVBox;
-
+    private FilteredList<ADCDataRecords> filteredListOfSignals;
     public ScrollPane getPlotsScrollPane() {
         return plotsScrollPane;
     }
+
+    @FXML
+    VBox plotsVBox;
 
     @FXML
     private ScrollPane plotsScrollPane;
@@ -111,6 +111,9 @@ public class SignalsOverviewController {
 
     @FXML
     private SplitPane signalsOverviewSplitPane;
+
+    @FXML
+    private TextField signalsListFilter;
 
     public VBox getPlotsVBox() {
         return plotsVBox;
@@ -201,18 +204,41 @@ public class SignalsOverviewController {
     }
 
     public void setTableItems() {
+
+        filteredListOfSignals = new FilteredList<>(mainApp.getAdcDataRecords(), n -> true);
+        signalsListFilter.setOnKeyReleased(k -> {
+            if (k.getCode() == KeyCode.ENTER){
+                filteredListOfSignals.setPredicate(n -> {
+
+                    boolean isContains = n.getAdcChannelNumber().contains(signalsListFilter.getText());
+                    if (signalsListFilter.getText() == null || signalsListFilter.getText().isEmpty()) {
+                        n.setSignalSelected(false);
+                        return true;
+                    }
+
+                    n.setSignalSelected(isContains);
+                    return isContains;
+
+                });
+        }
+        });
+
         // Add observable list data to the table
-        signalsTable.itemsProperty().setValue(mainApp.getAdcDataRecords());
+        signalsTable.itemsProperty().setValue(filteredListOfSignals);
+//        signalsTable.setItems(filteredListOfSignals);
+
+//        signalsTable.setItems(mainApp.getAdcDataRecords());
+//        signalsTable.itemsProperty().setValue(mainApp.getAdcDataRecords());
     }
-
-
 
     @FXML
     private void handleClickedOnTable(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount()==2){
-            for(ADCDataRecords sigM : mainApp.getAdcDataRecords())
+
+            for(ADCDataRecords sigM : filteredListOfSignals)
             {
                 sigM.setSignalSelected(checkedFlag);
+
             }
             checkedFlag=!checkedFlag;
         }

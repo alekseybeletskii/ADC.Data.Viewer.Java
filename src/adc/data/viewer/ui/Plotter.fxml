@@ -78,7 +78,7 @@
          <left>
             <HBox spacing="2.0">
                <children>
-                  <Button fx:id="Settings" defaultButton="true" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
+                  <Button fx:id="Settings" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
                      <font>
                         <Font size="10.0" />
                      </font>

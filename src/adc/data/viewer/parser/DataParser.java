@@ -178,7 +178,8 @@ public class DataParser {
         Path nextSignalPath = dataFilePath[fileIndex].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-        ADCDataRecords singleDataRecord =new ADCDataRecords(String.valueOf(adcChannelNumber) ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex, signal.clone());
+        String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
+        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex, signal.clone());
         ADCDataRecordsList.add(singleDataRecord);
     }
 

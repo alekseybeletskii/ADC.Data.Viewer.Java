@@ -403,11 +403,13 @@ public  class MainApp extends Application {
         }
     }
 
-    private void signalMarkerAddListeners() {
+    public void signalMarkerAddListeners() {
+//    public void signalMarkerAddListeners(List<ADCDataRecords> itemsInTable) {
 
         for (ADCDataRecords sgmrk : adcDataRecords){
             sgmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
                 redrawAllCanvas(sgmrk,newValue);
+//                redrawAllCanvas(sgmrk,newValue);
                     }
             );
 
