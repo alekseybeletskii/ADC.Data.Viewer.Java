@@ -174,11 +174,11 @@ public class DataParser {
 
     public void PutADCDataRecords(double [] signal, int signalIndex, int fileIndex, int adcChannelNumber) {
 //        String nextSignalLabel = adcChannelNumber+"@"+ fileNames[fileIndex]+ "_#"+ adcChannelNumber;
-        String nextSignalLabel = adcChannelNumber+"\u0040"+ fileNames[fileIndex];
+        String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
+        String nextSignalLabel = adcChannelNumberAsString+"\u0040"+ fileNames[fileIndex];
         Path nextSignalPath = dataFilePath[fileIndex].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-        String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
         ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex, signal.clone());
         ADCDataRecordsList.add(singleDataRecord);
     }

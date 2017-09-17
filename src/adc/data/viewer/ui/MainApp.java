@@ -175,7 +175,7 @@ public  class MainApp extends Application {
         primaryStage.setOnCloseRequest(e ->
         {Platform.exit();
          System.exit(0);});
-        splitPaneDivisionPosition =0.1;
+        splitPaneDivisionPosition =0.12;
         nextSignalToDrawIndex =-1;
         this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;

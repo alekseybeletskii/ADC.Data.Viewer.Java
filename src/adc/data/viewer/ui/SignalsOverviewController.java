@@ -44,6 +44,7 @@
 package adc.data.viewer.ui;
 
 import adc.data.viewer.model.ADCDataRecords;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -138,11 +139,12 @@ public class SignalsOverviewController {
         signalsTable.setPlaceholder(new Label("Check \"Help->How to use\" for instructions"));
         signalSelectedColumn.setCellValueFactory(cellData -> cellData.getValue().signalSelectedProperty() );
         signalColorColumn.setCellValueFactory(cellData -> cellData.getValue().signalColorProperty());
-        signalLabelColumn.setCellValueFactory(cellData -> cellData.getValue().adcChannelNumberProperty());
+        signalLabelColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSignalLabel()));
+
         signalColorColumn.setCellFactory(c->new TableCellColoredView<>(signalColorColumn));
 //        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(signalSelectedColumn));
         signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(param ->
-         mainApp.getAdcDataRecords().get(param).signalSelectedProperty()
+                filteredListOfSignals.get(param).signalSelectedProperty()
         ));
 
         showSignalDetails(null);
@@ -210,7 +212,7 @@ public class SignalsOverviewController {
             if (k.getCode() == KeyCode.ENTER){
                 filteredListOfSignals.setPredicate(n -> {
 
-                    boolean isContains = n.getAdcChannelNumber().contains(signalsListFilter.getText());
+                    boolean isContains = n.getSignalLabel().contains(signalsListFilter.getText());
                     if (signalsListFilter.getText() == null || signalsListFilter.getText().isEmpty()) {
                         n.setSignalSelected(false);
                         return true;
