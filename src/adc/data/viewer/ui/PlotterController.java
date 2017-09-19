@@ -161,7 +161,7 @@ public class PlotterController {
                 alertInvalidParam.showAndWait();
             }else if (!signalAsFilter.equals(null)){
                 SavitzkyGolayFilter sgfilter;
-                double [] sigAsFiltData =signalAsFilter.getSignalData().clone();
+                double [] sigAsFiltData =signalAsFilter.getSignalYData().clone();
                 String plotType = MainApp.appPreferencesRootNode.get("defaultPlotType","Raw");
                 if(!plotType.equals("Raw")){
 

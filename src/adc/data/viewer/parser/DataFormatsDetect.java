@@ -88,7 +88,7 @@ class DataFormatsDetect {
                     dataParams.setDataFormatStr("LGraph1", fileIndex);
                 } else if (dataFormat.equals("2571090,1618190 A")) {
                     dataParams.setDataFormatStr("LGraph1_2008", fileIndex);
-                } else if (dataFormat.charAt(2) == '/' & dataFormat.charAt(5) == '/') {
+                } else if (dataFormat.length()>5&&dataFormat.charAt(2) == '/' && dataFormat.charAt(5) == '/') {
                     dataParams.setDataFormatStr("Saturn", fileIndex);
                 } else if (dataFormat.equals("3571090,7859525")) {
                     dataParams.setDataFormatStr("LGraph2", fileIndex);

@@ -250,7 +250,6 @@ public class Axes extends Pane {
                 break;
         }
 
-        xMinBasic=0.0;
         absMaxYValue = abs(yMaxBasic)>abs(yMinBasic)?abs(yMaxBasic):abs(yMinBasic);
 //        yMaxBasic=absMaxYValue;
 //        yMinBasic=-absMaxYValue;
@@ -263,18 +262,20 @@ public class Axes extends Pane {
     }
 
     public void selectedSignalMargins(ADCDataRecords adcDataRecords) {
-        double dt;
-        dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileIndex()]);
+        xMinBasic=  adcDataRecords.getSignalTimeShift()<xMinBasic?adcDataRecords.getSignalTimeShift():xMinBasic;
+        double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileIndex()]);
         mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[adcDataRecords.getFileIndex()];
 
         if (mostSamples *dt > xMaxBasic) {
             xMaxBasic = mostSamples *dt;
         }
-        double[] testSignal = adcDataRecords.getSignalData();
+        double[] testSignal = adcDataRecords.getSignalYData();
         double maximum = SimpleMath.getMax(testSignal)- adcZeroShift;
         double minimum = SimpleMath.getMin(testSignal)- adcZeroShift;
         if (maximum> yMaxBasic) yMaxBasic =maximum;
         if (minimum< yMinBasic) yMinBasic =minimum;
+
+        System.out.println("xMinBasic="+xMinBasic+" ; "+"xMaxBasic="+xMaxBasic +" ; " +"dt="+dt);
     }
 
 }

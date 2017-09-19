@@ -162,7 +162,7 @@ public class DataParser {
     /**
      * This method produce ADC data records from source files and will be invoked by a corresponding ADC-type class
      *
-     * @param signal
+     * @param Ydata
      * a signal extracted from binary file by corresponding ADC-type-class
      * @param signalIndex
      * an extracted signal's sequence number in the "signals" array
@@ -172,14 +172,13 @@ public class DataParser {
      * an ADC channel number of extracted signal
      */
 
-    public void PutADCDataRecords(double [] signal, int signalIndex, int fileIndex, int adcChannelNumber) {
-//        String nextSignalLabel = adcChannelNumber+"@"+ fileNames[fileIndex]+ "_#"+ adcChannelNumber;
+    public void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileIndex, int adcChannelNumber, double signalTimeShift) {
         String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
         String nextSignalLabel = adcChannelNumberAsString+"\u0040"+ fileNames[fileIndex];
         Path nextSignalPath = dataFilePath[fileIndex].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex, signal.clone());
+        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex,Xdata.clone(), Ydata.clone(), signalTimeShift);
         ADCDataRecordsList.add(singleDataRecord);
     }
 
@@ -214,10 +213,10 @@ public class DataParser {
 
             try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(ADCDataRecordsList.get(i).getSignalLabel() +".txt"),StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
             {
-                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, ADCDataRecordsList.get(i).getSignalData().length*16);
+                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, ADCDataRecordsList.get(i).getSignalYData().length*16);
                 int j=0;
-                while(j< ADCDataRecordsList.get(i).getSignalData().length) {
-                    stringBytes = String.format("%15.7f", ADCDataRecordsList.get(i).getSignalData()[j]).getBytes("UTF-8");
+                while(j< ADCDataRecordsList.get(i).getSignalYData().length) {
+                    stringBytes = String.format("%15.7f", ADCDataRecordsList.get(i).getSignalYData()[j]).getBytes("UTF-8");
                     wrBuf.put(stringBytes);
                     wrBuf.put((byte)System.getProperty("line.separator").charAt(0));
                     j++;

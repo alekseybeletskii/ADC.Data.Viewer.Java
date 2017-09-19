@@ -67,6 +67,7 @@ class LGraph1_2008 implements DataTypes {
     private Path[] dataFilePath;
     private Path[] parFilePath;
 
+
     public void setDataParser(DataParser dataData) {
 
         this.dataData = dataData;
@@ -170,7 +171,7 @@ class LGraph1_2008 implements DataTypes {
                     i++;
                 }
                 signalIndex++;
-                dataData.PutADCDataRecords(oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
+                dataData.PutADCDataRecords(new double[0],oneSignal,signalIndex, fileIndex,chanAdcNum[jj],0);
                 jj++;
             }
         } catch (InvalidPathException e) {

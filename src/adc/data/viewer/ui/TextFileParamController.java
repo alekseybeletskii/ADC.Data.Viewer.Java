@@ -55,11 +55,15 @@ import static javafx.scene.control.Alert.AlertType.WARNING;
 
 public class TextFileParamController {
     static{
-        creationDate = "a date...";
-        deviceName = "an ADC name...";
-        channelNum = -1;
-        channelRate =-1.0;
-        columnNum = -1;
+        creationDate = "01.01.1111";
+        deviceName = "my ADC";
+        channelNum = 0;
+        channelRate =1;
+        yColumnNum = 1;
+        xColumnNum = 0;
+        amountOfHeaderLines = 0;
+        intercadrDelay =0;
+        columnSeparator = ",";
         isRememberTxtFileSettings = false;
     }
 
@@ -70,10 +74,15 @@ public class TextFileParamController {
     private DataParser dataParser;
     private int fileIndex;
     public static double channelRate;
+    public static double intercadrDelay;
     public static String creationDate;
     public static String deviceName;
     public static int channelNum;
-    public static int columnNum;
+    public static int yColumnNum;
+    public static int xColumnNum;
+    public static int amountOfHeaderLines;
+    public static String columnSeparator;
+
     public static boolean isRememberTxtFileSettings;
 
     private MainApp mainApp;
@@ -106,13 +115,20 @@ public class TextFileParamController {
 
     @FXML
     private TextField txtChannelRate;
+    @FXML
+    private TextField txtIntercadrDelay;
 
     @FXML
     private TextField txtChannelNum;
 
     @FXML
-    public TextField txtDataColumnNum;
-
+    private TextField txtYColumnNum;
+    @FXML
+    private TextField txtXColumnNum;
+    @FXML
+    private TextField txtAmountOfHeaderLines;
+    @FXML
+    private TextField txtColumnSeparator;
     @FXML
     CheckBox rememberCurrentFileSettings;
 
@@ -128,7 +144,11 @@ public class TextFileParamController {
         txtDeviceName.setText(deviceName);
         txtChannelNum.setText(String.valueOf(channelNum));
         txtChannelRate.setText(String.valueOf(channelRate));
-        txtDataColumnNum.setText(String.valueOf(columnNum));
+        txtIntercadrDelay.setText(String.valueOf(intercadrDelay));
+        txtYColumnNum.setText(String.valueOf(yColumnNum));
+        txtXColumnNum.setText(String.valueOf(xColumnNum));
+        txtAmountOfHeaderLines.setText(String.valueOf(amountOfHeaderLines));
+        txtColumnSeparator.setText(String.valueOf(columnSeparator));
         rememberCurrentFileSettings.setSelected(isRememberTxtFileSettings);
 
 
@@ -145,7 +165,8 @@ public class TextFileParamController {
         dialogPane.toFront();
         alertInvalidParam.setTitle("Warning");
         alertInvalidParam.setHeaderText("Invalid data format!");
-        alertInvalidParam.setContentText("channel number: integer, >0     \nchannel rate: float, >0     \ncolumn number: int, >0 \n   ");
+        alertInvalidParam.setContentText("channel number: integer, >=0 \nchannel rate: float, >0 " +
+                "\nX(Y) column number: int, >=0 \namount of header lines: integer, >=0");
         alertInvalidParam.showAndWait();
     }
 
@@ -156,15 +177,26 @@ public class TextFileParamController {
     @FXML
     private void handleOk(ActionEvent actionEvent)  {
         if(TestDataType.isInteger(txtChannelNum.getText(),10)&&
+           TestDataType.isInteger(txtYColumnNum.getText(),10)&&
+           TestDataType.isInteger(txtXColumnNum.getText(),10)&&
+           TestDataType.isInteger(txtAmountOfHeaderLines.getText(),10)&&
            TestDataType.isDouble(txtChannelRate.getText())&&
+           TestDataType.isDouble(txtIntercadrDelay.getText())&&
            Integer.parseInt(txtChannelNum.getText())>=0&&
+           Integer.parseInt(txtYColumnNum.getText())>=0&&
+           Integer.parseInt(txtAmountOfHeaderLines.getText())>=0&&
            Double.parseDouble(txtChannelRate.getText())>0&&
-           Integer.parseInt(txtDataColumnNum.getText())>=0){
+           Double.parseDouble(txtIntercadrDelay.getText())>=0)
+        {
             creationDate = txtCreationDate.getText();
             deviceName = txtDeviceName.getText();
             channelNum = Integer.parseInt(txtChannelNum.getText());
             channelRate = Double.parseDouble(txtChannelRate.getText());
-            columnNum = Integer.parseInt(txtDataColumnNum.getText());
+            intercadrDelay = Double.parseDouble(txtIntercadrDelay.getText());
+            yColumnNum = Integer.parseInt(txtYColumnNum.getText());
+            xColumnNum = Integer.parseInt(txtXColumnNum.getText());
+            amountOfHeaderLines = Integer.parseInt(txtAmountOfHeaderLines.getText());
+            columnSeparator = txtColumnSeparator.getText();
             isRememberTxtFileSettings = rememberCurrentFileSettings.isSelected();
             dataParser.getDataParams().setDataParamsValid(true);
             textFileParamsStage.close();
