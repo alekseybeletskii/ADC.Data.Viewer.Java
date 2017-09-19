@@ -130,7 +130,7 @@ class LGraph1 implements DataTypes {
 
     public void setData(int fileIndex, int signalIndex) {
         MappedByteBuffer dataBuf;
-        double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fileIndex]];
+        double [] signalY = new double [(int) dataParams.getRealCadresQuantity()[fileIndex]];
         int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
         int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
         int activeCh=0, allCh =0;
@@ -161,11 +161,11 @@ class LGraph1 implements DataTypes {
             {
                 int i = 0;
                 while (i < dataParams.getRealCadresQuantity()[fileIndex]) {
-                    oneSignal[i] = ((double)dataBuf.getShort ( i* dataParams.getRealChannelsQuantity()[fileIndex]*2+jj*2) * 5d / 2000d)/chanAdcGain[jj];
+                    signalY[i] = ((double)dataBuf.getShort ( i* dataParams.getRealChannelsQuantity()[fileIndex]*2+jj*2) * 5d / 2000d)/chanAdcGain[jj];
                     i++;
                 }
                 signalIndex++;
-                dataParser.PutADCDataRecords(oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
+                dataParser.PutADCDataRecords(new double[0], signalY,signalIndex, fileIndex,chanAdcNum[jj]);
                 jj++;
             }
         } catch (InvalidPathException e) {

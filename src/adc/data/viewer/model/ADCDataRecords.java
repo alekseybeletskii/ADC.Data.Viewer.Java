@@ -53,7 +53,10 @@ import javafx.scene.paint.Color;
 
 public class ADCDataRecords {
 
-    private final double [] signalData;
+    private final double [] signalYData;
+
+
+    private final double [] signalXData;
     private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
@@ -61,14 +64,22 @@ public class ADCDataRecords {
     private final IntegerProperty fileIndex;
     private final StringProperty adcChannelNumber;
 
-    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalData) {
+    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalXdata, double [] signalYdata) {
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
         this.signalLabel = new SimpleStringProperty(signalLable);
         this.fileIndex = new SimpleIntegerProperty(fileIndex);
-        this.signalData = signalData;
+        this.signalYData = signalYdata;
+        this.signalXData = signalXdata;
         this.adcChannelNumber = new SimpleStringProperty(adcChannelNumber);
+    }
+
+    public double[] getSignalYData() {
+        return signalYData;
+    }
+    public double[] getSignalXData() {
+        return signalXData;
     }
 
     public String getAdcChannelNumber() {
@@ -81,10 +92,6 @@ public class ADCDataRecords {
 
     public void setAdcChannelNumber(String adcChannelNumber) {
         this.adcChannelNumber.set(adcChannelNumber);
-    }
-
-    public double[] getSignalData() {
-        return signalData;
     }
 
     public int getSignalIndex() {

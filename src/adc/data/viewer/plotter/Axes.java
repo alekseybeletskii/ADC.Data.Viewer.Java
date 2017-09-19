@@ -270,7 +270,7 @@ public class Axes extends Pane {
         if (mostSamples *dt > xMaxBasic) {
             xMaxBasic = mostSamples *dt;
         }
-        double[] testSignal = adcDataRecords.getSignalData();
+        double[] testSignal = adcDataRecords.getSignalYData();
         double maximum = SimpleMath.getMax(testSignal)- adcZeroShift;
         double minimum = SimpleMath.getMin(testSignal)- adcZeroShift;
         if (maximum> yMaxBasic) yMaxBasic =maximum;

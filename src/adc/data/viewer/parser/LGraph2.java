@@ -195,7 +195,7 @@ class LGraph2  implements DataTypes {
                     i++;
                 }
                 signalIndex++;
-                dataData.PutADCDataRecords(oneSignal,signalIndex,fileIndex,chanAdcNum[jj]);
+                dataData.PutADCDataRecords(new double[0],oneSignal,signalIndex,fileIndex,chanAdcNum[jj]);
                 jj++;
             }
 

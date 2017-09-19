@@ -71,7 +71,6 @@ class UnknownADC implements DataTypes {
        byte[] arrayByte = {(byte) 1};
        dataParser.getDataParams().setChannelsMax(1, fileIndex) ; //int
        dataParser.getDataParams().setRealChannelsQuantity(1, fileIndex); //int
-       dataParser.getDataParams().setInterCadreDelay(0.0,fileIndex) ; //Double
        dataParser.getDataParams().setActiveAdcChannelArray(arrayByte,fileIndex) ; //Byte
        dataParser.getDataParams().setAdcChannelArray(arrayByte,fileIndex) ; //Byte
        dataParser.getDataParams().setAdcGainArray(arrayByte,fileIndex) ; //Byte
@@ -82,6 +81,7 @@ class UnknownADC implements DataTypes {
        dataParser.getDataParams().setDeviceName(deviceName,fileIndex); //string
        dataParser.getDataParams().setCreateDateTime(creationDate,fileIndex) ; //string
        dataParser.getDataParams().setChannelRate(channelRate,fileIndex) ; //Double
+        dataParser.getDataParams().setInterCadreDelay(intercadrDelay,fileIndex) ; //Double
        dataParser.getDataParams().setRealCadresQuantity(0, fileIndex) ; //long
        dataParser.getDataParams().setTotalTime(0.0,fileIndex) ; //Double
     }
@@ -89,32 +89,40 @@ class UnknownADC implements DataTypes {
 
    public void setData( int fileIndex, int signalIndex) {
       String line;
-      List<Double> allLines = new ArrayList<>();
+      List<Double> allYLines = new ArrayList<>();
+      List<Double> allXLines = new ArrayList<>();
       DataParams dataParams = dataParser.getDataParams();
+      final String REGEX = columnSeparator;
 
       try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataFilePath()[fileIndex], Charset.forName("UTF-8"))) {
          try {
-
+for (int i=0;i<amountOfHeaderLines;i++) {
+   line = signalDataFromText.readLine();
+}
             while ((line = signalDataFromText.readLine()) != null) {
-            String[] columns = line.split(",");
+            String[] columns = line.split(REGEX);
 
-               if(columns.length>= columnNum+1){allLines.add(Double.parseDouble(columns[columnNum]));}
+               if(columns.length>0){
+                   allYLines.add(Double.parseDouble(columns[yColumnNum]));}
+               else {throw new NumberFormatException ();}
+               if(columns.length>0&&xColumnNum>=0){
+                   allXLines.add(Double.parseDouble(columns[xColumnNum]));}
                else {throw new NumberFormatException ();}
             }
-            dataParams.setRealCadresQuantity(allLines.size(), fileIndex);
-            dataParams.setTotalTime(allLines.size() / dataParams.getChannelRate()[fileIndex], fileIndex);
-            double[] oneSignal = new double[allLines.size()];
-             dataParser.getDataParams().setRealCadresQuantity(allLines.size(), fileIndex) ;
-             dataParser.getDataParams().setTotalTime(allLines.size()/dataParser.getDataParams().getChannelRate()[fileIndex],fileIndex);
+            dataParams.setRealCadresQuantity(allYLines.size(), fileIndex);
+            dataParams.setTotalTime(allYLines.size() / dataParams.getChannelRate()[fileIndex], fileIndex);
+             double[] Ydata = new double[allYLines.size()];
+             double[] Xdata = new double[allXLines.size()];
+             for ( int i = 0;i< allYLines.size();i++) {
+                 Ydata[i] = allYLines.get(i);
+                 Xdata[i] = allXLines.get(i);
+             }
+             dataParser.getDataParams().setRealCadresQuantity(allYLines.size(), fileIndex) ;
+             dataParser.getDataParams().setTotalTime(allYLines.size()/dataParser.getDataParams().getChannelRate()[fileIndex],fileIndex);
              dataParser.getDataParams().setRealSamplesQuantity(dataParser.getDataParams().getRealCadresQuantity()[fileIndex], fileIndex) ; //long
-            int i = 0;
-            for (Double d : allLines) {
-               oneSignal[i] = d;
-               i++;
-            }
 
             signalIndex++;
-            dataParser.PutADCDataRecords(oneSignal, signalIndex, fileIndex, channelNum);
+            dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum);
          }
          catch (NumberFormatException e){
             Alert alert = new Alert(WARNING);
@@ -122,7 +130,7 @@ class UnknownADC implements DataTypes {
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.setTitle("Warning");
             alert.setHeaderText("Invalid data format!");
-            alert.setContentText("*.txt file should contain at least one column of float\nselect proper column, the first is 0\n No any header lines !");
+            alert.setContentText("*.txt file should contain at least one column of float\nselect proper column, the first is #0\n Check header lines amount and columns separator!");
             alert.showAndWait();
          }
       } catch (IOException x) {
