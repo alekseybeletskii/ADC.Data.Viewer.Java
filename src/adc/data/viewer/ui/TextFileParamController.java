@@ -59,11 +59,19 @@ public class TextFileParamController {
         deviceName = "my ADC";
         channelNum = 0;
         channelRate =1;
+<<<<<<< HEAD
         yColumnNum = 1;
         xColumnNum = 0;
         amountOfHeaderLines = 0;
         intercadrDelay =0;
         columnSeparator = ",";
+=======
+        yColumnNum = 0;
+        xColumnNum = 0;
+        amountOfHeaderLines = 0;
+        intercadrDelay =0;
+        columnSeparator = "\\t";
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
         isRememberTxtFileSettings = false;
     }
 
@@ -146,7 +154,11 @@ public class TextFileParamController {
         txtChannelRate.setText(String.valueOf(channelRate));
         txtIntercadrDelay.setText(String.valueOf(intercadrDelay));
         txtYColumnNum.setText(String.valueOf(yColumnNum));
+<<<<<<< HEAD
         txtXColumnNum.setText(String.valueOf(xColumnNum));
+=======
+        txtXColumnNum.setText(String.valueOf(yColumnNum));
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
         txtAmountOfHeaderLines.setText(String.valueOf(amountOfHeaderLines));
         txtColumnSeparator.setText(String.valueOf(columnSeparator));
         rememberCurrentFileSettings.setSelected(isRememberTxtFileSettings);
@@ -184,6 +196,10 @@ public class TextFileParamController {
            TestDataType.isDouble(txtIntercadrDelay.getText())&&
            Integer.parseInt(txtChannelNum.getText())>=0&&
            Integer.parseInt(txtYColumnNum.getText())>=0&&
+<<<<<<< HEAD
+=======
+           Integer.parseInt(txtXColumnNum.getText())>=0&&
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
            Integer.parseInt(txtAmountOfHeaderLines.getText())>=0&&
            Double.parseDouble(txtChannelRate.getText())>0&&
            Double.parseDouble(txtIntercadrDelay.getText())>=0)

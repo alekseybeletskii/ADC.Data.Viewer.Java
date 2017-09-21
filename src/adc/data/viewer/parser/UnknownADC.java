@@ -105,8 +105,16 @@ for (int i=0;i<amountOfHeaderLines;i++) {
             while ((line = signalDataFromText.readLine()) != null) {
             String[] columns = line.split(REGEX);
 
+<<<<<<< HEAD
                if(columns.length>yColumnNum){
                    allYLines.add(Double.parseDouble(columns[yColumnNum]));}
+=======
+               if(columns.length>0){
+                   allYLines.add(Double.parseDouble(columns[yColumnNum]));}
+               else {throw new NumberFormatException ();}
+               if(columns.length>0&&xColumnNum>=0){
+                   allXLines.add(Double.parseDouble(columns[xColumnNum]));}
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
                else {throw new NumberFormatException ();}
                if(columns.length>xColumnNum&&xColumnNum>=0){
                    allXLines.add(Double.parseDouble(columns[xColumnNum]));}
@@ -117,6 +125,7 @@ for (int i=0;i<amountOfHeaderLines;i++) {
              double[] Xdata = new double[allXLines.size()];
              for ( int i = 0;i< allYLines.size();i++) {
                  Ydata[i] = allYLines.get(i);
+<<<<<<< HEAD
                  if(Xdata.length==Ydata.length)Xdata[i] = allXLines.get(i);
              }
 
@@ -124,14 +133,21 @@ for (int i=0;i<amountOfHeaderLines;i++) {
                  double channelRateFromXData =1.0/((Xdata[Xdata.length-1]-Xdata[0])/Xdata.length);
                  dataParser.getDataParams().setChannelRate(channelRateFromXData,fileIndex) ;
                  xMin =Xdata[0];
+=======
+                 Xdata[i] = allXLines.get(i);
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
              }
              dataParser.getDataParams().setRealCadresQuantity(allYLines.size(), fileIndex) ;
              dataParser.getDataParams().setTotalTime(allYLines.size()/dataParser.getDataParams().getChannelRate()[fileIndex],fileIndex);
              dataParser.getDataParams().setRealSamplesQuantity(dataParser.getDataParams().getRealCadresQuantity()[fileIndex], fileIndex) ; //long
 
             signalIndex++;
+<<<<<<< HEAD
              System.out.println("channelNum:"+channelNum);
             dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum,xMin);
+=======
+            dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum);
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
          }
          catch (NumberFormatException e){
             Alert alert = new Alert(WARNING);
@@ -139,7 +155,11 @@ for (int i=0;i<amountOfHeaderLines;i++) {
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.setTitle("Warning");
             alert.setHeaderText("Invalid data format!");
+<<<<<<< HEAD
             alert.setContentText("*.txt file should contain at least one column of float\nselect proper columns numbers, the first is #0\n\nCheck header lines amount!\n\nCheck columns separator!");
+=======
+            alert.setContentText("*.txt file should contain at least one column of float\nselect proper column, the first is #0\n Check header lines amount and columns separator!");
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
             alert.showAndWait();
          }
       } catch (IOException x) {

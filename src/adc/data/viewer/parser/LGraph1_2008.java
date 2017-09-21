@@ -171,7 +171,11 @@ class LGraph1_2008 implements DataTypes {
                     i++;
                 }
                 signalIndex++;
+<<<<<<< HEAD
                 dataData.PutADCDataRecords(new double[0],oneSignal,signalIndex, fileIndex,chanAdcNum[jj],0);
+=======
+                dataData.PutADCDataRecords(new double[0],oneSignal,signalIndex, fileIndex,chanAdcNum[jj]);
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
                 jj++;
             }
         } catch (InvalidPathException e) {

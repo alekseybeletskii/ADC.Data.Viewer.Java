@@ -54,11 +54,17 @@ import javafx.scene.paint.Color;
 public class ADCDataRecords {
 
     private final double [] signalYData;
+<<<<<<< HEAD
     private final double [] signalXData;
 
 
 
     private final DoubleProperty signalTimeShift; // in milliseconds
+=======
+
+
+    private final double [] signalXData;
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
     private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
@@ -66,13 +72,20 @@ public class ADCDataRecords {
     private final IntegerProperty fileIndex;
     private final StringProperty adcChannelNumber;
 
+<<<<<<< HEAD
     public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalXdata, double [] signalYdata, double signalTimeShift) {
+=======
+    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalXdata, double [] signalYdata) {
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
         this.signalLabel = new SimpleStringProperty(signalLable);
         this.fileIndex = new SimpleIntegerProperty(fileIndex);
+<<<<<<< HEAD
         this.signalTimeShift = new SimpleDoubleProperty(signalTimeShift);
+=======
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
         this.signalYData = signalYdata;
         this.signalXData = signalXdata;
         this.adcChannelNumber = new SimpleStringProperty(adcChannelNumber);
@@ -85,6 +98,7 @@ public class ADCDataRecords {
         return signalXData;
     }
 
+<<<<<<< HEAD
 
 
     public double getSignalTimeShift() {
@@ -99,6 +113,8 @@ public class ADCDataRecords {
         this.signalTimeShift.set(signalTimeShift);
     }
 
+=======
+>>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
     public String getAdcChannelNumber() {
         return adcChannelNumber.get();
     }
