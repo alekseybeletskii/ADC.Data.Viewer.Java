@@ -254,9 +254,9 @@ public class Axes extends Pane {
 //        yMaxBasic=absMaxYValue;
 //        yMinBasic=-absMaxYValue;
         if(!isAnySelected){
-            xMinBasic= -1.0;
+            xMinBasic= 0.0;
             xMaxBasic= 1.0;
-            yMinBasic= -1.0;
+            yMinBasic= 0.0;
             yMaxBasic= 1.0;
         }
     }

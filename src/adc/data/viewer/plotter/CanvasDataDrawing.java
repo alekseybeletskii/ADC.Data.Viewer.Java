@@ -70,7 +70,7 @@ import static java.lang.Math.round;
  */
 public class CanvasDataDrawing extends Canvas {
 
-<<<<<<< HEAD
+
     private int xLeft;
     private int xRight;
 
@@ -110,42 +110,7 @@ public class CanvasDataDrawing extends Canvas {
         return yTheMAX;
     }
 
-=======
-    public double getAdcZeroShift() {
-        return adcZeroShift;
-    }
 
-    private double adcZeroShift;
-
-    public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
-        this.nextSignalToDraw = nextSignalToDraw;
-    }
-
-    public ADCDataRecords getNextSignalToDraw() {
-        return nextSignalToDraw;
-    }
-
-    public void setPlotterController(PlotterController plotterController) {
-        this.plotterController = plotterController;
-    }
-
-    public double getxTheMIN() {
-        return xTheMIN;
-    }
-
-    public double getxTheMAX() {
-        return xTheMAX;
-    }
-
-    public double getyTheMIN() {
-        return yTheMIN;
-    }
-
-    public double getyTheMAX() {
-        return yTheMAX;
-    }
-
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
     private double xTheMIN,xTheMAX,yTheMIN,yTheMAX;
 
     private PlotterController plotterController;
@@ -180,7 +145,7 @@ public class CanvasDataDrawing extends Canvas {
     public void setPlotStyle(String plotStyle) {
         this.plotStyle = plotStyle;
     }
-<<<<<<< HEAD
+
 
 
     public double getShiftYZero() {
@@ -262,88 +227,7 @@ public class CanvasDataDrawing extends Canvas {
         graphicContext.fillRect(0, 0, getWidth(), getHeight());
     }
 
-=======
 
-
-    public double getShiftYZero() {
-        return shiftYZero.get();
-    }
-
-    public double getShiftXZero() {
-        return shiftXZero.get();
-    }
-
-    public void resetCanvasDefault (){
-        widthOfLine =MainApp.appPreferencesRootNode.getDouble("defaultWidthOfLine",1.0);
-        plotType = MainApp.appPreferencesRootNode.get("defaultPlotType","Raw");
-        plotStyle = MainApp.appPreferencesRootNode.get("defaultPlotStyle","line");
-        pointSize = MainApp.appPreferencesRootNode.getInt("defaultPointSize",6);
-
-        SGFilterLeft= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeft",50); //points
-        SGFilterRight= MainApp.appPreferencesRootNode.getInt("defaultSGFilterRight",50); //points
-        SGFilterOrder= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeftOrder",1);
-        FixZeroShiftStart=MainApp.appPreferencesRootNode.getDouble("defaultFixZeroShiftStart",0); //ms
-        FixZeroShiftEnd= MainApp.appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",1);
-        isFixADCZeroShift = MainApp.appPreferencesRootNode.getBoolean("defaultFixZeroShift",false);
-    }
-
-
-    CanvasDataDrawing(MainApp mainApp, Axes axes) {
-
-        this.mainApp = mainApp;
-        this.axes = axes;
-
-        dx.bind(Bindings.divide(widthProperty(), Bindings.subtract(axes.getXAxis().upperBoundProperty(), axes.getXAxis().lowerBoundProperty())));
-        dy.bind(Bindings.divide(heightProperty(), Bindings.subtract(axes.getYAxis().upperBoundProperty(), axes.getYAxis().lowerBoundProperty())));
-        shiftXZero.bind(Bindings.multiply(axes.getXAxis().lowerBoundProperty(), dx));
-        shiftYZero.bind(Bindings.multiply(axes.getYAxis().upperBoundProperty(), dy));
-        graphicContext = getGraphicsContext2D();
-        maxZeroShift=0;
-
-    }
-
-    @Override
-    public boolean isResizable() {
-        return true;
-    }
-
-    @Override
-    public double prefWidth(double height) {
-        return getWidth();
-    }
-
-    @Override
-    public double prefHeight(double width) {
-        return getHeight();
-    }
-
-    /**
-     * Canvas drawing now successfully copes with millions of data points
-     * due to simple point-per-pixel approach (see "decimator" method)
-     */
-
-    public void drawDataMeshZerolines() {
-
-        cleanCanvas();
-        drawmesh();
-        drawData();
-        drawZeroLines();
-
-    }
-
-    public void drawMeshZeroLines() {
-        cleanCanvas();
-        drawmesh();
-
-    }
-
-    public void cleanCanvas() {
-        graphicContext.clearRect(0, 0, getWidth(), getHeight());
-        graphicContext.setFill(Color.TRANSPARENT);
-        graphicContext.fillRect(0, 0, getWidth(), getHeight());
-    }
-
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
     public void drawData() {
         resetCanvasDefault();
 
@@ -410,11 +294,7 @@ public class CanvasDataDrawing extends Canvas {
 
     public void drawNextSignal(ADCDataRecords nextSignalToDraw) {
         adcZeroShift = 0;
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
         int nextSignalLength =0;
         int nextSignalIndex = nextSignalToDraw.getSignalIndex();
         int ADCChannelNum = Integer.parseInt(nextSignalToDraw.getAdcChannelNumber());
@@ -430,7 +310,7 @@ public class CanvasDataDrawing extends Canvas {
         }
 
 //dt,dtCadre in milliseconds
-<<<<<<< HEAD
+
 
         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileIndex()]);
         nextSignalTimeShift.set(nextSignalToDraw.getSignalTimeShift());
@@ -440,18 +320,12 @@ public class CanvasDataDrawing extends Canvas {
         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileIndex()];
 
         nextSignalLength = nextYData.length;
-        xLeft = (int) round((axes.getXAxis().getLowerBound()-nextSignalTimeShift.get()) / dt)-2;
-        xRight = (int) round((axes.getXAxis().getUpperBound()-nextSignalTimeShift.get()) / dt)+2;
+        xLeft = (int) round((axes.getXAxis().getLowerBound()-nextSignalTimeShift.get()) / dt)-10;
+        xRight = (int) round((axes.getXAxis().getUpperBound()-nextSignalTimeShift.get()) / dt)+10;
 
 
         System.out.println("xLeft="+xLeft+" ; "+"xRight="+xRight +" ; " +"dt="+dt+" ; "+"nextSignalTimeShift="+nextSignalTimeShift.get());
-=======
-        double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileIndex()]);
-        double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileIndex()];
-        nextSignalLength = nextYData.length;
-        int xLeft = (int) round(axes.getXAxis().getLowerBound() / dt);
-        int xRight = (int) round(axes.getXAxis().getUpperBound() / dt);
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
 
         if(isFixADCZeroShift){
             int zeroStart = (int) round(FixZeroShiftStart / dt);
@@ -466,7 +340,6 @@ public class CanvasDataDrawing extends Canvas {
             adcZeroShift=0;
         }
 
-<<<<<<< HEAD
         findMaxMinY(nextYData, dt);
         axes.setADCZeroShift(adcZeroShift);
 
@@ -478,19 +351,7 @@ public class CanvasDataDrawing extends Canvas {
             double[] dataYSubarray = Arrays.copyOfRange(nextYData, xLeft, xRight);
 
             double[] dataXSubarray = nextXData.length!=0?Arrays.copyOfRange(nextXData, xLeft, xRight):new double[0];
-=======
-        findMaxMin(nextYData, dt);
-        axes.setADCZeroShift(adcZeroShift);
 
-        if((xRight>0)&&(xLeft<nextSignalLength)) {
-
-            xLeft=xLeft < 0 ? 0 : xLeft;
-            xRight=xRight > nextSignalLength ? nextSignalLength : xRight;
-
-            double[] dataYSubarray = Arrays.copyOfRange(nextYData,xLeft, xRight);
-
-            double[] dataXSubarray = nextXData.length!=0?Arrays.copyOfRange(nextXData,xLeft, xRight):new double[0];
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
 
             SavitzkyGolayFilter sgfilter;
             int sgLeft = (SGFilterLeft+SGFilterRight)>= dataYSubarray.length?1:SGFilterLeft;
@@ -597,11 +458,9 @@ public class CanvasDataDrawing extends Canvas {
 
     private void decimator(GraphicsContext graphicContext, int ADCChannelNum, double dt, double dtCadre, double[] dataYSubarry, double[] dataXSubarry) {
 
-<<<<<<< HEAD
+
         findMaxMinY(dataYSubarry, dt);
-=======
-        findMaxMin(dataYSubarry, dt);
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
 
 
         int step = (int)(dataYSubarry.length/widthProperty().get());
@@ -619,17 +478,12 @@ public class CanvasDataDrawing extends Canvas {
                 break;
 
             case "xDataFromFile" : if (step > 1) {
-<<<<<<< HEAD
+
                 drawDecimatedDataXFromFile(graphicContext, ADCChannelNum,  dtCadre, dataYSubarry, dataXSubarry, step);
             }
             else {
                 drawFullDataXFromFile(graphicContext, ADCChannelNum,  dtCadre, dataYSubarry, dataXSubarry);
-=======
-                drawDecimatedData(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarry, step);
-            }
-            else {
-                drawFullDataXFromFile(graphicContext, ADCChannelNum, dtCadre, dataYSubarry, dataXSubarry);
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
             }
 
                 break;
@@ -642,7 +496,7 @@ public class CanvasDataDrawing extends Canvas {
         int x=0;
         for (double y : dataYSubarry) {
             if (x == 0) {
-<<<<<<< HEAD
+
                 graphicContext.moveTo(mapX(x+xLeft, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
             }
             switch (plotStyle){
@@ -657,51 +511,12 @@ public class CanvasDataDrawing extends Canvas {
                     graphicContext.fillOval(mapX(x+xLeft, dt) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
                     break;
             }
-=======
-                graphicContext.moveTo(mapX(x, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
-            }
-            switch (plotStyle){
-                case "line":
-                    graphicContext.lineTo(mapX(x, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
-                    break;
-                case "line+scatter":
-                    graphicContext.lineTo(mapX(x, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
-                    graphicContext.fillOval(mapX(x, dt) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
-                    break;
-                case "scatter":
-                    graphicContext.fillOval(mapX(x, dt) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
-                    break;
-            }
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
             x++;
         }
     }
 
-<<<<<<< HEAD
-=======
-    private void drawFullDataXFromFile(GraphicsContext graphicContext, int ADCChannelNum, double dtCadre, double[] dataYSubarry, double[] dataXSubarry) {
-        int x=0;
-        for (double y : dataYSubarry) {
-            if (x == 0) {
-                graphicContext.moveTo(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
-            }
-            switch (plotStyle){
-                case "line":
-                    graphicContext.lineTo(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
-                    break;
-                case "line+scatter":
-                    graphicContext.lineTo(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
-                    graphicContext.fillOval(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
-                    break;
-                case "scatter":
-                    graphicContext.fillOval(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
-                    break;
-            }
-            x++;
-        }
-    }
 
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
 
     private void drawDecimatedData(GraphicsContext graphicContext, int ADCChannelNum, double dt, double dtCadre, double[] dataYSubarry, int step) {
         for (int i = 0; i< dataYSubarry.length-step; i=i+step)
@@ -709,7 +524,7 @@ public class CanvasDataDrawing extends Canvas {
             double [] sigSegment = Arrays.copyOfRange(dataYSubarry,
                     i,i+step);
             if (i == 0) {
-<<<<<<< HEAD
+
                 graphicContext.moveTo(mapX(i+xLeft, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(sigSegment[i]));
             }
 
@@ -789,33 +604,9 @@ public class CanvasDataDrawing extends Canvas {
 
                 else  return x*dx.get()-shiftXZero.get();
 
-=======
-                graphicContext.moveTo(mapX(i, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(sigSegment[i]));
-            }
 
-
-            graphicContext.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMax(sigSegment)));
-            graphicContext.lineTo(mapX(i+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMin(sigSegment)));
-        }
     }
 
-    private void findMaxMin(double[] sigSubarray, double dt) {
-        xTheMIN=0.0;
-        xTheMAX=sigSubarray.length*dt>xTheMAX?sigSubarray.length*dt:xTheMAX;
-        double ymax,ymin;
-        ymax= SimpleMath.getMax(sigSubarray);
-        ymin=SimpleMath.getMin(sigSubarray);
-        yTheMIN=ymin<yTheMIN?ymin:yTheMIN;
-        yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
-    }
-
-    private double mapX(double x, double dt) {
-        return (shiftXZero.get()<0? x*dx.get()*dt-shiftXZero.get():x*dx.get()*dt);
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
-    }
-    private double mapX(double x) {
-        return (shiftXZero.get()<0? x*dx.get()-shiftXZero.get():x*dx.get());
-    }
     private double mapY(double y) {
         return -y * dy.get()+ shiftYZero.get();
     }

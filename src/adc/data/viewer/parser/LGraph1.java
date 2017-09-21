@@ -166,11 +166,9 @@ class LGraph1 implements DataTypes {
                     i++;
                 }
                 signalIndex++;
-<<<<<<< HEAD
+
                 dataParser.PutADCDataRecords(new double[0], signalY,signalIndex, fileIndex,chanAdcNum[jj],0);
-=======
-                dataParser.PutADCDataRecords(new double[0], signalY,signalIndex, fileIndex,chanAdcNum[jj]);
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
                 jj++;
             }
         } catch (InvalidPathException e) {

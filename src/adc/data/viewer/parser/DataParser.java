@@ -172,21 +172,17 @@ public class DataParser {
      * an ADC channel number of extracted signal
      */
 
-<<<<<<< HEAD
+
     public void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileIndex, int adcChannelNumber, double signalTimeShift) {
-=======
-    public void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileIndex, int adcChannelNumber) {
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
         String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
         String nextSignalLabel = adcChannelNumberAsString+"\u0040"+ fileNames[fileIndex];
         Path nextSignalPath = dataFilePath[fileIndex].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-<<<<<<< HEAD
+
         ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex,Xdata.clone(), Ydata.clone(), signalTimeShift);
-=======
-        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex,Xdata.clone(), Ydata.clone());
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
         ADCDataRecordsList.add(singleDataRecord);
     }
 

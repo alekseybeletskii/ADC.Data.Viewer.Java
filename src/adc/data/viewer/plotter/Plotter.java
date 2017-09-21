@@ -198,14 +198,14 @@ import javafx.scene.shape.StrokeType;
 //                    axes.obtainDataAndTimeMargins(canvasData.getNextSignalToDraw());
 //                    axes.setAxesBasicSetup();
                     if(!mainApp.appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false)){axes.setAxesBounds
-                            (canvasData.getxTheMIN()==Integer.MAX_VALUE?-1:canvasData.getxTheMIN(),
+                            (canvasData.getxTheMIN()==Integer.MAX_VALUE?0:canvasData.getxTheMIN(),
                             canvasData.getxTheMAX()==Integer.MIN_VALUE?1:canvasData.getxTheMAX(),
-                            canvasData.getyTheMIN()==Integer.MAX_VALUE?-1:canvasData.getyTheMIN(),
+                            canvasData.getyTheMIN()==Integer.MAX_VALUE?0:canvasData.getyTheMIN(),
                             canvasData.getyTheMAX()==Integer.MIN_VALUE?1:canvasData.getyTheMAX());}
                             else {axes.setAxesBounds(
                             MainApp.appPreferencesRootNode.getDouble("defaultXAxisMin",0),
                             MainApp.appPreferencesRootNode.getDouble("defaultXAxisMax",1),
-                            MainApp.appPreferencesRootNode.getDouble("defaultYAxisMin",-1),
+                            MainApp.appPreferencesRootNode.getDouble("defaultYAxisMin",0),
                             MainApp.appPreferencesRootNode.getDouble("defaultYAxisMax",1)
                     );};
 

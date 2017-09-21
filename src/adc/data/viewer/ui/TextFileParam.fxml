@@ -117,28 +117,20 @@
             </CheckBox>
             <Label prefWidth="122.0" text="Creation Date" />
             <Label prefWidth="122.0" text="Device name" GridPane.rowIndex="1" />
-<<<<<<< HEAD
+
             <Label prefWidth="122.0" text="channel #" GridPane.rowIndex="2" />
             <Label text="channel rate, kHz&#10;(ignored if X column selected)" GridPane.rowIndex="3" />
             <Label text="Y column" GridPane.rowIndex="6" />
             <Label text="don't ask again" GridPane.rowIndex="9" />
             <Label text="X column (set &quot;-1&quot; to ignore)" GridPane.rowIndex="5" />
-=======
-            <Label prefWidth="122.0" text="ADC channel #" GridPane.rowIndex="2" />
-            <Label text="channel rate, kHz" GridPane.rowIndex="3" />
-            <Label text="Y" GridPane.rowIndex="6" />
-            <Label text="don't ask again" GridPane.rowIndex="9" />
-            <Label text="X" GridPane.rowIndex="5" />
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
             <TextField fx:id="txtXColumnNum" promptText="int &gt;=0 (&lt;0 for non)" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <font>
                   <Font size="14.0" />
                </font></TextField>
-<<<<<<< HEAD
+
             <TextField fx:id="txtColumnSeparator" promptText="&quot;,&quot;; &quot;\t&quot;; &quot;;&quot;; ... " GridPane.columnIndex="1" GridPane.rowIndex="7">
-=======
-            <TextField fx:id="txtColumnSeparator" promptText="&quot;,&quot;; &quot;t&quot;; &quot;;&quot;; ... " GridPane.columnIndex="1" GridPane.rowIndex="7">
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
                <font>
                   <Font size="14.0" />
                </font></TextField>
@@ -146,11 +138,9 @@
                <font>
                   <Font size="14.0" />
                </font></TextField>
-<<<<<<< HEAD
+
             <Label text="column separator&#10;(&quot;,&quot; &quot;\t&quot; - regEx supported)" GridPane.rowIndex="7" />
-=======
-            <Label text="column separator&#10;(regEx supported)" GridPane.rowIndex="7" />
->>>>>>> 3e3ce4108dae88a1743a6c1039cc20ef21edb4d8
+
             <Label text="amount of heder lines" GridPane.rowIndex="8" />
             <Label text="intercadre delay, ms" GridPane.rowIndex="4" />
             <TextField fx:id="txtIntercadrDelay" promptText="float &gt; 0" GridPane.columnIndex="1" GridPane.rowIndex="4">
