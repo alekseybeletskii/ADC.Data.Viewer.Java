@@ -79,6 +79,7 @@ public class TextFileParamController {
     public static double intercadrDelay;
     public static String creationDate;
     public static String deviceName;
+    //txtFile-specific:
     public static int channelNum;
     public static int yColumnNum;
     public static int xColumnNum;
@@ -203,7 +204,7 @@ public class TextFileParamController {
             amountOfHeaderLines = Integer.parseInt(txtAmountOfHeaderLines.getText());
             columnSeparator = txtColumnSeparator.getText();
             isRememberTxtFileSettings = rememberCurrentFileSettings.isSelected();
-            dataParser.getDataParams().setDataParamsValid(true);
+
             textFileParamsStage.close();
         }
         else{

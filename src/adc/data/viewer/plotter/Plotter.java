@@ -123,12 +123,12 @@ import javafx.scene.shape.StrokeType;
 
         this.toBack();
         showMouseXY();
-        zoom();
+        zoomAndPan();
 
     }
 
 
-        private void zoom() {
+        private void zoomAndPan() {
         DoubleProperty zoomTopLeftX = new SimpleDoubleProperty();
         DoubleProperty zoomTopLeftY = new SimpleDoubleProperty();
         DoubleProperty zoomBottomRightX = new SimpleDoubleProperty();

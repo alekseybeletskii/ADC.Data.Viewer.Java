@@ -324,7 +324,7 @@ public class CanvasDataDrawing extends Canvas {
         xRight = (int) round((axes.getXAxis().getUpperBound()-nextSignalTimeShift.get()) / dt)+10;
 
 
-        System.out.println("xLeft="+xLeft+" ; "+"xRight="+xRight +" ; " +"dt="+dt+" ; "+"nextSignalTimeShift="+nextSignalTimeShift.get());
+//        System.out.println("xLeft="+xLeft+" ; "+"xRight="+xRight +" ; " +"dt="+dt+" ; "+"nextSignalTimeShift="+nextSignalTimeShift.get());
 
 
         if(isFixADCZeroShift){
@@ -560,7 +560,6 @@ public class CanvasDataDrawing extends Canvas {
 
     private void drawDecimatedDataXFromFile(GraphicsContext graphicContext, int ADCChannelNum, double dtCadre, double[] dataYSubarry, double[] dataXSubarry, int step) {
 
-        System.out.println(ADCChannelNum * dx.get() * dtCadre);
 
         for (int x = 0; x< dataYSubarry.length-step; x=x+step)
 

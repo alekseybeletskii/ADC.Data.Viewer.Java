@@ -275,7 +275,7 @@ public class Axes extends Pane {
         if (maximum> yMaxBasic) yMaxBasic =maximum;
         if (minimum< yMinBasic) yMinBasic =minimum;
 
-        System.out.println("xMinBasic="+xMinBasic+" ; "+"xMaxBasic="+xMaxBasic +" ; " +"dt="+dt);
+//        System.out.println("xMinBasic="+xMinBasic+" ; "+"xMaxBasic="+xMaxBasic +" ; " +"dt="+dt);
     }
 
 }

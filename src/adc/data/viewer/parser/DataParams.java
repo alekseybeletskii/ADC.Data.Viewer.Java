@@ -72,6 +72,12 @@ public class DataParams  {
     private  double [][] CalibrScale;
     private  double [][] CalibrOffset;
     private  int [] Segments;
+    //textFiles-specific:
+    public  int[] channelNum;
+    public  int[] yColumnNum;
+    public  int[] xColumnNum;
+    public  int[] amountOfHeaderLines;
+    public  String []columnSeparator;
 
     DataParams(int amountOfFiles) {
         this.dataParamsValid =false;
@@ -98,7 +104,53 @@ public class DataParams  {
         this.CalibrScale = new double[amountOfFiles][1024];
         this.CalibrOffset = new double[amountOfFiles][1024];
         this.Segments = new int[amountOfFiles];
+        //txtFiles-specifc:
+        this.channelNum= new int[amountOfFiles];
+        this.yColumnNum= new int[amountOfFiles];
+        this.xColumnNum= new int[amountOfFiles];
+        this.amountOfHeaderLines= new int[amountOfFiles];
+        this.columnSeparator= new String[amountOfFiles];
     }
+
+
+    public int[] getChannelNum() {
+        return channelNum;
+    }
+    public int[] getyColumnNum() {
+        return yColumnNum;
+    }
+    public int[] getxColumnNum() {
+        return xColumnNum;
+    }
+    public int[] getAmountOfHeaderLines() {
+        return amountOfHeaderLines;
+    }
+    public String[] getColumnSeparator() {
+        return columnSeparator;
+    }
+
+
+    public void setChannelNum(int channelNum, int fileIndex) {
+        this.channelNum[fileIndex] = channelNum;
+    }
+
+    public void setyColumnNum(int yColumnNum, int fileIndex) {
+        this.yColumnNum[fileIndex] = yColumnNum;
+    }
+
+    public void setxColumnNum(int xColumnNum, int fileIndex) {
+        this.xColumnNum[fileIndex] = xColumnNum;
+    }
+
+    public void setAmountOfHeaderLines(int amountOfHeaderLines, int fileIndex) {
+        this.amountOfHeaderLines[fileIndex] = amountOfHeaderLines;
+    }
+
+    public void setColumnSeparator(String columnSeparator, int fileIndex) {
+        this.columnSeparator[fileIndex] = columnSeparator;
+    }
+
+
 
     public boolean isDataParamsValid() {
         return dataParamsValid;

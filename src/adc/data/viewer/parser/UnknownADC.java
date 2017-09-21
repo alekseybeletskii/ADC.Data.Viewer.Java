@@ -57,7 +57,7 @@ import static adc.data.viewer.ui.TextFileParamController.*;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
 class UnknownADC implements DataTypes {
-    double xMin = 0;
+    double signalTimeShift = 0;
     private DataParser dataParser;
 
     public void setDataParser(DataParser dataParser) {
@@ -86,6 +86,15 @@ class UnknownADC implements DataTypes {
        dataParser.getDataParams().setRealCadresQuantity(0, fileIndex) ; //long
        dataParser.getDataParams().setTotalTime(0.0,fileIndex) ; //Double
        dataParser.getDataParams().setTotalTime(0.0,fileIndex) ; //Double
+        //textFile-specific:
+        dataParser.getDataParams().setChannelNum(channelNum,fileIndex);
+        dataParser.getDataParams().setyColumnNum(yColumnNum,fileIndex);
+        dataParser.getDataParams().setxColumnNum(xColumnNum,fileIndex);
+        dataParser.getDataParams().setAmountOfHeaderLines(amountOfHeaderLines,fileIndex);
+        dataParser.getDataParams().setColumnSeparator(columnSeparator,fileIndex);
+
+
+        dataParser.getDataParams().setDataParamsValid(true);
     }
 
 
@@ -95,7 +104,11 @@ class UnknownADC implements DataTypes {
       List<Double> allYLines = new ArrayList<>();
       List<Double> allXLines = new ArrayList<>();
       DataParams dataParams = dataParser.getDataParams();
-      final String REGEX = columnSeparator;
+      final String REGEX = dataParser.getDataParams().getColumnSeparator()[fileIndex];
+      int amountOfHeaderLines =dataParser.getDataParams().getAmountOfHeaderLines()[fileIndex];
+      int yColumnNum =dataParser.getDataParams().getyColumnNum()[fileIndex];
+      int xColumnNum =dataParser.getDataParams().getxColumnNum()[fileIndex];
+      int channelNum =dataParser.getDataParams().getChannelNum()[fileIndex];
 
       try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataFilePath()[fileIndex], Charset.forName("UTF-8"))) {
          try {
@@ -126,7 +139,7 @@ for (int i=0;i<amountOfHeaderLines;i++) {
              if(Xdata.length==Ydata.length){
                  double channelRateFromXData =1.0/((Xdata[Xdata.length-1]-Xdata[0])/Xdata.length);
                  dataParser.getDataParams().setChannelRate(channelRateFromXData,fileIndex) ;
-                 xMin =Xdata[0];
+                 signalTimeShift =Xdata[0];
 
              }
              dataParser.getDataParams().setRealCadresQuantity(allYLines.size(), fileIndex) ;
@@ -135,9 +148,9 @@ for (int i=0;i<amountOfHeaderLines;i++) {
 
             signalIndex++;
 
-             System.out.println("channelNum:"+channelNum);
+//             System.out.println("channelNum:"+channelNum);
              
-            dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum,xMin);
+            dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum, signalTimeShift);
 
          }
          catch (NumberFormatException e){
