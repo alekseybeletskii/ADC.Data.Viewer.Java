@@ -147,35 +147,40 @@ public class PlotterController {
     public void handleSubtractSignal(ActionEvent actionEvent) {
         MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", SubtractSignal.isSelected());
         if(SubtractSignal.isSelected()) {
+//            double [] sigAsFiltData;
             int i = 0;
             ADCDataRecords signalAsFilter = null;
             for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
                 if (sigMarc.getSignalSelected()) {
-                    signalAsFilter =sigMarc;
                     i++;
+                    if(i>1) break;
+                    signalAsFilter =sigMarc;
                 }
             }
-            if(i!=1){
-                SubtractSignal.setSelected(false);
-                MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", false);
-                alertInvalidParam.showAndWait();
-            }else if (!signalAsFilter.equals(null)){
-                SavitzkyGolayFilter sgfilter;
-                double [] sigAsFiltData =signalAsFilter.getSignalYData().clone();
-                String plotType = MainApp.appPreferencesRootNode.get("defaultPlotType","Raw");
-                if(!plotType.equals("Raw")){
+            if(i==1){
+                MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",-1);
+                mainApp.setSignalUsedAsFilter(signalAsFilter.getSignalYData().clone());
+            }else if (i>1) {
+                int numberOfADCChannelAsFilter =Integer.parseInt(signalAsFilter != null ? signalAsFilter.getAdcChannelNumber() : "-1");
+                MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",numberOfADCChannelAsFilter);
+//                alertInvalidParam.showAndWait();
 
-                    int SGFilterLeft= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeft",50); //points
-                    int  SGFilterRight= MainApp.appPreferencesRootNode.getInt("defaultSGFilterRight",50); //points
-                    int SGFilterOrder= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeftOrder",1);
-                    int sgLeft = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterLeft;
-                    int sgRight = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterRight;
-                    sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, SGFilterOrder);
-                    sigAsFiltData = sgfilter.filterData(sigAsFiltData);
-                }
-
-                mainApp.setSignalUsedAsFilter(sigAsFiltData);
             }
+//            MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", false);
+//                double [] sigAsFiltData =signalAsFilter.getSignalYData().clone();
+//                SavitzkyGolayFilter sgfilter;
+//                String plotType = MainApp.appPreferencesRootNode.get("defaultPlotType","Raw");
+//                if(!plotType.equals("Raw")){
+//
+//                    int SGFilterLeft= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeft",50); //points
+//                    int  SGFilterRight= MainApp.appPreferencesRootNode.getInt("defaultSGFilterRight",50); //points
+//                    int SGFilterOrder= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeftOrder",1);
+//                    int sgLeft = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterLeft;
+//                    int sgRight = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterRight;
+//                    sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, SGFilterOrder);
+//                    sigAsFiltData = sgfilter.filterData(sigAsFiltData);
+//                }
+
 
         }
         else{

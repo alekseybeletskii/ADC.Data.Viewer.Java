@@ -194,10 +194,11 @@ import javafx.scene.shape.StrokeType;
 
         setOnMouseReleased(mreleased -> {
             if(mreleased.getButton()== MouseButton.PRIMARY) {
-                if ((zoomRectangle.getWidth() <= 0.0 | zoomRectangle.getHeight() <= 0.0) & !mainApp.getAdcDataRecords().isEmpty()) {
+                if ((zoomRectangle.getWidth() <= -20| zoomRectangle.getHeight() <= -20) & !mainApp.getAdcDataRecords().isEmpty()) {
 //                    axes.obtainDataAndTimeMargins(canvasData.getNextSignalToDraw());
 //                    axes.setAxesBasicSetup();
-                    if(!mainApp.appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false)){axes.setAxesBounds
+                    if(!mainApp.appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false))
+                    {axes.setAxesBounds
                             (canvasData.getxTheMIN()==Integer.MAX_VALUE?0:canvasData.getxTheMIN(),
                             canvasData.getxTheMAX()==Integer.MIN_VALUE?1:canvasData.getxTheMAX(),
                             canvasData.getyTheMIN()==Integer.MAX_VALUE?0:canvasData.getyTheMIN(),
@@ -219,7 +220,7 @@ import javafx.scene.shape.StrokeType;
                     zoomRectangle = null;
                 }
                 else {
-                    axes.setAxesBounds(-1,1,-1,1);
+//                    axes.setAxesBounds(-1,1,-1,1);
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;}
             }

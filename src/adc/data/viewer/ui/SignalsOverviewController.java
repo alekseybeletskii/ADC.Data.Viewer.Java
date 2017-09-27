@@ -45,8 +45,6 @@ package adc.data.viewer.ui;
 
 import adc.data.viewer.model.ADCDataRecords;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -179,16 +177,16 @@ public class SignalsOverviewController {
     private void showSignalDetails(ADCDataRecords signal) {
         if (signal != null){
 
-            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileIndex()]);
-            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileIndex()]);
-            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileIndex()]));
-            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileIndex()]));
+            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileOrdinalNumber()]);
+            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileOrdinalNumber()]);
+            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileOrdinalNumber()]));
+            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileOrdinalNumber()]));
             channelNumberLabel.setText(signal.getAdcChannelNumber());
 //            channelNumberLabel.setText(signal.getSignalLabel().substring(signal.getSignalLabel().lastIndexOf("#")+1));
-            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileIndex()]));
+            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileOrdinalNumber()]));
             channelDurationLabel.setText(String.format("%.2f",
-                    mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileIndex()]
-                            /mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileIndex()]));
+                    mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileOrdinalNumber()]
+                            /mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileOrdinalNumber()]));
         }
         else{
             deviceNameLabel.setText("-----");

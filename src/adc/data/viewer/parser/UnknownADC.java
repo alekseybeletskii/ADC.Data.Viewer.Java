@@ -113,7 +113,7 @@ class UnknownADC implements DataTypes {
       try (BufferedReader signalDataFromText = Files.newBufferedReader(dataParser.getDataFilePath()[fileIndex], Charset.forName("UTF-8"))) {
          try {
 for (int i=0;i<amountOfHeaderLines;i++) {
-   line = signalDataFromText.readLine();
+   signalDataFromText.readLine();
 }
             while ((line = signalDataFromText.readLine()) != null) {
             String[] columns = line.split(REGEX);

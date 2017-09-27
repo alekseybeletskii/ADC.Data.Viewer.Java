@@ -53,9 +53,9 @@ import javafx.scene.paint.Color;
 
 public class ADCDataRecords {
 
-    private final double [] signalYData;
+    private  double [] signalYData;
 
-    private final double [] signalXData;
+    private  double [] signalXData;
 
 
 
@@ -65,17 +65,17 @@ public class ADCDataRecords {
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
     private final ObjectProperty<Color> signalColor;
-    private final IntegerProperty fileIndex;
+    private final IntegerProperty fileOrdinalNumber;
     private final StringProperty adcChannelNumber;
 
 
-    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileIndex, double [] signalXdata, double [] signalYdata, double signalTimeShift) {
+    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileOrdinalNumber, double [] signalXdata, double [] signalYdata, double signalTimeShift) {
 
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
         this.signalLabel = new SimpleStringProperty(signalLable);
-        this.fileIndex = new SimpleIntegerProperty(fileIndex);
+        this.fileOrdinalNumber = new SimpleIntegerProperty(fileOrdinalNumber);
 
         this.signalTimeShift = new SimpleDoubleProperty(signalTimeShift);
 
@@ -91,7 +91,13 @@ public class ADCDataRecords {
         return signalXData;
     }
 
+    public void setSignalYData(double[] signalYData) {
+        this.signalYData = signalYData;
+    }
 
+    public void setSignalXData(double[] signalXData) {
+        this.signalXData = signalXData;
+    }
 
 
     public double getSignalTimeShift() {
@@ -130,15 +136,15 @@ public class ADCDataRecords {
         this.signalIndex.set(signalIndex);
     }
 
-    public int getFileIndex() { return fileIndex.get();
+    public int getFileOrdinalNumber() { return fileOrdinalNumber.get();
     }
 
-    public IntegerProperty fileIndexProperty() {
-        return fileIndex;
+    public IntegerProperty fileOrdinalNumberProperty() {
+        return fileOrdinalNumber;
     }
 
-    public void setFileIndex(int fileIndex) {
-        this.fileIndex.set(fileIndex);
+    public void setFileOrdinalNumber(int fileOrdinalNumber) {
+        this.fileOrdinalNumber.set(fileOrdinalNumber);
     }
 
     public Color getSignalColor() {

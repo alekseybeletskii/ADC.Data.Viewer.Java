@@ -50,9 +50,7 @@ import adc.data.viewer.ui.MainApp;
 import adc.data.viewer.ui.PlotterController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -288,6 +286,13 @@ public class CanvasDataDrawing extends Canvas {
             default:
                 break;
         }
+
+        if(MainApp.appPreferencesRootNode.getBoolean("defaultIsReplaceRawWithFilter", false)){
+            MainApp.appPreferencesRootNode.putBoolean("defaultIsReplaceRawWithFilter", false);
+            drawData();
+        }
+
+
         drawZeroLines();
     }
 
@@ -300,24 +305,42 @@ public class CanvasDataDrawing extends Canvas {
         int ADCChannelNum = Integer.parseInt(nextSignalToDraw.getAdcChannelNumber());
         double [] nextYData = nextSignalToDraw.getSignalYData().clone();
         double [] nextXData = nextSignalToDraw.getSignalXData().clone();
-        if(MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)&&
-                !(mainApp.getSignalUsedAsFilter()==null)){
-            int i = 0;
-            for (double yy : mainApp.getSignalUsedAsFilter()) {
-                nextYData[i] = nextYData[i] - yy;
-                i++;
+
+        if(MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)){
+            int numberOfADCChannelUsedAsFilter = MainApp.appPreferencesRootNode.getInt("defaultADCChannelUsedAsFilter",-1);
+
+            int nextFilterIndex =mainApp.getDataParser().getDataParams()
+                    .getRealChannelsQuantity()[nextSignalToDraw.getFileOrdinalNumber()]*nextSignalToDraw
+                    .getFileOrdinalNumber()+numberOfADCChannelUsedAsFilter-1;
+
+
+            if(numberOfADCChannelUsedAsFilter == -1){
+                int i = 0;
+                for (double yy : mainApp.getSignalUsedAsFilter()) {
+                    nextYData[i] = nextYData[i] - yy;
+                    i++;
+                }
+            }else {
+                int i = 0;
+                for (double yy : mainApp.getAdcDataRecords()
+                        .get(nextFilterIndex)
+                        .getSignalYData()) {
+                    nextYData[i] = nextYData[i] - yy;
+                    i++;
+                }
             }
+//            MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", false);
         }
 
 //dt,dtCadre in milliseconds
 
 
-        double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileIndex()]);
+        double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileOrdinalNumber()]);
         nextSignalTimeShift.set(nextSignalToDraw.getSignalTimeShift());
         xTheMIN=nextSignalToDraw.getSignalTimeShift()<xTheMIN?nextSignalToDraw.getSignalTimeShift():xTheMIN;
         xTheMAX=nextSignalToDraw.getSignalYData().length*dt>xTheMAX?nextSignalToDraw.getSignalYData().length*dt:xTheMAX;
 
-        double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileIndex()];
+        double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileOrdinalNumber()];
 
         nextSignalLength = nextYData.length;
         xLeft = (int) round((axes.getXAxis().getLowerBound()-nextSignalTimeShift.get()) / dt)-10;
@@ -334,8 +357,9 @@ public class CanvasDataDrawing extends Canvas {
                 adcZeroShift =SimpleMath.findAverage(Arrays.copyOfRange(nextYData,zeroStart,zeroEnd));
                 for(int i = 0; i< nextYData.length; i++)
                     nextYData[i]= nextYData[i]- adcZeroShift;
-//                 maxZeroShift=abs(maxZeroShift)>abs(adcZeroShift)?maxZeroShift:adcZeroShift;
             }
+
+
         }else{
             adcZeroShift=0;
         }
@@ -376,6 +400,7 @@ public class CanvasDataDrawing extends Canvas {
                         dataYSubarray[i] = dataYSubarray[i] - yy;
                         i++;
                     }
+
                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
                     break;
                 case "RawAndSGFilter":
@@ -386,6 +411,7 @@ public class CanvasDataDrawing extends Canvas {
                     graphicContext.beginPath();
                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
                     dataYSubarray = sgfilter.filterData(dataYSubarray);
+
                     graphicContext.setStroke(Color.BLACK);
                     graphicContext.setFill(Color.TRANSPARENT);
                     graphicContext.beginPath();
@@ -400,6 +426,11 @@ public class CanvasDataDrawing extends Canvas {
                     graphicContext.beginPath();
                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
                     break;
+            }
+
+            if(MainApp.appPreferencesRootNode.getBoolean("defaultIsReplaceRawWithFilter", false)&&
+                    dataYSubarray.length==nextYData.length){
+                mainApp.getAdcDataRecords().get(nextSignalIndex).setSignalYData(dataYSubarray);
             }
         }
 

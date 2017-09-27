@@ -45,6 +45,7 @@ package adc.data.viewer.ui;
 
 import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.parser.DataParser;
+import adc.data.viewer.parser.ExportToText;
 import adc.data.viewer.plotter.Plotter;
 import adc.data.viewer.util.ApplicationPreferences;
 import javafx.application.Application;
@@ -69,54 +70,20 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 import static adc.data.viewer.ui.TextFileParamController.isRememberTxtFileSettings;
+import static java.lang.Math.round;
 
 public  class MainApp extends Application {
 
 
-    public void setDirectoryWatcher(WatchDirectory directoryWatcher) {
-        this.directoryWatcher = directoryWatcher;
-    }
-
-    public WatchDirectory getDirectoryWatcher() {
-        return directoryWatcher;
-    }
-
-    private  WatchDirectory directoryWatcher;
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    public void setListOfFiles(List<File> listOfFiles) {
-        this.listOfFiles = listOfFiles;
-    }
-
-    private List<File> listOfFiles;
-
-    public boolean isNewFileCreated() {
-        return newFileCreated;
-    }
-
-    public void setNewFileCreated(boolean newFileCreated) {
-        this.newFileCreated = newFileCreated;
-    }
-
     private boolean newFileCreated;
     private  boolean redrawAllowed;
-
-    public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
-        this.nextSignalToDraw = nextSignalToDraw;
-    }
-
     private final Image logo = new Image("images/logo.png");
     private ADCDataRecords nextSignalToDraw;
     private String defaultPlotsLayoutType;
     private Stage primaryStage;
     private BorderPane mainLayout;
     private DataParser dataParser;
-
     public  static final Preferences appPreferencesRootNode = Preferences.userRoot().node("ADCDAtaViewer");
-
     private ObservableList<ADCDataRecords> adcDataRecords = FXCollections.observableArrayList();
     private TextFileParamController textFileParamController;
     private int nextSignalToDrawIndex;
@@ -126,6 +93,29 @@ public  class MainApp extends Application {
     private double [] signalUsedAsFilter;
     private double splitPaneDivisionPosition;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+    public void setDirectoryWatcher(WatchDirectory directoryWatcher) {
+        this.directoryWatcher = directoryWatcher;
+    }
+    public WatchDirectory getDirectoryWatcher() {
+        return directoryWatcher;
+    }
+    public void setListOfFiles(List<File> listOfFiles) {
+        this.listOfFiles = listOfFiles;
+    }
+    private  WatchDirectory directoryWatcher;
+    public boolean isNewFileCreated() {
+        return newFileCreated;
+    }
+    public void setNewFileCreated(boolean newFileCreated) {
+        this.newFileCreated = newFileCreated;
+    }
+    private List<File> listOfFiles;
+    public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
+        this.nextSignalToDraw = nextSignalToDraw;
+    }
     public double getSplitPaneDivisionPosition() {
         return splitPaneDivisionPosition;
     }
@@ -437,15 +427,42 @@ public  class MainApp extends Application {
     private void setKeyPressedAction(){
 
 
-
-
         signalsOverviewController.getPlotsScrollPane().setOnKeyPressed(k -> {
 
-            if(k.getCode().getName().equals("F")){
+            if(k.getCode().getName().equals("W")&&k.isControlDown()){
                 double oldDividerPos = signalsOverviewController.getSignalsOverviewSplitPane().getDividerPositions()[0];
                 double newDividerPosition = oldDividerPos>0.05?0:0.2;
                 signalsOverviewController.getSignalsOverviewSplitPane().setDividerPosition(0,newDividerPosition);
             }
+
+//            &&!MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)
+            if(k.getCode().getName().equals("F")&&k.isShiftDown()){
+                MainApp.appPreferencesRootNode.putBoolean("defaultIsReplaceRawWithFilter", true);
+                for (PlotterController pc: plotterControllerlist) {
+                    pc.getPlotter().getAxes().setAxesBasicSetup();
+                    pc.getPlotter().getCanvasData().drawData();
+                }
+            }
+
+            if(k.getCode().getName().equals("P")&&k.isShiftDown()){
+                for (PlotterController pc: plotterControllerlist) {
+                    dataParser.getExportToText().takeSnapShot( signalsOverviewController.getPlotsScrollPane());
+                }
+            }
+
+
+
+
+            if(k.getCode().getName().equals("S")&&k.isShiftDown()){
+
+                    String delims = "\\s+";
+                if (!plotterControllerlist.isEmpty() ){
+                    String s = plotterControllerlist.get(0).getXyLabel().getText();
+                    double profileTime = Double.parseDouble(s.split(delims)[1]);
+                    dataParser.getExportToText().saveProfile(profileTime);
+                }
+            }
+
 
 
 

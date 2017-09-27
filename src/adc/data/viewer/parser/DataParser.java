@@ -62,29 +62,51 @@ public class DataParser {
     private DataParams dataParams;
     private DataFormatsDetect dataFormatsDetect;
     private int signalIndex;
+
     private Path [] signalPath;
-
     private MainApp mainApp;
-
     private List<ADCDataRecords> ADCDataRecordsList = new ArrayList<>();
-
     private Path[] dataFilePath;
     private Path[] parFilePath;
     private String[] fileNames;
-
     private  int totalFiles;
     private  int totalSignals;
     private Color[] signalColors;
-
     private boolean drawAllSignals;
+    private ExportToText exportToText;
 
     public List<ADCDataRecords> getADCDataRecordsList() {
         return ADCDataRecordsList;
+    }
+    public String[] getFileNames() {
+        return fileNames;
+    }
+    public ExportToText getExportToText() {
+        return exportToText;
+    }
+    public void setExportToText(ExportToText exportToText) {
+        this.exportToText = exportToText;
+    }
+    public DataParams getDataParams() {
+        return dataParams;
+    }
+    public Path[] getDataFilePath() {
+        return dataFilePath;
+    }
+    public Path[] getParFilePath() {
+        return parFilePath;
+    }
+    public MainApp getMainApp() {
+        return mainApp;
+    }
+    public Path[] getSignalPath() {
+        return signalPath;
     }
 
     public DataParser( MainApp mainApp) {
         this.mainApp=mainApp;
         dataFormatsDetect = new DataFormatsDetect(mainApp);
+        exportToText =new ExportToText(mainApp);
     }
 
     public  void parseNewList(List<Path> dataPath) {
@@ -100,9 +122,7 @@ public class DataParser {
         mainApp.getAdcDataRecords().addAll(ADCDataRecordsList);
     }
 
-    public String[] getFileNames() {
-        return fileNames;
-    }
+
 
     private void makePaths(List<Path> pathes) {
         int count = 0;
@@ -131,13 +151,13 @@ public class DataParser {
         dataFormatsDetect.detectFormat();
 
         String formatName;
-        int i=0;
-        while (i < dataFilePath.length)
+        int fileOrdinalNumber=0;
+        while (fileOrdinalNumber < dataFilePath.length)
         {
-            formatName = dataParams.getDataFormatStr()[i].toUpperCase();
+            formatName = dataParams.getDataFormatStr()[fileOrdinalNumber].toUpperCase();
 //            if (!formatName.equals("TEXTFILE"))
-                DataTypesList.valueOf(formatName).getDataType().setParam(i);
-            i++;
+                DataTypesList.valueOf(formatName).getDataType().setParam(fileOrdinalNumber);
+            fileOrdinalNumber++;
         }
         totalSignals= IntStream.of(dataParams.getRealChannelsQuantity()).sum();
     }
@@ -146,16 +166,16 @@ public class DataParser {
     private  void setData (){
         if(!dataParams.isDataParamsValid()) return;
         String formatName;
-        int i=0;
-        while (i < dataFilePath.length)
+        int fileOrdinalNumber=0;
+        while (fileOrdinalNumber < dataFilePath.length)
         {
-            formatName = dataParams.getDataFormatStr()[i].toUpperCase();
+            formatName = dataParams.getDataFormatStr()[fileOrdinalNumber].toUpperCase();
 //            if (formatName.equals("TEXTFILE"))
 //            {mainApp.getTextFileParamController().setData(i,signalIndex);
 //                i++;
 //                continue;}
-            DataTypesList.valueOf(formatName).getDataType().setData(i,signalIndex);
-            i++;
+            DataTypesList.valueOf(formatName).getDataType().setData(fileOrdinalNumber,signalIndex);
+            fileOrdinalNumber++;
         }
     }
 
@@ -166,22 +186,22 @@ public class DataParser {
      * a signal extracted from binary file by corresponding ADC-type-class
      * @param signalIndex
      * an extracted signal's sequence number in the "signals" array
-     * @param fileIndex
+     * @param fileOrdinalNumber
      * a number of a processed source file
      * @param adcChannelNumber
      * an ADC channel number of extracted signal
      */
 
 
-    public void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileIndex, int adcChannelNumber, double signalTimeShift) {
+    public void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileOrdinalNumber, int adcChannelNumber, double signalTimeShift) {
 
         String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
-        String nextSignalLabel = adcChannelNumberAsString+"\u0040"+ fileNames[fileIndex];
-        Path nextSignalPath = dataFilePath[fileIndex].getParent();
+        String nextSignalLabel = adcChannelNumberAsString+"\u0040"+ fileNames[fileOrdinalNumber];
+        Path nextSignalPath = dataFilePath[fileOrdinalNumber].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
 
-        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileIndex,Xdata.clone(), Ydata.clone(), signalTimeShift);
+        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,Xdata.clone(), Ydata.clone(), signalTimeShift);
 
         ADCDataRecordsList.add(singleDataRecord);
     }
@@ -199,54 +219,11 @@ public class DataParser {
         this.signalColors = signalColors;
     }
 
-    /**
-     * The method saves avery signal as a separate text file to the "txt" subdirectory
-     */
-    public void saveToText(){
-        int i=0;
-        byte [] stringBytes;
-        while (i< ADCDataRecordsList.size()){
 
-            Path outTxtPath = signalPath[i].resolve(Paths.get("txt"));
 
-            try {
-                Files.createDirectories(outTxtPath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(ADCDataRecordsList.get(i).getSignalLabel() +".txt"),StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
-            {
-                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, ADCDataRecordsList.get(i).getSignalYData().length*16);
-                int j=0;
-                while(j< ADCDataRecordsList.get(i).getSignalYData().length) {
-                    stringBytes = String.format("%15.7f", ADCDataRecordsList.get(i).getSignalYData()[j]).getBytes("UTF-8");
-                    wrBuf.put(stringBytes);
-                    wrBuf.put((byte)System.getProperty("line.separator").charAt(0));
-                    j++;
-                }
-            } catch(InvalidPathException e) {
-                System.out.println("Path Error " + e);
-            } catch (IOException e) {
-                System.out.println("I/O Error " + e);
-            }
-            i++;
-        }
-    }
 
-    public DataParams getDataParams() {
-        return dataParams;
-    }
 
-    public Path[] getDataFilePath() {
-        return dataFilePath;
-    }
-    public Path[] getParFilePath() {
-        return parFilePath;
-    }
-    public MainApp getMainApp() {
-        return mainApp;
-    }
 }
 
 
