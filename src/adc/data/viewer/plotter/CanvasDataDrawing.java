@@ -53,6 +53,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
@@ -227,6 +228,7 @@ public class CanvasDataDrawing extends Canvas {
 
 
     public void drawData() {
+
         resetCanvasDefault();
 
 //         System.out.println(getxTheMIN()+"\n"+getxTheMAX()+"\n"+getyTheMIN()+"\n"+getyTheMAX()+"\n");
@@ -244,48 +246,34 @@ public class CanvasDataDrawing extends Canvas {
         graphicContext.setLineWidth(widthOfLine);
         graphicContext.setLineDashes(0);
 
+        makeLegend();
+
         switch (mainApp.getDefaultPlotsLayoutType()) {
+
             case "AllPlots":
-                int i=0;
-                plotterController.getLegend().setText("");
-                plotterController.getSignalIndexLabel().setText("");
                 for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
-
                     if (sigMarc.getSignalSelected()) {
-                        i++;
                         nextSignalToDraw=sigMarc;
-                        drawNextSignal(nextSignalToDraw);
 
-                        plotterController.getLegend().setText(plotterController.getLegend().getText()+nextSignalToDraw.getSignalLabel()+"="+plotType+"\n");
-                        plotterController.getSignalIndexLabel().setText(plotterController.getSignalIndexLabel().getText()+String.format("%d",(nextSignalToDraw.getSignalIndex()+1))+"\n");
+                        drawNextSignal(nextSignalToDraw);
                     }
                 }
 
-//                 if(i==1){
-//                     plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
-//                     plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
-//                 }
-//                 else{
-//                     plotterController.getLegend().setText(
-//                             nextSignalToDraw.getSignalLabel()+"="+plotType);
-//                     plotterController.getSignalIndexLabel().setText("");
-//                 }
-//                     plotterController.getLegend().setText("="+plotType+"=");
 
                 break;
             case "AllPlotsByOne":
-                plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
-                plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
+;
                 if(nextSignalToDraw.isSignalSelected())drawNextSignal(nextSignalToDraw);
                 break;
             case "AllPlotsByOneScroll":
-                plotterController.getLegend().setText(nextSignalToDraw.getSignalLabel()+"="+plotType);
-                plotterController.getSignalIndexLabel().setText(String.format("%d",(nextSignalToDraw.getSignalIndex()+1)));
+
                 drawNextSignal(nextSignalToDraw);
                 break;
             default:
                 break;
         }
+
+
 
         if(MainApp.appPreferencesRootNode.getBoolean("defaultIsReplaceRawWithFilter", false)){
             MainApp.appPreferencesRootNode.putBoolean("defaultIsReplaceRawWithFilter", false);
@@ -294,6 +282,38 @@ public class CanvasDataDrawing extends Canvas {
 
 
         drawZeroLines();
+    }
+
+    private void makeLegend() {
+
+        plotterController.getSignalIndexLabel().setText("");
+        plotterController.getLegendPane().getChildren().clear();
+
+        switch (mainApp.getDefaultPlotsLayoutType()) {
+            case "AllPlots":
+                for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
+                    if (sigMarc.getSignalSelected()) {
+                        Label curveLabel = new Label(sigMarc.getSignalLabel() + "=" + plotType);
+                        curveLabel.setText(sigMarc.getSignalLabel() + "=" + plotType);
+                        curveLabel.setStyle("-fx-background-color: transparent");
+                        curveLabel.setTextFill(sigMarc.getSignalColor());
+                        plotterController.getLegendPane().getChildren().add(curveLabel);
+                        plotterController.getSignalIndexLabel().setText(plotterController.getSignalIndexLabel().getText() + String.format("%d", (sigMarc.getSignalIndex() + 1)) + "\n");
+
+                    }
+                }
+
+                break;
+            default:
+                Label curveLabel = new Label(nextSignalToDraw.getSignalLabel() + "=" + plotType);
+                curveLabel.setText(nextSignalToDraw.getSignalLabel() + "=" + plotType);
+                curveLabel.setStyle("-fx-background-color: transparent");
+                curveLabel.setTextFill(nextSignalToDraw.getSignalColor());
+                plotterController.getLegendPane().getChildren().add(curveLabel);
+                plotterController.getSignalIndexLabel().setText(plotterController.getSignalIndexLabel().getText() + String.format("%d", (nextSignalToDraw.getSignalIndex() + 1)) + "\n");
+                break;
+
+        }
     }
 
 

@@ -46,11 +46,11 @@ package adc.data.viewer.ui;
 
 import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.plotter.Plotter;
-import adc.data.viewer.processing.SavitzkyGolayFilter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 
 import static javafx.scene.control.Alert.AlertType.WARNING;
@@ -60,14 +60,21 @@ public class PlotterController {
 
     private MainApp mainApp;
     private Plotter plotter;
+    private Alert alertFilterIsApplied;
     private Alert alertInvalidParam;
-
-
-
     @FXML
     Label signalIndexLabel;
+
+    public FlowPane getLegendPane() {
+        return legendPane;
+    }
+
+    public void setLegendPane(FlowPane legendPane) {
+        this.legendPane = legendPane;
+    }
+
     @FXML
-    Label legend;
+    FlowPane legendPane;
     @FXML
     private AnchorPane plotsLayout;
     @FXML
@@ -83,11 +90,13 @@ public class PlotterController {
     @FXML
     private ToggleButton SubtractSignal;
 
+    private ToggleGroup toggleGroup;
+
     public ToggleGroup getToggleGroup() {
         return toggleGroup;
     }
 
-    private ToggleGroup toggleGroup;
+
 
     public Plotter getPlotter() {
         return plotter;
@@ -111,34 +120,33 @@ public class PlotterController {
     public Label getSignalIndexLabel() {
         return signalIndexLabel;
     }
-    public Label getLegend() {
-        return legend;
-    }
+
 
 
     @FXML
     public void handleRaw(ActionEvent actionEvent) {
+        toggleButton("Raw");
         MainApp.appPreferencesRootNode.put("defaultPlotType","Raw");
         plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleRawAndSGFilter(ActionEvent actionEvent) {
-
+        toggleButton("RawAndSGFilter");
         MainApp.appPreferencesRootNode.put("defaultPlotType","RawAndSGFilter");
         plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleSGFiltered(ActionEvent actionEvent) {
-
+        toggleButton("SGFiltered");
         MainApp.appPreferencesRootNode.put("defaultPlotType","SGFiltered");
         plotter.getCanvasData().drawData();
     }
 
     @FXML
     public void handleSGFilter(ActionEvent actionEvent) {
-
+        toggleButton("SGFilter");
         MainApp.appPreferencesRootNode.put("defaultPlotType","SGFilter");
         plotter.getCanvasData().drawData();
     }
@@ -147,7 +155,7 @@ public class PlotterController {
     public void handleSubtractSignal(ActionEvent actionEvent) {
         MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", SubtractSignal.isSelected());
         if(SubtractSignal.isSelected()) {
-//            double [] sigAsFiltData;
+
             int i = 0;
             ADCDataRecords signalAsFilter = null;
             for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
@@ -160,28 +168,13 @@ public class PlotterController {
             if(i==1){
                 MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",-1);
                 mainApp.setSignalUsedAsFilter(signalAsFilter.getSignalYData().clone());
+                alertFilterIsApplied.setContentText("the channel "+signalAsFilter.getSignalLabel()+"\nis selected as a filter for all remained\n\n");
             }else if (i>1) {
                 int numberOfADCChannelAsFilter =Integer.parseInt(signalAsFilter != null ? signalAsFilter.getAdcChannelNumber() : "-1");
                 MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",numberOfADCChannelAsFilter);
-//                alertInvalidParam.showAndWait();
-
+                alertFilterIsApplied.setContentText("the channel # "+signalAsFilter.getAdcChannelNumber()+"\nis selected from every file as a filter\n\n");
             }
-//            MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", false);
-//                double [] sigAsFiltData =signalAsFilter.getSignalYData().clone();
-//                SavitzkyGolayFilter sgfilter;
-//                String plotType = MainApp.appPreferencesRootNode.get("defaultPlotType","Raw");
-//                if(!plotType.equals("Raw")){
-//
-//                    int SGFilterLeft= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeft",50); //points
-//                    int  SGFilterRight= MainApp.appPreferencesRootNode.getInt("defaultSGFilterRight",50); //points
-//                    int SGFilterOrder= MainApp.appPreferencesRootNode.getInt("defaultSGFilterLeftOrder",1);
-//                    int sgLeft = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterLeft;
-//                    int sgRight = (SGFilterLeft+SGFilterRight)>=sigAsFiltData.length?1:SGFilterRight;
-//                    sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, SGFilterOrder);
-//                    sigAsFiltData = sgfilter.filterData(sigAsFiltData);
-//                }
-
-
+            alertFilterIsApplied.showAndWait();
         }
         else{
             SubtractSignal.setSelected(false);
@@ -218,6 +211,9 @@ public class PlotterController {
     private void initialize() {
 
         toggleGroup = new ToggleGroup();
+
+
+
         Raw.setToggleGroup(toggleGroup);
         RawAndSGFilter.setToggleGroup(toggleGroup);
         SGFilter.setToggleGroup(toggleGroup);
@@ -241,5 +237,18 @@ public class PlotterController {
         alertInvalidParam.setHeaderText("Improper selection!");
         alertInvalidParam.setContentText("In order to use any signal as a filter for all other signals,\n" +
                 "there ought to be one and only one selected signal\n\n");
+
+        alertFilterIsApplied = new Alert(WARNING);
+        DialogPane dPane = alertFilterIsApplied.getDialogPane();
+        dPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
+        dPane.getStyleClass().add("myDialog");
+        dPane.setMinHeight(Region.USE_PREF_SIZE);
+        dPane.setMinWidth(Region.USE_PREF_SIZE);
+        dPane.toFront();
+        alertFilterIsApplied.setTitle("Filter is applied");
+        alertFilterIsApplied.setHeaderText("The next ADC channel is used as a filter");
+        alertFilterIsApplied.setContentText("------?????-------");
+
+
     }
 }

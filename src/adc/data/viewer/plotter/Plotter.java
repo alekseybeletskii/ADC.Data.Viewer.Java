@@ -58,7 +58,7 @@ import javafx.scene.shape.StrokeType;
     public class Plotter extends AnchorPane {
 
     private static int plotterObjectsCounter;
-    private  Axes axes;
+    private Axes axes;
     private CanvasDataDrawing canvasData;
     private PlotterController plotterController;
     private Rectangle zoomRectangle;

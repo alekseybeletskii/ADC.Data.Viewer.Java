@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
@@ -56,14 +57,6 @@
    <children>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="legend" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="signalLabel">
-               <font>
-                  <Font size="10.0" />
-               </font>
-               <HBox.margin>
-                  <Insets right="50.0" />
-               </HBox.margin>
-            </Label>
             <Label fx:id="signalIndexLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="signalIndexLabel" textAlignment="RIGHT" textFill="#1e68b0">
                <font>
                   <Font name="System Bold Italic" size="18.0" />
@@ -78,35 +71,35 @@
          <left>
             <HBox spacing="2.0">
                <children>
-                  <Button fx:id="Settings" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
+                  <Button fx:id="Settings" focusTraversable="false" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Button>
-                  <ToggleButton fx:id="SubtractSignal" mnemonicParsing="false" onAction="#handleSubtractSignal" text="- Signal">
+                  <ToggleButton fx:id="SubtractSignal" focusTraversable="false" mnemonicParsing="false" onAction="#handleSubtractSignal" text="- Signal">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </ToggleButton>
-                    <ToggleButton fx:id="Raw" onAction="#handleRaw" text="Raw">
+                    <ToggleButton fx:id="Raw" focusTraversable="false" onAction="#handleRaw" text="Raw">
       
                            <font>
                         <Font size="10.0" />
                      </font>
                     </ToggleButton>
-                    <ToggleButton fx:id="RawAndSGFilter" onAction="#handleRawAndSGFilter" text="Raw&amp;Filter">
+                    <ToggleButton fx:id="RawAndSGFilter" focusTraversable="false" onAction="#handleRawAndSGFilter" text="Raw&amp;Filter">
       
                            <font>
                         <Font size="10.0" />
                      </font>
                     </ToggleButton>
-                    <ToggleButton fx:id="SGFilter" onAction="#handleSGFilter" text="Filter">
+                    <ToggleButton fx:id="SGFilter" focusTraversable="false" onAction="#handleSGFilter" text="Filter">
       >
                            <font>
                         <Font size="10.0" />
                      </font>
                     </ToggleButton>
-                  <ToggleButton fx:id="subtractSGFilter" onAction="#handleSGFiltered" text="Raw-Filter">
+                  <ToggleButton fx:id="subtractSGFilter" focusTraversable="false" onAction="#handleSGFiltered" text="Raw-Filter">
                      <font>
                         <Font size="10.0" />
                      </font>
@@ -135,5 +128,6 @@
             </HBox>
          </left>
       </BorderPane>
+      <FlowPane fx:id="legendPane" alignment="TOP_RIGHT" columnHalignment="RIGHT" minHeight="0.0" minWidth="0.0" mouseTransparent="true" prefWrapLength="0.0" rowValignment="TOP" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>
