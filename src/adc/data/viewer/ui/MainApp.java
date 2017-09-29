@@ -46,9 +46,7 @@ package adc.data.viewer.ui;
 
 import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.parser.DataParser;
-import adc.data.viewer.parser.ExportToText;
 import adc.data.viewer.plotter.Plotter;
-import adc.data.viewer.util.ApplicationPreferences;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -332,8 +330,11 @@ public  class MainApp extends Application {
             BorderPane plotterSetting = loader.load();
             plotterSettingController = loader.getController();
             Stage plotterSettingStage = new Stage();
+            plotterSettingStage.getIcons().add(logo);
+            plotterSettingStage.initOwner(primaryStage);
             plotterSettingStage.setResizable(false);
             plotterSettingStage.setAlwaysOnTop(true);
+            plotterSettingController.setMainApp(this);
             plotterSettingController.setPlotterController(pc);
             plotterSettingController.initializeSettings();
             plotterSettingController.setPlotterSettingStage(plotterSettingStage);
@@ -447,7 +448,7 @@ public  class MainApp extends Application {
 
             if(k.getCode().getName().equals("P")&&k.isShiftDown()){
                 for (PlotterController pc: plotterControllerlist) {
-                    dataParser.getExportToText().takeSnapShot( signalsOverviewController.getPlotsScrollPane());
+                    dataParser.getExportToTextAndSnapshot().takeSnapShot( signalsOverviewController.getPlotsScrollPane());
                 }
             }
 
@@ -460,7 +461,7 @@ public  class MainApp extends Application {
                 if (!plotterControllerlist.isEmpty() ){
                     String s = plotterControllerlist.get(0).getXyLabel().getText();
                     double profileTime = Double.parseDouble(s.split(delims)[1]);
-                    dataParser.getExportToText().saveProfile(profileTime);
+                    dataParser.getExportToTextAndSnapshot().saveProfile(profileTime);
                 }
             }
 

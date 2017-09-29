@@ -361,6 +361,7 @@ public class CanvasDataDrawing extends Canvas {
         xTheMIN=nextSignalToDraw.getSignalTimeShift()<xTheMIN?nextSignalToDraw.getSignalTimeShift():xTheMIN;
         xTheMAX=nextSignalToDraw.getSignalYData().length*dt>xTheMAX?nextSignalToDraw.getSignalYData().length*dt:xTheMAX;
 
+
         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileOrdinalNumber()];
 
         nextSignalLength = nextYData.length;
@@ -638,25 +639,10 @@ public class CanvasDataDrawing extends Canvas {
         yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
     }
 
-    private double mapX(double x, double dt) {
-
-        if(shiftXZero.get()<0){
-            return x*dx.get()*dt-shiftXZero.get();
-        }
-
-        else  return x*dx.get()*dt-shiftXZero.get();    }
+    private double mapX(double x, double dt) {return x  * dt * dx.get() - shiftXZero.get()+nextSignalTimeShift.get()*dx.get();}
 
 
-    private double mapX(double x) {
-
-                if(shiftXZero.get()<0){
-                    return x*dx.get()-shiftXZero.get();
-                }
-
-                else  return x*dx.get()-shiftXZero.get();
-
-
-    }
+    private double mapX(double x) {return x*dx.get()-shiftXZero.get();}
 
     private double mapY(double y) {
         return -y * dy.get()+ shiftYZero.get();

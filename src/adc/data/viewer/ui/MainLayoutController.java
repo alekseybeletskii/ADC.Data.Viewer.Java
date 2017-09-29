@@ -165,7 +165,7 @@ public class MainLayoutController {
     private void handleSignalsToText() {
 
         if (mainApp.getAdcDataRecords().size() != 0) {
-            mainApp.getDataParser().getExportToText().saveAllToText();
+            mainApp.getDataParser().getExportToTextAndSnapshot().saveAllToText();
         }
     }
 

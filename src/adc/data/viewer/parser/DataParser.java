@@ -49,9 +49,6 @@ import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.ui.MainApp;
 import javafx.scene.paint.Color;
 
-import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +71,7 @@ public class DataParser {
     private  int totalSignals;
     private Color[] signalColors;
     private boolean drawAllSignals;
-    private ExportToText exportToText;
+    private ExportToTextAndSnapshot exportToTextAndSnapshot;
 
     public List<ADCDataRecords> getADCDataRecordsList() {
         return ADCDataRecordsList;
@@ -82,11 +79,11 @@ public class DataParser {
     public String[] getFileNames() {
         return fileNames;
     }
-    public ExportToText getExportToText() {
-        return exportToText;
+    public ExportToTextAndSnapshot getExportToTextAndSnapshot() {
+        return exportToTextAndSnapshot;
     }
-    public void setExportToText(ExportToText exportToText) {
-        this.exportToText = exportToText;
+    public void setExportToTextAndSnapshot(ExportToTextAndSnapshot exportToTextAndSnapshot) {
+        this.exportToTextAndSnapshot = exportToTextAndSnapshot;
     }
     public DataParams getDataParams() {
         return dataParams;
@@ -107,7 +104,7 @@ public class DataParser {
     public DataParser( MainApp mainApp) {
         this.mainApp=mainApp;
         dataFormatsDetect = new DataFormatsDetect(mainApp);
-        exportToText =new ExportToText(mainApp);
+        exportToTextAndSnapshot =new ExportToTextAndSnapshot(mainApp);
     }
 
     public  void parseNewList(List<Path> dataPath) {

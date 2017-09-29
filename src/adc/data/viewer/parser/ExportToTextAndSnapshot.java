@@ -71,14 +71,14 @@ import java.util.List;
 import static java.lang.Math.round;
 
 
-public class ExportToText {
+public class ExportToTextAndSnapshot {
 
     private int linesWrittenWithSaveProfile =0;
     private MainApp mainApp;
     private List<ADCDataRecords> ADCDataRecordsList = new ArrayList<>();
 
 
-    public ExportToText (MainApp mainApp){
+    public ExportToTextAndSnapshot(MainApp mainApp){
         this.mainApp = mainApp;
     }
 

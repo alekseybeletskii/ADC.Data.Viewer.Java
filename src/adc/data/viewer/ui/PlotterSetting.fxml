@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -117,6 +118,9 @@
                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <Label text="Plots setting" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
@@ -126,8 +130,11 @@
                   </Label>
                   <Label text="type" GridPane.rowIndex="1" />
                   <TextField fx:id="lineWidth" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ChoiceBox fx:id="chooseLineOrScatter" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Width" GridPane.rowIndex="2" />
+                  <ChoiceBox fx:id="chooseLineOrScatter" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="width" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="setDataStartTime" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="dataStartTime" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label text="start time&#10;(ms)" textAlignment="CENTER" GridPane.rowIndex="4" />
                </children>
             </GridPane>
             <GridPane hgap="5.0" layoutX="10.0" layoutY="10.0">
