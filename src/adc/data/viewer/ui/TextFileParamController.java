@@ -65,7 +65,7 @@ public class TextFileParamController {
         xColumnNum = 0;
         amountOfHeaderLines = 0;
         intercadrDelay =0;
-        columnSeparator = ",";
+        columnSeparator = "(,\\t|\\t|, | |,)";
 
         isRememberTxtFileSettings = false;
     }

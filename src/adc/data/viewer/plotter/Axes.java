@@ -266,7 +266,6 @@ public class Axes extends Pane {
         xMinBasic=  adcDataRecords.getSignalTimeShift()<xMinBasic?adcDataRecords.getSignalTimeShift():xMinBasic;
         double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileOrdinalNumber()]);
         mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[adcDataRecords.getFileOrdinalNumber()];
-
         if (mostSamples *dt > xMaxBasic) {
             xMaxBasic = mostSamples *dt;
         }

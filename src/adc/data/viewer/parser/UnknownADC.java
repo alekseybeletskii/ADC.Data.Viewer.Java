@@ -138,7 +138,7 @@ for (int i=0;i<amountOfHeaderLines;i++) {
              }
 
              if(Xdata.length==Ydata.length){
-                 double channelRateFromXData =1.0/((Xdata[Xdata.length-1]-Xdata[0])/Xdata.length);
+                 double channelRateFromXData =1.0/((Xdata[Xdata.length-1]-Xdata[0])/(Xdata.length-1));
                  dataParser.getDataParams().setChannelRate(channelRateFromXData,fileIndex) ;
                  signalTimeShift =Xdata[0];
 
