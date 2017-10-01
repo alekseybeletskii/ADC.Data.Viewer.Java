@@ -49,12 +49,9 @@ import adc.data.viewer.processing.TestDataType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import static javafx.scene.control.Alert.AlertType.WARNING;
-
-public class TextFileParamController {
+public class TextFileParamController extends BaseController{
     static{
         creationDate = "01.01.1111";
         deviceName = "my ADC";
@@ -89,10 +86,6 @@ public class TextFileParamController {
 
     public static boolean isRememberTxtFileSettings;
 
-    private MainApp mainApp;
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
     public void setDataParser(DataParser dataParser) { this.dataParser = dataParser; }
 
     public void setTextFileParamsStage(Stage textFileParamsStage) {
@@ -160,21 +153,7 @@ public class TextFileParamController {
 
     }
 
-    public void makeAlert() {
-        alertInvalidParam = new Alert(WARNING);
-        alertInvalidParam.initOwner(textFileParamsStage);
-        DialogPane dialogPane = alertInvalidParam.getDialogPane();
-        dialogPane.setMinHeight(Region.USE_PREF_SIZE);
-        dialogPane.setMinWidth(Region.USE_PREF_SIZE);
-        dialogPane.getStyleClass().add("myDialog");
-        dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
-        dialogPane.toFront();
-        alertInvalidParam.setTitle("Warning");
-        alertInvalidParam.setHeaderText("Invalid data format!");
-        alertInvalidParam.setContentText("channel number: integer, >=0 \nchannel rate: float, >0 " +
-                "\nX(Y) column number: int, >=0 \namount of header lines: integer, >=0");
-        alertInvalidParam.showAndWait();
-    }
+
 
     public void pushOk(){
         OkButton.fire();
@@ -209,7 +188,7 @@ public class TextFileParamController {
             textFileParamsStage.close();
         }
         else{
-            makeAlert();
+            mainApp.getBaseController().alertInvalidDataFormatDefinition();
         }
     }
 

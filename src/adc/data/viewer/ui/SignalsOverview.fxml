@@ -76,7 +76,7 @@
                      <center>
                         <TableView fx:id="signalsTable" editable="true" onMouseClicked="#handleClickedOnTable" stylesheets="/css/signalsOverview.css" BorderPane.alignment="CENTER">
                           <columns>
-                              <TableColumn fx:id="signalLabelColumn" maxWidth="1.7976931348623157E308" minWidth="40.0" prefWidth="-1.0" sortable="false" text="#" />
+                              <TableColumn fx:id="signalLabelColumn" maxWidth="1.7976931348623157E308" minWidth="40.0" prefWidth="-1.0" sortable="false" text="data labels" />
                             <TableColumn fx:id="signalSelectedColumn" maxWidth="-1.0" minWidth="40.0" prefWidth="-1.0" resizable="false" sortable="false" />
                             <TableColumn fx:id="signalColorColumn" maxWidth="-1.0" minWidth="40.0" prefWidth="-1.0" resizable="false" sortable="false" />
                           </columns>

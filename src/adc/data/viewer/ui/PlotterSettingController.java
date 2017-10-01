@@ -52,21 +52,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.util.prefs.Preferences;
 
-import static javafx.scene.control.Alert.AlertType.WARNING;
 
 
-public class PlotterSettingController {
+public class PlotterSettingController extends BaseController{
 
 
 
-    private MainApp mainApp;
     private Stage plotterSettingsStage;
-    private Alert alertInvalidParam;
     private PlotterController plotterController;
     private Preferences appPreferencesRootNode = MainApp.appPreferencesRootNode;
 
@@ -132,9 +128,6 @@ public class PlotterSettingController {
 
 
 
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
 
     public void setPlotterController(PlotterController plotterController) {
         this.plotterController = plotterController;
@@ -147,17 +140,6 @@ public class PlotterSettingController {
 
     @FXML
     private void initialize() {
-
-        alertInvalidParam = new Alert(WARNING);
-        DialogPane dialogPane = alertInvalidParam.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        dialogPane.setMinHeight(Region.USE_PREF_SIZE);
-        dialogPane.setMinWidth(Region.USE_PREF_SIZE);
-        dialogPane.toFront();
-        alertInvalidParam.setTitle("Warning");
-        alertInvalidParam.setHeaderText("Invalid data format or axes ranges!");
-        alertInvalidParam.setContentText("all axes parameters should be of type float,\nother pframeters should be Integer\nand \"FFTWindowType\" of type String\n\n");
 
 
 
@@ -215,9 +197,7 @@ public class PlotterSettingController {
             ymin=Double.parseDouble(manualYmin.getText());
             ymax=Double.parseDouble(manualYmax.getText());
 
-            if ((xmin>xmax)|(ymin>ymax)) {alertInvalidParam.showAndWait();
-
-            }
+            if ((xmin>xmax)|(ymin>ymax)) {mainApp.getBaseController().alertInvalidSettingsParam();}
 
             sgleft=Integer.parseInt(manualSGFilterLeft.getText());
             sgright=Integer.parseInt(manualSGFilterRight.getText());
@@ -251,7 +231,7 @@ public class PlotterSettingController {
         }
 
         else{
-            alertInvalidParam.showAndWait();
+            mainApp.getBaseController().alertInvalidSettingsParam();;
             return false;
         }
 

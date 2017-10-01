@@ -75,6 +75,7 @@ public class CanvasDataDrawing extends Canvas {
     private int xRight;
 
     private DoubleProperty nextSignalTimeShift = new SimpleDoubleProperty();
+    private Color signalColor;
 
     public double getAdcZeroShift() {
         return adcZeroShift;
@@ -320,12 +321,13 @@ public class CanvasDataDrawing extends Canvas {
 
     public void drawNextSignal(ADCDataRecords nextSignalToDraw) {
         adcZeroShift = 0;
-
         int nextSignalLength =0;
         int nextSignalIndex = nextSignalToDraw.getSignalIndex();
         int ADCChannelNum = Integer.parseInt(nextSignalToDraw.getAdcChannelNumber());
         double [] nextYData = nextSignalToDraw.getSignalYData().clone();
         double [] nextXData = nextSignalToDraw.getSignalXData().clone();
+        signalColor = mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor();
+        String lineStyleSelected = MainApp.appPreferencesRootNode.get("defaultPlotStyle","line");
 
         if(MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)){
             int numberOfADCChannelUsedAsFilter = MainApp.appPreferencesRootNode.getInt("defaultADCChannelUsedAsFilter",-1);
@@ -358,8 +360,8 @@ public class CanvasDataDrawing extends Canvas {
 
         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileOrdinalNumber()]);
         nextSignalTimeShift.set(nextSignalToDraw.getSignalTimeShift());
-        xTheMIN=nextSignalToDraw.getSignalTimeShift()<xTheMIN?nextSignalToDraw.getSignalTimeShift():xTheMIN;
-        xTheMAX=nextSignalToDraw.getSignalYData().length*dt>xTheMAX?nextSignalToDraw.getSignalYData().length*dt:xTheMAX;
+        xTheMIN=nextSignalTimeShift.get()<xTheMIN?nextSignalTimeShift.get():xTheMIN;
+        xTheMAX=nextSignalToDraw.getSignalYData().length*dt+nextSignalTimeShift.get()>xTheMAX?nextSignalToDraw.getSignalYData().length*dt+nextSignalTimeShift.get():xTheMAX;
 
 
         double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileOrdinalNumber()];
@@ -404,18 +406,20 @@ public class CanvasDataDrawing extends Canvas {
             int sgRight = (SGFilterLeft+SGFilterRight)>= dataYSubarray.length?1:SGFilterRight;
 
 
-
             switch (plotType) {
                 case "Raw":
-                    graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
-                    graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
+
+                    graphicContext.setStroke(signalColor);
+                    graphicContext.setFill(signalColor);
                     graphicContext.beginPath();
                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
                     break;
                 case "SGFiltered":
+
+                    graphicContext.setStroke(Color.TRANSPARENT);
+                    graphicContext.setStroke(signalColor);
+                    graphicContext.setFill(signalColor);
                     sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, SGFilterOrder);
-                    graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
-                    graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
                     graphicContext.beginPath();
                     int i = 0;
                     for (double yy : sgfilter.filterData(dataYSubarray)) {
@@ -426,25 +430,26 @@ public class CanvasDataDrawing extends Canvas {
                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
                     break;
                 case "RawAndSGFilter":
+
+                    graphicContext.setStroke(signalColor);
+                    graphicContext.setFill(signalColor);
+                    graphicContext.beginPath();
+                    decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
+
                     sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, SGFilterOrder);
-
-                    graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
-                    graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
-                    graphicContext.beginPath();
-                    decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
                     dataYSubarray = sgfilter.filterData(dataYSubarray);
-
                     graphicContext.setStroke(Color.BLACK);
-                    graphicContext.setFill(Color.TRANSPARENT);
+                    graphicContext.setFill(Color.BLACK);
                     graphicContext.beginPath();
+                    MainApp.appPreferencesRootNode.put("defaultPlotStyle","line");
                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
+                    MainApp.appPreferencesRootNode.put("defaultPlotStyle",lineStyleSelected);
                     break;
                 case "SGFilter":
+                    graphicContext.setStroke(signalColor);
+                    graphicContext.setFill(signalColor);
                     sgfilter =new SavitzkyGolayFilter(sgLeft, sgRight, SGFilterOrder);
-
                     dataYSubarray = sgfilter.filterData(dataYSubarray);
-                    graphicContext.setStroke(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
-                    graphicContext.setFill(mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor());
                     graphicContext.beginPath();
                     decimator(graphicContext, ADCChannelNum, dt, dtCadre, dataYSubarray, dataXSubarray);
                     break;
@@ -513,10 +518,9 @@ public class CanvasDataDrawing extends Canvas {
 
 
         findMaxMinY(dataYSubarry, dt);
-
-
-
         int step = (int)(dataYSubarry.length/widthProperty().get());
+
+
 
         String isAmptydataXSubarry = dataXSubarry.length==0?"noXDataFromFile":"xDataFromFile";
 
@@ -561,7 +565,9 @@ public class CanvasDataDrawing extends Canvas {
                     graphicContext.fillOval(mapX(x+xLeft, dt) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
                     break;
                 case "scatter":
+//                    graphicContext.lineTo(mapX(x+xLeft, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
                     graphicContext.fillOval(mapX(x+xLeft, dt) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
+
                     break;
             }
 
@@ -572,6 +578,7 @@ public class CanvasDataDrawing extends Canvas {
 
 
     private void drawDecimatedData(GraphicsContext graphicContext, int ADCChannelNum, double dt, double dtCadre, double[] dataYSubarry, int step) {
+//graphicContext.setStroke(signalColor);
         for (int i = 0; i< dataYSubarry.length-step; i=i+step)
         {
             double [] sigSegment = Arrays.copyOfRange(dataYSubarry,
@@ -580,7 +587,6 @@ public class CanvasDataDrawing extends Canvas {
 
                 graphicContext.moveTo(mapX(i+xLeft, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(sigSegment[i]));
             }
-
 
             graphicContext.lineTo(mapX(i+xLeft+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMax(sigSegment)));
             graphicContext.lineTo(mapX(i+xLeft+step/2, dt) + ADCChannelNum * dx.get() * dtCadre, mapY(SimpleMath.getMin(sigSegment)));
@@ -603,6 +609,7 @@ public class CanvasDataDrawing extends Canvas {
                     graphicContext.fillOval(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
                     break;
                 case "scatter":
+//                    graphicContext.lineTo(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre, mapY(y));
                     graphicContext.fillOval(mapX(dataXSubarry[x]) + ADCChannelNum * dx.get() * dtCadre-pointSize/2, mapY(y)-pointSize/2,pointSize,pointSize);
                     break;
             }
@@ -612,7 +619,7 @@ public class CanvasDataDrawing extends Canvas {
 
 
     private void drawDecimatedDataXFromFile(GraphicsContext graphicContext, int ADCChannelNum, double dtCadre, double[] dataYSubarry, double[] dataXSubarry, int step) {
-
+//        graphicContext.setStroke(signalColor);
 
         for (int x = 0; x< dataYSubarry.length-step; x=x+step)
 
@@ -635,6 +642,7 @@ public class CanvasDataDrawing extends Canvas {
         double ymax,ymin;
         ymax= SimpleMath.getMax(sigSubarray);
         ymin=SimpleMath.getMin(sigSubarray);
+       if(ymax==ymin){ymax=ymax+1;ymin=ymin-1;}
         yTheMIN=ymin<yTheMIN?ymin:yTheMIN;
         yTheMAX=ymax>yTheMAX?ymax:yTheMAX;
     }

@@ -52,19 +52,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
-
-import static javafx.scene.control.Alert.AlertType.WARNING;
-
-public class PlotterController {
 
 
-    private MainApp mainApp;
+public class PlotterController extends BaseController{
+
+
     private Plotter plotter;
-    private Alert alertFilterIsApplied;
-    private Alert alertInvalidParam;
     @FXML
     Label signalIndexLabel;
+    private ADCDataRecords signalAsFilter;
 
     public FlowPane getLegendPane() {
         return legendPane;
@@ -108,9 +104,7 @@ public class PlotterController {
     public AnchorPane getPlotsLayout() {
         return plotsLayout;
     }
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
+
 
     public void setPlotsOnPane() {
 
@@ -158,7 +152,7 @@ public class PlotterController {
         if(SubtractSignal.isSelected()) {
 
             int i = 0;
-            ADCDataRecords signalAsFilter = null;
+            signalAsFilter = null;
             for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
                 if (sigMarc.getSignalSelected()) {
                     i++;
@@ -169,13 +163,17 @@ public class PlotterController {
             if(i==1){
                 MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",-1);
                 mainApp.setSignalUsedAsFilter(signalAsFilter.getSignalYData().clone());
-                alertFilterIsApplied.setContentText("the channel "+signalAsFilter.getSignalLabel()+"\nis selected as a filter for all remained\n\n");
+                mainApp.getBaseController().alertFilterIsApplied("one",signalAsFilter.getSignalLabel());
             }else if (i>1) {
                 int numberOfADCChannelAsFilter =Integer.parseInt(signalAsFilter != null ? signalAsFilter.getAdcChannelNumber() : "-1");
                 MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",numberOfADCChannelAsFilter);
-                alertFilterIsApplied.setContentText("the channel # "+signalAsFilter.getAdcChannelNumber()+"\nis selected from every file as a filter\n\n");
-            }
-            alertFilterIsApplied.showAndWait();
+                mainApp.getBaseController().alertFilterIsApplied("multy",signalAsFilter.getSignalLabel());
+            }else {
+                SubtractSignal.setSelected(false);
+                MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",-1);
+                MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", false);
+                mainApp.getBaseController().alertFilterIsApplied("non",signalAsFilter.getSignalLabel());            }
+
         }
         else{
             SubtractSignal.setSelected(false);
@@ -226,30 +224,7 @@ public class PlotterController {
         SubtractSignal.setText("\u2013Signal");
         SubtractSignal.setSelected(MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false));
 
-
-        alertInvalidParam = new Alert(WARNING);
-        DialogPane dialogPane = alertInvalidParam.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
-        dialogPane.setMinHeight(Region.USE_PREF_SIZE);
-        dialogPane.setMinWidth(Region.USE_PREF_SIZE);
-        dialogPane.toFront();
-        alertInvalidParam.setTitle("Warning");
-        alertInvalidParam.setHeaderText("Improper selection!");
-        alertInvalidParam.setContentText("In order to use any signal as a filter for all other signals,\n" +
-                "there ought to be one and only one selected signal\n\n");
-
-        alertFilterIsApplied = new Alert(WARNING);
-        DialogPane dPane = alertFilterIsApplied.getDialogPane();
-        dPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
-        dPane.getStyleClass().add("myDialog");
-        dPane.setMinHeight(Region.USE_PREF_SIZE);
-        dPane.setMinWidth(Region.USE_PREF_SIZE);
-        dPane.toFront();
-        alertFilterIsApplied.setTitle("Filter is applied");
-        alertFilterIsApplied.setHeaderText("The next ADC channel is used as a filter");
-        alertFilterIsApplied.setContentText("------?????-------");
-
-
     }
+
+
 }

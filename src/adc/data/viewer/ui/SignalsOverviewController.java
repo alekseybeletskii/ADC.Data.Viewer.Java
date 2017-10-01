@@ -62,10 +62,8 @@ import javafx.scene.paint.Color;
 /**
  *
  */
-public class SignalsOverviewController {
+public class SignalsOverviewController extends BaseController{
 
-    // Reference to the main application.
-    private MainApp mainApp;
     private boolean checkedFlag;
     private FilteredList<ADCDataRecords> filteredListOfSignals;
     public ScrollPane getPlotsScrollPane() {

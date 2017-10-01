@@ -45,7 +45,6 @@
 package adc.data.viewer.ui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -59,29 +58,26 @@ import java.util.Optional;
 import java.util.prefs.Preferences;
 
 
-public class MainLayoutController {
+public class MainLayoutController extends BaseController {
 
 //    static {
 //        initDir=new File(System.getProperty("user.home"));
 //    }
 
-    private MainApp mainApp;
     private File initDir;
     private WatchDirectory watcher;
     private Thread watchDirThread;
     private Preferences appPreferencesRootNode = MainApp.appPreferencesRootNode;
     private  List<Path> inpList;
-
     public List<Path> getInpList() {
         return inpList;
     }
+//    private MainApp mainApp;
 
 
-
-
-    void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
+//    void setMainApp(MainApp mainApp) {
+//        this.mainApp = mainApp;
+//    }
 
     @FXML
     private void handleOpen() {
@@ -101,17 +97,11 @@ public class MainLayoutController {
         fileChooser.getExtensionFilters().add(extFilter);
         getMoreFiles(fileChooser);
 
+        //to propose open more files after every file opening, set "morefiles" to true
+
         boolean morefiles = false;
         while(morefiles) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("");
-            alert.setHeaderText("More files?");
-//            alert.initStyle(StageStyle.UTILITY);
-            alert.initOwner(mainApp.getPrimaryStage());
-            alert.getDialogPane().setPrefSize(250,120);
-            alert.getDialogPane().setMinSize(250,120);
-
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = alertOpenMoreFiles();
             if (result.get() == ButtonType.OK) {
                 getMoreFiles( fileChooser);
             }
@@ -171,11 +161,7 @@ public class MainLayoutController {
 
     @FXML
     private void handleAbout() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("ADC binary data viewer");
-        alert.setHeaderText("JavaFX8-based application for digital signals visualisation");
-        alert.setContentText("Author: \nAleksey Beletskii\n\nWebsite:\nhttps://ua.linkedin.com/in/beletskii-aleksey");
-        alert.showAndWait();
+      alertAboutThisProgram();
     }
 
     @FXML

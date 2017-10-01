@@ -149,24 +149,16 @@ for (int i=0;i<amountOfHeaderLines;i++) {
 
             signalIndex++;
 
-//             System.out.println("channelNum:"+channelNum);
-             
             dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum, signalTimeShift);
 
          }
          catch (NumberFormatException e){
-            Alert alert = new Alert(WARNING);
-            alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Invalid data format!");
-
-            alert.setContentText("*.txt file should contain at least one column of float\nselect proper columns numbers, the first is #0\n\nCheck header lines amount!\n\nCheck columns separator!");
-
-            alert.showAndWait();
+             dataParser.getMainApp().getBaseController().alertNumberFormatExc();
          }
       } catch (IOException x) {
          System.err.format("IOException: %s%n", x);
       }
    }
- }
+
+
+}

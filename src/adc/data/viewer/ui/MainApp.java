@@ -74,6 +74,7 @@ import static java.lang.Math.round;
 public  class MainApp extends Application {
 
 
+    private final BaseController baseController = new BaseController();
     private boolean newFileCreated;
     private  boolean redrawAllowed;
     private final Image logo = new Image("images/logo.png");
@@ -92,8 +93,8 @@ public  class MainApp extends Application {
     private double [] signalUsedAsFilter;
     private double splitPaneDivisionPosition;
 
-    public static void main(String[] args) {
-        launch(args);
+    public BaseController getBaseController() {
+        return baseController;
     }
     public void setDirectoryWatcher(WatchDirectory directoryWatcher) {
         this.directoryWatcher = directoryWatcher;
@@ -156,16 +157,21 @@ public  class MainApp extends Application {
     }
 
 
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-//        ApplicationPreferences.setAllPreferencesToBasicDefaults();
-
+        BaseController.mainApp=this;
         primaryStage.setOnCloseRequest(e ->
         {Platform.exit();
          System.exit(0);});
         splitPaneDivisionPosition =0.12;
         nextSignalToDrawIndex =-1;
+//        baseController.setMainApp(this);
         this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ADC Signal Viewer");
@@ -186,7 +192,7 @@ public  class MainApp extends Application {
             Scene scene = new Scene(mainLayout);
             primaryStage.setScene(scene);
             MainLayoutController controller = loader.getController();
-            controller.setMainApp(this);
+//            controller.setMainApp(this);
             primaryStage.setMaximized(true);
             primaryStage.show();
         } catch (IOException e) {
@@ -204,7 +210,7 @@ public  class MainApp extends Application {
             signalsOverviewController.setMainApp(this);
             signalsOverviewController.setTableItems();
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
-            signalsOverviewController.getSignalsOverviewSplitPane().setVisible(false);
+            signalsOverviewController.getSignalsOverviewSplitPane().setVisible(true);
             setKeyPressedAction();
             getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(splitPaneDivisionPosition);
             mainLayout.widthProperty().addListener(observable -> {this.getSignalsOverviewController().getSignalsOverviewSplitPane().setDividerPositions(splitPaneDivisionPosition);});
@@ -282,7 +288,7 @@ public  class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("Plotter.fxml"));
             loader.load();
             plotterController = loader.getController();
-            plotterController.setMainApp(this);
+//            plotterController.setMainApp(this);
             plotterController.setPlotsOnPane();
             plotterController.getPlotter().getCanvasData().setPlotterController(plotterController);
             plotterController.getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
@@ -306,7 +312,7 @@ public  class MainApp extends Application {
             textFileParamsStage.initOwner(primaryStage);
             textFileParamsStage.setResizable(false);
             textFileParamsStage.toFront();
-            textFileParamController.setMainApp(this);
+//            textFileParamController.setMainApp(this);
             textFileParamController.setDataParser(dataParser);
             textFileParamController.setTextFileParamsStage(textFileParamsStage);
             textFileParamController.setFileNumber(fileIndex);
@@ -334,7 +340,7 @@ public  class MainApp extends Application {
             plotterSettingStage.initOwner(primaryStage);
             plotterSettingStage.setResizable(false);
             plotterSettingStage.setAlwaysOnTop(true);
-            plotterSettingController.setMainApp(this);
+//            plotterSettingController.setMainApp(this);
             plotterSettingController.setPlotterController(pc);
             plotterSettingController.initializeSettings();
             plotterSettingController.setPlotterSettingStage(plotterSettingStage);
@@ -439,6 +445,7 @@ public  class MainApp extends Application {
 
 //            &&!MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)
             if(k.getCode().getName().equals("F")&&k.isShiftDown()){
+                baseController.alertSourceDataReplaced();
                 MainApp.appPreferencesRootNode.putBoolean("defaultIsReplaceRawWithFilter", true);
                 for (PlotterController pc: plotterControllerlist) {
                     pc.getPlotter().getAxes().setAxesBasicSetup();

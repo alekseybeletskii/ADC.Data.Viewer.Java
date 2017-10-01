@@ -56,7 +56,7 @@
   ~ ********************* END LICENSE BLOCK ***********************************
   -->
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="BorderPane" stylesheets="/css/dialog.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.TextFileParamController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="BorderPane" stylesheets="/css/dialog.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.TextFileParamController">
    <center>
       <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -130,7 +130,7 @@
                   <Font size="14.0" />
                </font></TextField>
 
-            <TextField fx:id="txtColumnSeparator" promptText="&quot;,&quot;; &quot;\t&quot;; &quot;;&quot;; ... " GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <TextField fx:id="txtColumnSeparator" promptText="(,\t|\t|, | |,)" GridPane.columnIndex="1" GridPane.rowIndex="7">
 
                <font>
                   <Font size="14.0" />
