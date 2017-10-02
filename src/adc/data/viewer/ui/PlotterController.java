@@ -58,10 +58,7 @@ public class PlotterController extends BaseController{
 
 
     private Plotter plotter;
-    @FXML
-    Label signalIndexLabel;
     private ADCDataRecords signalAsFilter;
-
     public FlowPane getLegendPane() {
         return legendPane;
     }
@@ -72,6 +69,8 @@ public class PlotterController extends BaseController{
 
     @FXML
     FlowPane legendPane;
+    @FXML
+    Label signalIndexLabel;
     @FXML
     private AnchorPane plotsLayout;
     @FXML

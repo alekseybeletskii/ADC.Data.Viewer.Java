@@ -85,13 +85,14 @@ public class PlotterSettingController extends BaseController{
      private String plotStyle;
 
     private ObservableList<String> lineOrScatter = FXCollections.observableArrayList();
-    private ObservableList<String> allDataLables = FXCollections.observableArrayList();
+    private ObservableList<String> allDataLabels = FXCollections.observableArrayList();
 
-
+    @FXML
+    TextField yDataMultiplier;
     @FXML
     private TextField dataStartTime;
     @FXML
-    ComboBox<String> setDataStartTime;
+    ComboBox<String> setDataStartTimeAndYMultiplier;
     @FXML
     private TextField lineWidth;
     @FXML
@@ -138,12 +139,7 @@ public class PlotterSettingController extends BaseController{
         this.plotterSettingsStage = plotterSettingsStage;
     }
 
-    @FXML
-    private void initialize() {
 
-
-
-    }
 
     @FXML
     private void handleCancel(ActionEvent actionEvent) {
@@ -157,7 +153,7 @@ public class PlotterSettingController extends BaseController{
     private void handleOk(ActionEvent actionEvent) {
 
         if (ApplyNewSettings()) plotterSettingsStage.close();
-        setDataStartTime.getSelectionModel().clearSelection();
+        setDataStartTimeAndYMultiplier.getSelectionModel().clearSelection();
 
     }
 
@@ -165,9 +161,11 @@ public class PlotterSettingController extends BaseController{
     private void handleReset(ActionEvent actionEvent){
         ApplicationPreferences.setAllPreferencesToBasicDefaults();
         plotterController.toggleButton("Raw");
-        plotterController.getPlotter().getCanvasData().drawData();
-        setDataStartTime.getSelectionModel().clearSelection();
+        setDataStartTimeAndYMultiplier.getSelectionModel().clearSelection();
         dataStartTime.setText("0.0");
+        yDataMultiplier.setText("1.0");
+        plotterController.getPlotter().getAxes().dropAxesBasicLimits();
+        plotterController.getPlotter().getCanvasData().drawData();
         initializeSettings();
 
 //        plotterSettingsStage.close();
@@ -188,6 +186,7 @@ public class PlotterSettingController extends BaseController{
                         TestDataType.isDouble(zeroShiftStart.getText())&&
                         TestDataType.isDouble(zeroShiftEnd.getText())&&
                         TestDataType.isDouble(dataStartTime.getText())&&
+                        TestDataType.isDouble(yDataMultiplier.getText())&&
                         Double.parseDouble(manualXmin.getText())<Double.parseDouble(manualXmax.getText())&&
                         Double.parseDouble(manualYmin.getText())<Double.parseDouble(manualYmax.getText())
                 )
@@ -214,13 +213,16 @@ public class PlotterSettingController extends BaseController{
 
             plotterController.getPlotter().getAxes().setAxesBounds(xmin,xmax,ymin,ymax);
 
-            if(!setDataStartTime.getSelectionModel().isEmpty()&&
-               !setDataStartTime.getSelectionModel().isSelected(0)){
-                ADCDataRecords adcr = mainApp.getAdcDataRecords().get(setDataStartTime.getSelectionModel().getSelectedIndex()-1);
+            if(!setDataStartTimeAndYMultiplier.getSelectionModel().isEmpty()&&
+               !setDataStartTimeAndYMultiplier.getSelectionModel().isSelected(0)){
+                ADCDataRecords adcr = mainApp.getAdcDataRecords().get(setDataStartTimeAndYMultiplier.getSelectionModel().getSelectedIndex()-1);
                 updateSignalXData(adcr);
-            }else if(setDataStartTime.getSelectionModel().isSelected(0)){
+                updateSignalYData(adcr);
+            }else if(setDataStartTimeAndYMultiplier.getSelectionModel().isSelected(0)){
                 for(ADCDataRecords adcr : mainApp.getAdcDataRecords()) {
                 updateSignalXData(adcr);
+                updateSignalYData(adcr);
+
                 }
             }
 
@@ -251,6 +253,21 @@ public class PlotterSettingController extends BaseController{
             adcr.setSignalXData(xtmp);
         }
     }
+
+
+    private void updateSignalYData(ADCDataRecords adcr) {
+        adcr.setyMultiplier(Double.parseDouble(yDataMultiplier.getText()));
+        if (adcr.getSignalYData().length > 0) {
+            double[] ytmp = new double[adcr.getSignalYData().length];
+            int i = 0;
+            for (double x : adcr.getSignalYData()) {
+                ytmp[i] = adcr.getSignalYData()[i] *Double.parseDouble(yDataMultiplier.getText());
+                i++;
+            }
+            adcr.setSignalYData(ytmp);
+        }
+    }
+
 
     private void setAllPreferencesToNewDefaults() {
         appPreferencesRootNode.put("defaultPlotStyle",plotStyle);
@@ -290,30 +307,45 @@ public class PlotterSettingController extends BaseController{
         zeroShiftStart.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultFixZeroShiftStart",0)));
         zeroShiftEnd.setText(String.valueOf(appPreferencesRootNode.getDouble("defaultFixZeroShiftEnd",1)));
         fixZeroShift.setSelected(appPreferencesRootNode.getBoolean("defaultFixZeroShift",false));
+        dataStartTime.setText("0.0");
+        yDataMultiplier.setText("1.0");
 
+        chooseLineOrScatter.setValue(appPreferencesRootNode.get("defaultPlotStyle","line"));
+        UseNewDefaults.setSelected(appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false));
+    }
+
+
+    @FXML
+    private void initialize() {
         plotStyle =appPreferencesRootNode.get("defaultPlotStyle","line");
+        chooseLineOrScatter.setValue(plotStyle);
+        lineOrScatter.clear();
         lineOrScatter.addAll("line+scatter","line","scatter");
         chooseLineOrScatter.itemsProperty().setValue(lineOrScatter);
-        chooseLineOrScatter.setValue(plotStyle);
+        chooseLineOrScatter.setValue("line");
         chooseLineOrScatter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             plotterController.getPlotter().getCanvasData().setPlotStyle(newValue);
             plotStyle =newValue;
         });
-        allDataLables.add("set for all data");
-        for(ADCDataRecords adcr : mainApp.getAdcDataRecords()){
-            allDataLables.add(adcr.getSignalLabel());
-        }
-        dataStartTime.setText("0.0");
-        setDataStartTime.itemsProperty().setValue(allDataLables);
-        setDataStartTime.getSelectionModel().clearSelection();
-        setDataStartTime.setOnAction(event -> {
-            if(!setDataStartTime.getSelectionModel().isEmpty()&&!setDataStartTime.getSelectionModel().isSelected(0)){double startTime = mainApp.getAdcDataRecords().get(setDataStartTime.getSelectionModel().getSelectedIndex()-1).getSignalTimeShift();
-            dataStartTime.setText(String.valueOf(startTime));
-            }
 
+        allDataLabels.add("set for all data");
+        for(ADCDataRecords adcr : mainApp.getAdcDataRecords()){
+            allDataLabels.add(adcr.getSignalLabel());
+        }
+
+        setDataStartTimeAndYMultiplier.itemsProperty().setValue(allDataLabels);
+        setDataStartTimeAndYMultiplier.getSelectionModel().clearSelection();
+        setDataStartTimeAndYMultiplier.setOnAction(event -> {
+            if(!setDataStartTimeAndYMultiplier.getSelectionModel().isEmpty()&&!setDataStartTimeAndYMultiplier.getSelectionModel().isSelected(0)){
+                double startTime = mainApp.getAdcDataRecords().get(setDataStartTimeAndYMultiplier.getSelectionModel()
+                        .getSelectedIndex()-1).getSignalTimeShift();
+                dataStartTime.setText(String.valueOf(startTime));
+                double yMultiplier = mainApp.getAdcDataRecords().get(setDataStartTimeAndYMultiplier.getSelectionModel()
+                        .getSelectedIndex()-1).getyMultiplier();
+                yDataMultiplier.setText(String.valueOf(yMultiplier));
+            }
         });
 
-        UseNewDefaults.setSelected(appPreferencesRootNode.getBoolean("defaultUseNewDefaults",false));
     }
 }
 

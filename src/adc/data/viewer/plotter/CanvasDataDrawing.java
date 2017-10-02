@@ -264,7 +264,7 @@ public class CanvasDataDrawing extends Canvas {
 
                 break;
             case "AllPlotsByOne":
-;
+
                 if(nextSignalToDraw.isSignalSelected())drawNextSignal(nextSignalToDraw);
                 break;
             case "AllPlotsByOneScroll":
@@ -319,7 +319,7 @@ public class CanvasDataDrawing extends Canvas {
     }
 
 
-    public void drawNextSignal(ADCDataRecords nextSignalToDraw) {
+    void drawNextSignal(ADCDataRecords nextSignalToDraw) {
         adcZeroShift = 0;
         int nextSignalLength =0;
         int nextSignalIndex = nextSignalToDraw.getSignalIndex();
@@ -402,6 +402,7 @@ public class CanvasDataDrawing extends Canvas {
 
 
             SavitzkyGolayFilter sgfilter;
+
             int sgLeft = (SGFilterLeft+SGFilterRight)>= dataYSubarray.length?1:SGFilterLeft;
             int sgRight = (SGFilterLeft+SGFilterRight)>= dataYSubarray.length?1:SGFilterRight;
 
@@ -578,7 +579,6 @@ public class CanvasDataDrawing extends Canvas {
 
 
     private void drawDecimatedData(GraphicsContext graphicContext, int ADCChannelNum, double dt, double dtCadre, double[] dataYSubarry, int step) {
-//graphicContext.setStroke(signalColor);
         for (int i = 0; i< dataYSubarry.length-step; i=i+step)
         {
             double [] sigSegment = Arrays.copyOfRange(dataYSubarry,

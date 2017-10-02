@@ -207,7 +207,7 @@ public  class MainApp extends Application {
             AnchorPane signalsOverview = loader.load();
             mainLayout.setCenter(signalsOverview);
             signalsOverviewController  = loader.getController();
-            signalsOverviewController.setMainApp(this);
+//            signalsOverviewController.setMainApp(this);
             signalsOverviewController.setTableItems();
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
             signalsOverviewController.getSignalsOverviewSplitPane().setVisible(true);

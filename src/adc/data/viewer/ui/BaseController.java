@@ -45,9 +45,7 @@
 package adc.data.viewer.ui;
 
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 
 import java.util.Optional;
@@ -94,7 +92,7 @@ static MainApp mainApp;
             case "multy":
                 alertFilterIsApplied.setTitle("Filter is applied");
                 alertFilterIsApplied.setHeaderText("The next ADC channel is used as a filter");
-                alertFilterIsApplied.setContentText("the channel # "+ signalLable+"\nis selected FROM EVERY file as a filter\n\n");
+                alertFilterIsApplied.setContentText("the channel # "+ signalLable.split("@")[0]+"\nis selected FROM EVERY file as a filter\n\n");
                 break;
         }
         alertFilterIsApplied.showAndWait();
@@ -119,8 +117,9 @@ static MainApp mainApp;
 
      Optional<ButtonType>  alertOpenMoreFiles(){
          alertOpenMoreFiles= buildWarning(alertOpenMoreFiles,CONFIRMATION);
-         alertOpenMoreFiles.setTitle("");
+         alertOpenMoreFiles.setTitle("More files?");
          alertOpenMoreFiles.setHeaderText("More files?");
+         alertOpenMoreFiles.setContentText("Would you like to open more files ? \n\n");
         return  alertOpenMoreFiles.showAndWait();
     }
 
@@ -145,6 +144,16 @@ static MainApp mainApp;
          if(alert==null) {
              alert = new Alert(alertType);
              alert.initOwner(mainApp.getPrimaryStage());
+
+             if (alertType==Alert.AlertType.CONFIRMATION) {
+                 alert.getButtonTypes().clear();
+                 alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+                 Button yesButton = (Button) alert.getDialogPane().lookupButton( ButtonType.YES );
+                 yesButton.setDefaultButton( false );
+                 Button noButton = (Button) alert.getDialogPane().lookupButton( ButtonType.NO );
+                 noButton.setDefaultButton( true );
+             }
+
 //            alert.initStyle(StageStyle.UTILITY);
 //             alert.getDialogPane().setPrefSize(250,120);
 //             alert.getDialogPane().setMinSize(250,120);

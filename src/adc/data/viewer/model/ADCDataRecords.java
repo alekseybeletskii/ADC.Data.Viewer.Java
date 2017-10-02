@@ -61,17 +61,17 @@ public class ADCDataRecords {
 
 
     private final DoubleProperty signalTimeShift; // in milliseconds
-
     private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
     private final ObjectProperty<Color> signalColor;
     private final IntegerProperty fileOrdinalNumber;
     private final StringProperty adcChannelNumber;
+    private final DoubleProperty yMultiplier;
 
 
-    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileOrdinalNumber, double [] signalXdata, double [] signalYdata, double signalTimeShift) {
-
+    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileOrdinalNumber, double [] signalXdata, double [] signalYdata, double signalTimeShift, double yMultiplier) {
+        this.yMultiplier = new SimpleDoubleProperty(yMultiplier);
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
@@ -83,6 +83,17 @@ public class ADCDataRecords {
         this.signalYData = signalYdata;
         this.signalXData = signalXdata;
         this.adcChannelNumber = new SimpleStringProperty(adcChannelNumber);
+    }
+
+
+    public double getyMultiplier() {
+        return yMultiplier.get();
+    }
+    public DoubleProperty yMultiplierProperty() {
+        return yMultiplier;
+    }
+    public void setyMultiplier(double yMultiplier) {
+        this.yMultiplier.set(yMultiplier);
     }
 
     public double[] getSignalYData() {

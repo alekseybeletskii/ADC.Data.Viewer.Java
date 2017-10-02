@@ -198,9 +198,7 @@ public class SignalsOverviewController extends BaseController{
         }
     }
 
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
+
 
     public void setTableItems() {
 

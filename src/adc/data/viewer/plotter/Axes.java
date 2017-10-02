@@ -220,10 +220,7 @@ public class Axes extends Pane {
 
     public void obtainDataAndTimeMargins(ADCDataRecords nextSignalToDraw) {
 
-//xMinBasic= Integer.MAX_VALUE;
-//xMaxBasic= Integer.MIN_VALUE;
-//yMinBasic= Integer.MAX_VALUE;
-//yMaxBasic= Integer.MIN_VALUE;
+
 
         boolean isAnySelected =false;
 
@@ -274,6 +271,15 @@ public class Axes extends Pane {
         if (minimum< yMinBasic) yMinBasic =minimum;
 
 //        System.out.println("xMinBasic="+xMinBasic+" ; "+"xMaxBasic="+xMaxBasic +" ; " +"dt="+dt);
+    }
+
+
+
+    public void dropAxesBasicLimits() {
+        xMinBasic= Integer.MAX_VALUE;
+        xMaxBasic= Integer.MIN_VALUE;
+        yMinBasic= Integer.MAX_VALUE;
+        yMaxBasic= Integer.MIN_VALUE;
     }
 
 }

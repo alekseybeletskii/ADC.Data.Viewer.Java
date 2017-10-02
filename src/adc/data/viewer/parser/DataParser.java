@@ -70,7 +70,6 @@ public class DataParser {
     private  int totalFiles;
     private  int totalSignals;
     private Color[] signalColors;
-    private boolean drawAllSignals;
     private ExportToTextAndSnapshot exportToTextAndSnapshot;
 
     public List<ADCDataRecords> getADCDataRecordsList() {
@@ -108,7 +107,6 @@ public class DataParser {
     }
 
     public  void parseNewList(List<Path> dataPath) {
-        drawAllSignals=false;
         signalIndex =-1;
         ADCDataRecordsList.clear();
         totalFiles=dataPath.size();
@@ -153,7 +151,6 @@ public class DataParser {
         while (fileOrdinalNumber < dataFilePath.length)
         {
             formatName = dataParams.getDataFormatStr()[fileOrdinalNumber].toUpperCase();
-//            if (!formatName.equals("TEXTFILE"))
                 DataTypesList.valueOf(formatName).getDataType().setParam(fileOrdinalNumber);
             fileOrdinalNumber++;
         }
@@ -168,10 +165,6 @@ public class DataParser {
         while (fileOrdinalNumber < dataFilePath.length)
         {
             formatName = dataParams.getDataFormatStr()[fileOrdinalNumber].toUpperCase();
-//            if (formatName.equals("TEXTFILE"))
-//            {mainApp.getTextFileParamController().setData(i,signalIndex);
-//                i++;
-//                continue;}
             DataTypesList.valueOf(formatName).getDataType().setData(fileOrdinalNumber,signalIndex);
             fileOrdinalNumber++;
         }
@@ -191,15 +184,16 @@ public class DataParser {
      */
 
 
-    public void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileOrdinalNumber, int adcChannelNumber, double signalTimeShift) {
+     void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileOrdinalNumber, int adcChannelNumber, double signalTimeShift) {
 
         String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
         String nextSignalLabel = adcChannelNumberAsString+"\u0040"+ fileNames[fileOrdinalNumber];
         Path nextSignalPath = dataFilePath[fileOrdinalNumber].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-
-        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawAllSignals, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,Xdata.clone(), Ydata.clone(), signalTimeShift);
+        double yMultiplier = 1.0;
+        boolean drawThisSignal = false;
+        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawThisSignal, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,Xdata.clone(), Ydata.clone(), signalTimeShift,yMultiplier);
 
         ADCDataRecordsList.add(singleDataRecord);
     }
@@ -215,6 +209,13 @@ public class DataParser {
             if(hue>360) {hue=40;}
         }
         this.signalColors = signalColors;
+    }
+
+
+    private void setYDataMultiplier(){
+
+
+
     }
 
 

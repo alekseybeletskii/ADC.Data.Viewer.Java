@@ -102,7 +102,7 @@ public class MainLayoutController extends BaseController {
         boolean morefiles = false;
         while(morefiles) {
             Optional<ButtonType> result = alertOpenMoreFiles();
-            if (result.get() == ButtonType.OK) {
+            if (result.get() == ButtonType.YES) {
                 getMoreFiles( fileChooser);
             }
             else {
