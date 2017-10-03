@@ -60,40 +60,55 @@ public class ADCDataRecords {
 
 
 
-    private final DoubleProperty signalTimeShift; // in milliseconds
+    private final DoubleProperty signalTimeShift_ms; // in milliseconds
     private final IntegerProperty signalIndex;
     private final BooleanProperty signalSelected;
     private final StringProperty signalLabel;
     private final ObjectProperty<Color> signalColor;
     private final IntegerProperty fileOrdinalNumber;
     private final StringProperty adcChannelNumber;
-    private final DoubleProperty yMultiplier;
+    private final DoubleProperty dataMultiplier;
 
+    private final DoubleProperty signalRate_kHz;
 
-    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileOrdinalNumber, double [] signalXdata, double [] signalYdata, double signalTimeShift, double yMultiplier) {
-        this.yMultiplier = new SimpleDoubleProperty(yMultiplier);
+    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileOrdinalNumber, double [] signalXdata, double [] signalYdata, double signalTimeShift_ms, double dataMultiplier, double signalRate_kHz) {
+        this.dataMultiplier = new SimpleDoubleProperty(dataMultiplier);
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
         this.signalLabel = new SimpleStringProperty(signalLable);
         this.fileOrdinalNumber = new SimpleIntegerProperty(fileOrdinalNumber);
 
-        this.signalTimeShift = new SimpleDoubleProperty(signalTimeShift);
+        this.signalTimeShift_ms = new SimpleDoubleProperty(signalTimeShift_ms);
 
         this.signalYData = signalYdata;
         this.signalXData = signalXdata;
         this.adcChannelNumber = new SimpleStringProperty(adcChannelNumber);
+        this.signalRate_kHz = new SimpleDoubleProperty(signalRate_kHz);
     }
 
 
-    public double getyMultiplier() {
-        return yMultiplier.get();
+    public double getSignalRate_kHz() {
+        return signalRate_kHz.get();
     }
-    public DoubleProperty yMultiplierProperty() {
-        return yMultiplier;
+
+    public DoubleProperty signalRate_kHzProperty() {
+        return signalRate_kHz;
     }
-    public void setyMultiplier(double yMultiplier) {
-        this.yMultiplier.set(yMultiplier);
+
+    public void setSignalRate_kHz(double signalRate_kHz) {
+        this.signalRate_kHz.set(signalRate_kHz);
+    }
+
+
+    public double getDataMultiplier() {
+        return dataMultiplier.get();
+    }
+    public DoubleProperty dataMultiplierProperty() {
+        return dataMultiplier;
+    }
+    public void setDataMultiplier(double dataMultiplier) {
+        this.dataMultiplier.set(dataMultiplier);
     }
 
     public double[] getSignalYData() {
@@ -112,16 +127,16 @@ public class ADCDataRecords {
     }
 
 
-    public double getSignalTimeShift() {
-        return signalTimeShift.get();
+    public double getSignalTimeShift_ms() {
+        return signalTimeShift_ms.get();
     }
 
-    public DoubleProperty signalTimeShiftProperty() {
-        return signalTimeShift;
+    public DoubleProperty signalTimeShift_msProperty() {
+        return signalTimeShift_ms;
     }
 
-    public void setSignalTimeShift(double signalTimeShift) {
-        this.signalTimeShift.set(signalTimeShift);
+    public void setSignalTimeShift_ms(double signalTimeShift_ms) {
+        this.signalTimeShift_ms.set(signalTimeShift_ms);
     }
 
     public String getAdcChannelNumber() {

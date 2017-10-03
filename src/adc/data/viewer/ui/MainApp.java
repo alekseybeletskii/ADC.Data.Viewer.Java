@@ -372,7 +372,7 @@ public  class MainApp extends Application {
     }
 
      void clearAll(){
-         nextSignalToDrawIndex=-1;
+             nextSignalToDrawIndex=-1;
              adcDataRecords.clear();
              signalsOverviewController.getPlotsVBox().getChildren().clear();
              plotterControllerlist.clear();

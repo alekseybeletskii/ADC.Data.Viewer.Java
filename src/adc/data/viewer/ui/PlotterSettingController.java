@@ -240,7 +240,7 @@ public class PlotterSettingController extends BaseController{
     }
 
     private void updateSignalXData(ADCDataRecords adcr) {
-        adcr.setSignalTimeShift(Double.parseDouble(dataStartTime.getText()));
+        adcr.setSignalTimeShift_ms(Double.parseDouble(dataStartTime.getText()));
         if (adcr.getSignalXData().length > 0) {
             double[] xtmp = new double[adcr.getSignalXData().length];
             double tStart = adcr.getSignalXData()[0];
@@ -256,7 +256,7 @@ public class PlotterSettingController extends BaseController{
 
 
     private void updateSignalYData(ADCDataRecords adcr) {
-        adcr.setyMultiplier(Double.parseDouble(yDataMultiplier.getText()));
+        adcr.setDataMultiplier(Double.parseDouble(yDataMultiplier.getText()));
         if (adcr.getSignalYData().length > 0) {
             double[] ytmp = new double[adcr.getSignalYData().length];
             int i = 0;
@@ -338,10 +338,10 @@ public class PlotterSettingController extends BaseController{
         setDataStartTimeAndYMultiplier.setOnAction(event -> {
             if(!setDataStartTimeAndYMultiplier.getSelectionModel().isEmpty()&&!setDataStartTimeAndYMultiplier.getSelectionModel().isSelected(0)){
                 double startTime = mainApp.getAdcDataRecords().get(setDataStartTimeAndYMultiplier.getSelectionModel()
-                        .getSelectedIndex()-1).getSignalTimeShift();
+                        .getSelectedIndex()-1).getSignalTimeShift_ms();
                 dataStartTime.setText(String.valueOf(startTime));
                 double yMultiplier = mainApp.getAdcDataRecords().get(setDataStartTimeAndYMultiplier.getSelectionModel()
-                        .getSelectedIndex()-1).getyMultiplier();
+                        .getSelectedIndex()-1).getDataMultiplier();
                 yDataMultiplier.setText(String.valueOf(yMultiplier));
             }
         });

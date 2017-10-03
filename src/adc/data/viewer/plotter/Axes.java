@@ -262,8 +262,8 @@ public class Axes extends Pane {
     public void selectedSignalMargins(ADCDataRecords adcDataRecords) {
         double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileOrdinalNumber()]);
         mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[adcDataRecords.getFileOrdinalNumber()];
-        xMinBasic=  adcDataRecords.getSignalTimeShift()<xMinBasic?adcDataRecords.getSignalTimeShift():xMinBasic;
-        xMaxBasic=mostSamples *dt+adcDataRecords.getSignalTimeShift()>xMaxBasic?mostSamples *dt+adcDataRecords.getSignalTimeShift():xMaxBasic;
+        xMinBasic=  adcDataRecords.getSignalTimeShift_ms()<xMinBasic?adcDataRecords.getSignalTimeShift_ms():xMinBasic;
+        xMaxBasic=mostSamples *dt+adcDataRecords.getSignalTimeShift_ms()>xMaxBasic?mostSamples *dt+adcDataRecords.getSignalTimeShift_ms():xMaxBasic;
         double[] testSignal = adcDataRecords.getSignalYData();
         double maximum = SimpleMath.getMax(testSignal)- adcZeroShift;
         double minimum = SimpleMath.getMin(testSignal)- adcZeroShift;

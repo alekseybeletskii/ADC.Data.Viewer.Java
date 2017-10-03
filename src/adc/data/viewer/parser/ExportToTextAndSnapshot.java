@@ -101,10 +101,12 @@ public class ExportToTextAndSnapshot {
             try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalLabel() +".txt"), StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
             {
 
-                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalYData().length*16);
+                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalYData().length*16*2);
                 int j=0;
                 while(j< mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalYData().length) {
-                    stringBytes = String.format("%15.7f", mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalYData()[j]).getBytes("UTF-8");
+                    stringBytes = String.format("%15.7f,%15.7f",
+                            j*1.0/mainApp.getAdcDataRecords().get(i).getSignalRate_kHz()+mainApp.getAdcDataRecords().get(i).getSignalTimeShift_ms(),
+                            mainApp.getAdcDataRecords().get(i).getSignalYData()[j]).getBytes("UTF-8");
                     wrBuf.put(stringBytes);
                     wrBuf.put((byte)System.getProperty("line.separator").charAt(0));
                     j++;
@@ -133,7 +135,7 @@ public class ExportToTextAndSnapshot {
                 {
                     getAmountOfLinesInFile(outTxtPath);
                     MappedByteBuffer wrBuf;
-                    stringBytes = String.format("%16s, %16s, %16s, %16s, %16s", "x", "y", "channel@file", "profileTime", "ordinal").getBytes("UTF-8");
+                    stringBytes = String.format("%16s, %16s, %30s, %16s, %16s", "x", "y", "channel@file", "profileTime", "ordinal").getBytes("UTF-8");
                     if(fWrite.size()==0){
 
                     int bufferSize = (totalSelected+1)*(stringBytes.length+1);
@@ -151,10 +153,11 @@ public class ExportToTextAndSnapshot {
 
                     for (ADCDataRecords nextSignal : mainApp.getAdcDataRecords()) {
                         if (nextSignal.getSignalSelected()) {
+//                            String format = "%16d, %16.7f, %"+nextSignal.getSignalLabel().length()+"s, %16.7f, %16d";
                             double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignal.getFileOrdinalNumber()]);
                             int profileIndex = (int) round(profileTime / dt);
                             double profileDataPoint = nextSignal.getSignalYData()[profileIndex];
-                            stringBytes = String.format("%16d, %16.7f, %16s, %16.7f, %16d", linesWrittenWithSaveProfile, profileDataPoint, nextSignal.getSignalLabel(), profileTime, linesWrittenWithSaveProfile).getBytes("UTF-8");
+                            stringBytes = String.format("%16d, %16.7f, %30s, %16.7f, %16d", linesWrittenWithSaveProfile, profileDataPoint, nextSignal.getSignalLabel(), profileTime, linesWrittenWithSaveProfile).getBytes("UTF-8");
                             wrBuf.put(stringBytes);
                             wrBuf.put((byte) System.getProperty("line.separator").charAt(0));
                             linesWrittenWithSaveProfile++;

@@ -191,9 +191,10 @@ public class DataParser {
         Path nextSignalPath = dataFilePath[fileOrdinalNumber].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
-        double yMultiplier = 1.0;
+        double dataMultiplier = 1.0;
         boolean drawThisSignal = false;
-        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawThisSignal, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,Xdata.clone(), Ydata.clone(), signalTimeShift,yMultiplier);
+        double signalRate_kHz = dataParams.getChannelRate()[fileOrdinalNumber];
+        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawThisSignal, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,Xdata.clone(), Ydata.clone(), signalTimeShift, dataMultiplier,signalRate_kHz);
 
         ADCDataRecordsList.add(singleDataRecord);
     }

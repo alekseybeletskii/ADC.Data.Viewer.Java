@@ -209,7 +209,7 @@ import javafx.scene.shape.StrokeType;
                             MainApp.appPreferencesRootNode.getDouble("defaultXAxisMax",1),
                             MainApp.appPreferencesRootNode.getDouble("defaultYAxisMin",0),
                             MainApp.appPreferencesRootNode.getDouble("defaultYAxisMax",1)
-                    );};
+                    );}
 
                     getChildren().remove(zoomRectangle);
                     zoomRectangle = null;

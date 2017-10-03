@@ -359,7 +359,7 @@ public class CanvasDataDrawing extends Canvas {
 
 
         double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileOrdinalNumber()]);
-        nextSignalTimeShift.set(nextSignalToDraw.getSignalTimeShift());
+        nextSignalTimeShift.set(nextSignalToDraw.getSignalTimeShift_ms());
         xTheMIN=nextSignalTimeShift.get()<xTheMIN?nextSignalTimeShift.get():xTheMIN;
         xTheMAX=nextSignalToDraw.getSignalYData().length*dt+nextSignalTimeShift.get()>xTheMAX?nextSignalToDraw.getSignalYData().length*dt+nextSignalTimeShift.get():xTheMAX;
 
