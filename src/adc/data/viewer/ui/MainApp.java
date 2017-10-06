@@ -171,7 +171,6 @@ public  class MainApp extends Application {
          System.exit(0);});
         splitPaneDivisionPosition =0.12;
         nextSignalToDrawIndex =-1;
-//        baseController.setMainApp(this);
         this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ADC Signal Viewer");
@@ -191,8 +190,6 @@ public  class MainApp extends Application {
             mainLayout =  loader.load();
             Scene scene = new Scene(mainLayout);
             primaryStage.setScene(scene);
-            MainLayoutController controller = loader.getController();
-//            controller.setMainApp(this);
             primaryStage.setMaximized(true);
             primaryStage.show();
         } catch (IOException e) {
@@ -207,7 +204,6 @@ public  class MainApp extends Application {
             AnchorPane signalsOverview = loader.load();
             mainLayout.setCenter(signalsOverview);
             signalsOverviewController  = loader.getController();
-//            signalsOverviewController.setMainApp(this);
             signalsOverviewController.setTableItems();
             signalsOverviewController.getPlotsScrollPane().setVisible(false);
             signalsOverviewController.getSignalsOverviewSplitPane().setVisible(true);
@@ -288,7 +284,6 @@ public  class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("Plotter.fxml"));
             loader.load();
             plotterController = loader.getController();
-//            plotterController.setMainApp(this);
             plotterController.setPlotsOnPane();
             plotterController.getPlotter().getCanvasData().setPlotterController(plotterController);
             plotterController.getPlotter().getCanvasData().setNextSignalToDraw(nextSignalToDraw);
@@ -312,7 +307,6 @@ public  class MainApp extends Application {
             textFileParamsStage.initOwner(primaryStage);
             textFileParamsStage.setResizable(false);
             textFileParamsStage.toFront();
-//            textFileParamController.setMainApp(this);
             textFileParamController.setDataParser(dataParser);
             textFileParamController.setTextFileParamsStage(textFileParamsStage);
             textFileParamController.setFileNumber(fileIndex);
@@ -340,7 +334,6 @@ public  class MainApp extends Application {
             plotterSettingStage.initOwner(primaryStage);
             plotterSettingStage.setResizable(false);
             plotterSettingStage.setAlwaysOnTop(true);
-//            plotterSettingController.setMainApp(this);
             plotterSettingController.setPlotterController(pc);
             plotterSettingController.initializeSettings();
             plotterSettingController.setPlotterSettingStage(plotterSettingStage);
@@ -402,12 +395,10 @@ public  class MainApp extends Application {
     }
 
     public void signalMarkerAddListeners() {
-//    public void signalMarkerAddListeners(List<ADCDataRecords> itemsInTable) {
 
         for (ADCDataRecords sgmrk : adcDataRecords){
             sgmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
                 redrawAllCanvas(sgmrk,newValue);
-//                redrawAllCanvas(sgmrk,newValue);
                     }
             );
 
@@ -443,7 +434,6 @@ public  class MainApp extends Application {
                 signalsOverviewController.getSignalsOverviewSplitPane().setDividerPosition(0,newDividerPosition);
             }
 
-//            &&!MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)
             if(k.getCode().getName().equals("F")&&k.isShiftDown()){
                 baseController.alertSourceDataReplaced();
                 MainApp.appPreferencesRootNode.putBoolean("defaultIsReplaceRawWithFilter", true);
@@ -454,22 +444,20 @@ public  class MainApp extends Application {
             }
 
             if(k.getCode().getName().equals("P")&&k.isShiftDown()){
-                for (PlotterController pc: plotterControllerlist) {
-                    dataParser.getExportToTextAndSnapshot().takeSnapShot( signalsOverviewController.getPlotsScrollPane());
-                }
+            String outPath = dataParser.getExportToTextAndSnapshot().takeSnapShot( signalsOverviewController.getPlotsScrollPane());
+                baseController.alertExport(outPath);
             }
 
 
-
-
             if(k.getCode().getName().equals("S")&&k.isShiftDown()){
-
-                    String delims = "\\s+";
+                String outPath = "";
+                        String delims = "\\s+";
                 if (!plotterControllerlist.isEmpty() ){
                     String s = plotterControllerlist.get(0).getXyLabel().getText();
                     double profileTime = Double.parseDouble(s.split(delims)[1]);
-                    dataParser.getExportToTextAndSnapshot().saveProfile(profileTime);
+                    outPath = dataParser.getExportToTextAndSnapshot().saveProfile(profileTime);
                 }
+                baseController.alertSaveProfile(outPath);
             }
 
 

@@ -140,6 +140,7 @@
                   <Label text="X shift, ms" GridPane.rowIndex="5" />
                   <Label text="Y multiplier" GridPane.rowIndex="6" />
                   <TextField fx:id="yDataMultiplier" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <Label text="data" GridPane.rowIndex="4" />
                </children>
             </GridPane>
             <GridPane hgap="5.0" layoutX="10.0" layoutY="10.0">

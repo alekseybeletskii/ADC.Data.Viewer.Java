@@ -121,9 +121,9 @@
 
             <Label prefWidth="122.0" text="channel #" GridPane.rowIndex="2" />
             <Label text="channel rate, kHz&#10;(ignored if X column selected)" GridPane.rowIndex="3" />
-            <Label text="Y column" GridPane.rowIndex="6" />
+            <Label text="Y column, &gt;=0" GridPane.rowIndex="6" />
             <Label text="don't ask again" GridPane.rowIndex="9" />
-            <Label text="X column (set &quot;-1&quot; to ignore)" GridPane.rowIndex="5" />
+            <Label text="X column, &gt;=0&#10;(set &quot;-1&quot; to ignore)" GridPane.rowIndex="5" />
 
             <TextField fx:id="txtXColumnNum" promptText="int &gt;=0 (&lt;0 for non)" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <font>

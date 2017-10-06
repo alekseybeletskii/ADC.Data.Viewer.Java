@@ -61,6 +61,8 @@ private Alert alertSourceDataReplaced;
 private Alert alertAboutThisProgram;
 private Alert alertOpenMoreFiles;
 private Alert alertNumberFormatExc;
+private Alert alertExport;
+private Alert alertSaveProfile;
 static MainApp mainApp;
 
 
@@ -136,8 +138,24 @@ static MainApp mainApp;
           alertNumberFormatExc=buildWarning(alertNumberFormatExc,Alert.AlertType.WARNING);
           alertNumberFormatExc.setTitle("Warning");
           alertNumberFormatExc.setHeaderText("Invalid data format!");
-          alertNumberFormatExc.setContentText("*.txt file should contain at least one column of float\nselect proper columns numbers, the first is #0\n\nCheck header lines amount!\n\nCheck columns separator!");
+          alertNumberFormatExc.setContentText("*.txt file should contain at least one column of float\nselect proper columns numbers, the first is #0\n\nCheck header lines amount!\n\nCheck columns separator!\n\n");
           alertNumberFormatExc.showAndWait();
+     }
+
+     public void alertExport(String outPath){
+         alertExport=buildWarning(alertExport,Alert.AlertType.WARNING);
+         alertExport.setTitle("Warning");
+         alertExport.setHeaderText("Data export");
+         alertExport.setContentText("The data are exported to\n\n"+outPath+"\n\n");
+         alertExport.showAndWait();
+     }
+
+     public void alertSaveProfile(String outPath){
+         alertSaveProfile=buildWarning(alertSaveProfile,Alert.AlertType.WARNING);
+         alertSaveProfile.setTitle("Warning");
+         alertSaveProfile.setHeaderText("Profile saving");
+         alertSaveProfile.setContentText("The profile is saved to\n\n"+outPath+"\n\n");
+         alertSaveProfile.showAndWait();
      }
 
      private Alert buildWarning(Alert alert,Alert.AlertType alertType) {
@@ -166,6 +184,9 @@ static MainApp mainApp;
          }
          return alert;
      }
+
+
+
 
 }
 

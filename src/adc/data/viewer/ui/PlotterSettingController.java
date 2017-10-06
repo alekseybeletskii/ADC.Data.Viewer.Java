@@ -240,7 +240,6 @@ public class PlotterSettingController extends BaseController{
     }
 
     private void updateSignalXData(ADCDataRecords adcr) {
-        adcr.setSignalTimeShift_ms(Double.parseDouble(dataStartTime.getText()));
         if (adcr.getSignalXData().length > 0) {
             double[] xtmp = new double[adcr.getSignalXData().length];
             double tStart = adcr.getSignalXData()[0];
@@ -249,23 +248,23 @@ public class PlotterSettingController extends BaseController{
                 xtmp[i] = adcr.getSignalXData()[i] - tStart + Double.parseDouble(dataStartTime.getText());
                 i++;
             }
-
             adcr.setSignalXData(xtmp);
         }
+        adcr.setSignalTimeShift_ms(Double.parseDouble(dataStartTime.getText()));
     }
 
 
     private void updateSignalYData(ADCDataRecords adcr) {
-        adcr.setDataMultiplier(Double.parseDouble(yDataMultiplier.getText()));
         if (adcr.getSignalYData().length > 0) {
             double[] ytmp = new double[adcr.getSignalYData().length];
             int i = 0;
             for (double x : adcr.getSignalYData()) {
-                ytmp[i] = adcr.getSignalYData()[i] *Double.parseDouble(yDataMultiplier.getText());
+                ytmp[i] = adcr.getSignalYData()[i] *Double.parseDouble(yDataMultiplier.getText())/adcr.getDataMultiplier();
                 i++;
             }
             adcr.setSignalYData(ytmp);
         }
+        adcr.setDataMultiplier(Double.parseDouble(yDataMultiplier.getText()));
     }
 
 

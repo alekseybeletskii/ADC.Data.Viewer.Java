@@ -152,8 +152,7 @@ public class MainLayoutController extends BaseController {
     }
 
     @FXML
-    private void handleSignalsToText() {
-
+    private void handleExportDataToText() {
         if (mainApp.getAdcDataRecords().size() != 0) {
             mainApp.getDataParser().getExportToTextAndSnapshot().saveAllToText();
         }

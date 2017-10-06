@@ -76,7 +76,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Plot">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleSignalsToText" text="Export all to txt" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleExportDataToText" text="Export selected to txt" />
                   <MenuItem mnemonicParsing="false" onAction="#handleDrawPlots" text="Draw" />
                   <MenuItem mnemonicParsing="false" onAction="#handleDrawPlotsByOne" text="Draw by one" />
                   <MenuItem mnemonicParsing="false" onAction="#handleDrawPlotsByOneScroll" text="Draw by one &amp; scroll" />

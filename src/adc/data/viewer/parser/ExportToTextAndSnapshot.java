@@ -47,25 +47,22 @@ package adc.data.viewer.parser;
 import adc.data.viewer.model.ADCDataRecords;
 import adc.data.viewer.ui.MainApp;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.Math.round;
@@ -85,43 +82,43 @@ public class ExportToTextAndSnapshot {
     /**
      * The method saves avery signal as a separate text file to the "txt" subdirectory
      */
-    public void saveAllToText(){
-        int i=0;
-        byte [] stringBytes;
-        while (i< mainApp.getDataParser().getADCDataRecordsList().size()){
+    public void saveAllToText() {
+        byte[] stringBytes;
+        for (ADCDataRecords nextData : mainApp.getAdcDataRecords()){
+            if (nextData.getSignalSelected()) {
 
-            Path outTxtPath = mainApp.getDataParser().getSignalPath()[i].resolve(Paths.get("txt"));
+                Path outTxtPath = mainApp.getDataParser().getSignalPath()[nextData.getFileOrdinalNumber()].resolve(Paths.get("txt"));
 
-            try {
-                Files.createDirectories(outTxtPath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try ( FileChannel fWrite = (FileChannel)Files.newByteChannel(outTxtPath.resolve(mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalLabel() +".txt"), StandardOpenOption.WRITE,StandardOpenOption.READ, StandardOpenOption.CREATE))
-            {
-
-                MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalYData().length*16*2);
-                int j=0;
-                while(j< mainApp.getDataParser().getADCDataRecordsList().get(i).getSignalYData().length) {
-                    stringBytes = String.format("%15.7f,%15.7f",
-                            j*1.0/mainApp.getAdcDataRecords().get(i).getSignalRate_kHz()+mainApp.getAdcDataRecords().get(i).getSignalTimeShift_ms(),
-                            mainApp.getAdcDataRecords().get(i).getSignalYData()[j]).getBytes("UTF-8");
-                    wrBuf.put(stringBytes);
-                    wrBuf.put((byte)System.getProperty("line.separator").charAt(0));
-                    j++;
+                try {
+                    Files.createDirectories(outTxtPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch(InvalidPathException e) {
-                System.out.println("Path Error " + e);
-            } catch (IOException e) {
-                System.out.println("I/O Error " + e);
+
+                try (FileChannel fWrite = (FileChannel) Files.newByteChannel(outTxtPath.resolve(nextData.getSignalLabel() + ".txt"), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE)) {
+
+                    MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, nextData.getSignalYData().length * 16 * 2);
+                    int j = 0;
+                    while (j < nextData.getSignalYData().length) {
+                        stringBytes = String.format("%15.7f,%15.7f",
+                                j * 1.0 / nextData.getSignalRate_kHz() + nextData.getSignalTimeShift_ms(),
+                                nextData.getSignalYData()[j]).getBytes("UTF-8");
+                        wrBuf.put(stringBytes);
+                        wrBuf.put((byte) System.getProperty("line.separator").charAt(0));
+                        j++;
+                    }
+                } catch (InvalidPathException e) {
+                    System.out.println("Path Error " + e);
+                } catch (IOException e) {
+                    System.out.println("I/O Error " + e);
+                }
+
             }
-            i++;
-        }
+    }
     }
 
 
-    public void saveProfile (double profileTime) {
+    public String saveProfile (double profileTime) {
         byte [] stringBytes;
         int totalSelected =howManySignalsIsSelected();
                 Path outTxtPath = mainApp.getDataParser().getSignalPath()[0].resolve(Paths.get("txt","profile.txt"));
@@ -153,11 +150,11 @@ public class ExportToTextAndSnapshot {
 
                     for (ADCDataRecords nextSignal : mainApp.getAdcDataRecords()) {
                         if (nextSignal.getSignalSelected()) {
-//                            String format = "%16d, %16.7f, %"+nextSignal.getSignalLabel().length()+"s, %16.7f, %16d";
+                        String nextLabel = nextSignal.getSignalLabel().length()>30?nextSignal.getSignalLabel().substring(0,29):nextSignal.getSignalLabel();
                             double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignal.getFileOrdinalNumber()]);
                             int profileIndex = (int) round(profileTime / dt);
                             double profileDataPoint = nextSignal.getSignalYData()[profileIndex];
-                            stringBytes = String.format("%16d, %16.7f, %30s, %16.7f, %16d", linesWrittenWithSaveProfile, profileDataPoint, nextSignal.getSignalLabel(), profileTime, linesWrittenWithSaveProfile).getBytes("UTF-8");
+                            stringBytes = String.format("%16d, %16.7f, %30s, %16.7f, %16d", linesWrittenWithSaveProfile, profileDataPoint, nextLabel, profileTime, linesWrittenWithSaveProfile).getBytes("UTF-8");
                             wrBuf.put(stringBytes);
                             wrBuf.put((byte) System.getProperty("line.separator").charAt(0));
                             linesWrittenWithSaveProfile++;
@@ -169,7 +166,7 @@ public class ExportToTextAndSnapshot {
                 } catch (IOException e) {
                     System.out.println("I/O Error " + e);
                 }
-
+        return outTxtPath.toString();
 
         }
 
@@ -183,7 +180,6 @@ public class ExportToTextAndSnapshot {
         } catch (IOException e) {
             System.err.println(e);
         }
-
     }
 
 
@@ -196,23 +192,19 @@ public class ExportToTextAndSnapshot {
         }
 
 
-public void takeSnapShot(ScrollPane plotter){
-
-    Date nowTime = new Date();
+public String takeSnapShot(ScrollPane plotter){
+    String nowTimeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd'.'MM'.'yyyy'_'H'.'mm'.'ss"));
     SnapshotParameters params = new SnapshotParameters();
     WritableImage writableImage = new WritableImage((int)plotter.getWidth(), (int)plotter.getHeight());
     plotter.snapshot(params,writableImage);
-    Path path =  Paths.get(MainApp.appPreferencesRootNode.get("defaultWorkingDirectory", System.getProperty("user.home")),nowTime.toString()+"_snapshot.png");
-File  file = path.toFile();
-
-
-
-
+    Path outImagePath =  Paths.get(MainApp.appPreferencesRootNode.get("defaultWorkingDirectory", System.getProperty("user.home")),nowTimeString+"_snapshot.png");
+File  file = outImagePath.toFile();
     try {
         ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
     } catch (IOException ex) {
         ex.printStackTrace();
     }
+    return outImagePath.toString();
 }
 
 
