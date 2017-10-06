@@ -129,7 +129,7 @@ static MainApp mainApp;
          alertAboutThisProgram=buildWarning(alertAboutThisProgram,INFORMATION);
          alertAboutThisProgram.setTitle("ADC binary data viewer");
          alertAboutThisProgram.setHeaderText("JavaFX8-based application for digital signals visualisation");
-         alertAboutThisProgram.setContentText("Author: \nAleksey Beletskii\n\nWebsite:\nhttps://ua.linkedin.com/in/beletskii-aleksey");
+         alertAboutThisProgram.setContentText("Author: \nAleksey Beletskii\n\nWebsite:\nhttps://ua.linkedin.com/in/beletskii-aleksey\n\n");
          alertAboutThisProgram.showAndWait();
     }
 

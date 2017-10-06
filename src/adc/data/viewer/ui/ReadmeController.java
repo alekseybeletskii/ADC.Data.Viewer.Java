@@ -46,6 +46,8 @@ package adc.data.viewer.ui;
 
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -54,6 +56,9 @@ public class ReadmeController  extends BaseController{
     private Stage stageReadme;
 
     public void setStageReadme(Stage stageReadme) { this.stageReadme = stageReadme; }
+
+    @FXML
+    TextArea readmeText;
 
     @FXML
     private void handleOnMouseClick(MouseEvent mouseEvent) {
