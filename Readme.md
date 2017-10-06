@@ -64,12 +64,12 @@ How to use:
    - double click on table will check/uncheck all signals
    - individual color can be set for every signal
    - hot keys for menu items;
-   - keys "ctrl+W" when pressed will move panel divider position
+   - keys "Ctrl+W" when pressed will move panel divider position
      to show/hide data table
-   - keys "ctrl+S" when pressed will save a profile - Y values
+   - keys "Shift+S" when pressed will save a profile - Y values
      at a given X coordinate from every data that are plotted
-   - keys "ctrl+F" when pressed will substitute source Y data with filtered ones
-   - keys "ctrl+P" when pressed will save a snapshot of plots
+   - keys "Shift+F" when pressed will substitute source Y data with filtered ones
+   - keys "Shift+P" when pressed will save a snapshot of plots
 
 In order to hot keys were enabled, your drawing should be in focus, just mouse-click on it      
 
