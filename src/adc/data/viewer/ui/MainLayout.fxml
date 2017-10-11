@@ -74,6 +74,13 @@
                      </accelerator></MenuItem>
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="DataBase">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleReadFromDataBase" text="Read from database" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleWriteToDataBase" text="Write to database" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleConnectionSetup" text="Connection setup" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Plot">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleExportDataToText" text="Export selected to txt" />

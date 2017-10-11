@@ -211,10 +211,18 @@ public class MainLayoutController extends BaseController {
         mainApp.showReadme();
     }
 
-//    @FXML
-//    private void initialize() {
-//        initDir=new File(System.getProperty("user.home"));
-//    }
+@FXML
+private  void handleConnectionSetup(){
+
+}
+@FXML
+private  void handleReadFromDataBase(){
+        
+}
+@FXML
+private  void handleWriteToDataBase(){
+
+}
 
     @FXML
     private void initialize (){
