@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+
+<!--
+  ~ ********************* BEGIN LICENSE BLOCK *********************************
+  ~
+  ~ ADCDataViewer
+  ~ Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
+  ~ All rights reserved
+  ~
+  ~ github: https://github.com/alekseybeletskii
+  ~
+  ~ The ADCDataViewer software serves for visualization and simple processing
+  ~ of any data recorded with Analog Digital Converters in binary or text form.
+  ~
+  ~ Commercial support is available. To find out more contact the author directly.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~     1. Redistributions of source code must retain the above copyright notice, this
+  ~          list of conditions and the following disclaimer.
+  ~     2. Redistributions in binary form must reproduce the above copyright notice,
+  ~         this list of conditions and the following disclaimer in the documentation
+  ~         and/or other materials provided with the distribution.
+  ~
+  ~ The software is distributed to You under terms of the GNU General Public
+  ~ License. This means it is "free software". However, any program, using
+  ~ ADCDataViewer _MUST_ be the "free software" as well.
+  ~ See the GNU General Public License for more details
+  ~ (file ./COPYING in the root of the distribution
+  ~ or website <http://www.gnu.org/licenses/>)
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ~ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  ~ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ~ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  ~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  ~ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ~ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  ~ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~
+  ~ ********************* END LICENSE BLOCK ***********************************
+  -->
+
+
+<TextArea fx:id="readmeText" onMouseClicked="#handleOnMouseClick" prefHeight="400.0" prefWidth="750.0" stylesheets="/css/dialog.css" text="This application allows to visualize binary files created with analog digital converters,&#10;by default these are:&#10;&#10;1. L-Card L-783M, http://www.lcard.ru/products/boards/l-783&#10;2. L-Card e20-10, http://www.lcard.ru/products/external/e20-10&#10;3. SATURN SDI-AD12-128H, http://www.saturn-data.com&#10;&#10;It is possible to visualize data presented in a text file.&#10;For now it should be a single file per one array of registered data:&#10;&#10; -(a) single data column inside&#10; -(b) X column in milliseconds, Y data column&#10; &#10;You will be prompted to enter some data parameters manually in this case&#10; (choose proper data and time columns, channel number, ADC channel rate...).&#10;&#10;You can select data from the table to show some data details&#10;&#10;and select some positions one by one or all at once to visualize plots&#10;For more convenience the filter above the table can be utilized,&#10;just insert a proper string with part of data label to filter the list&#10;&#10;Some interactive plotter settings and Savitsky-Golay filter are available:&#10;line width, move data along X axis, data scaling,&#10;compensation of ADC zero drift&#10;&#10;You can view signals one under another&#10;&#10;ADC files examples are included in the &quot;resources/sampledata/&quot; subfolder.&#10;&#10;Executable Jar file with data examples are located in &quot;resources/executable/&quot; subfolder.&#10;&#10;An information about every signal will be extracted from an appropriate&#10;binary *.par file  in correspondence with a chosen binary *.dat file&#10;(or from the beginning of a chosen *.dat file in case of SATURN SDI-AD12-128H)&#10;This information will be shown in the right part of the program's main window,&#10;according to a selected  table row, when pressing ctrl+H&#10;(mouse-click on a plot to focus)&#10;&#10;&#10;How to use:&#10;&#10;   - &quot;File-&gt;Open&quot;               shows a file chooser dialog, files with &quot;dat&quot;, &quot;csv&quot; and &quot;txt&quot;&#10;                                extensions will be available;&#10;                                new data will be added to the existing list&#10;   - &quot;File-&gt;Clear&quot;              will clear the list of data in table;                                 &#10;   - &quot;File-&gt;Open Auto&quot;          shows a directory chooser dialog to set a directory&#10;                                for watching new files creation by an ADC, by copying, etc.&#10;&#10;   - &quot;Plot-&gt;Export selected to txt &quot;     converts selected data shown in the main table&#10;                                    to the text format and save it to a subfolder named &quot;&lt;source&gt;/txt&quot;&#10;   - &quot;Plot-&gt;Draw&quot;                   shows selected signals;&#10;                                    arrow UP,DOWN - list by one; ctrl+HOME - show all in one;&#10;   - &quot;Plot-&gt;Draw by one&quot;            shows selected signals inside one drawing, one under another;&#10;   - &quot;Plot-&gt;Draw by one and scroll&quot; shows selected signals one by one inside a scrolling pane;&#10;&#10;   - When plots are shown, Savitsky-Golay filter can be applied.&#10;   - double click on table will check/uncheck all signals&#10;   - individual color can be set for every signal&#10;   - hot keys for menu items;&#10;   - keys &quot;Сtrl+W&quot; when pressed will move panel divider position&#10;     to show/hide data table&#10;   - keys &quot;Shift+S&quot; when pressed will save a profile - Y values&#10;     at a given X coordinate from every data that are plotted&#10;   - keys &quot;Shift+F&quot; when pressed will substitute source Y data with filtered ones&#10;   - keys &quot;Shift+P&quot; when pressed will save a snapshot of plots&#10;&#10;In order to hot keys were enabled, your drawing should be in focus, just mouse-click on it      &#10;&#10;Zoom and pan plots with mouse:&#10;   - zoom: left click + drag from a top left to a bottom right&#10;   - pan: right click + drag &#10;   - rescale to a full view: left click + drag back from a bottom right to a top left&#10;&#10;NOTE: if there are a lot of points, complete drawing will take some time.&#10;      Laptop with Intel i5 renders a 1 000 000 of points about 1 minute,&#10;      in case of drawing all data &quot;as is&quot;.&#10;      Feature is included that enables rapid drawing even when there are&#10;      millions of data points. Canvas drawing now successfully&#10;      copes with millions of data points due to simple &quot;point-per-pixel&quot; approach.&#10;      Just use zoom to view all the details.&#10;&#10;LICENSING&#10;&#10;Copyright (c) 2016 onward, Aleksey Beletskii  &lt;beletskiial@gmail.com&gt;&#10;All rights reserved&#10;&#10;github: https://github.com/alekseybeletskii&#10;&#10;The ADCDataViewer software serves for visualization and simple processing&#10;of any data recorded with Analog Digital Converters in binary or text form.&#10;&#10;Commercial support is available. To find out more contact the author directly.&#10;&#10;Redistribution and use in source and binary forms, with or without&#10;modification, are permitted provided that the following conditions are met:&#10;&#10;  1. Redistributions of source code must retain the above copyright notice, this&#10;     list of conditions and the following disclaimer.&#10;  2. Redistributions in binary form must reproduce the above copyright notice,&#10;     this list of conditions and the following disclaimer in the documentation&#10;     and/or other materials provided with the distribution.&#10;&#10;The software is distributed to You under terms of the GNU General Public&#10;License. This means it is &quot;free software&quot;. However, any program, using&#10;ADCDataViewer _MUST_ be the &quot;free software&quot; as well.&#10;See the GNU General Public License for more details&#10;(file ./COPYING in the root of the distribution&#10;or website &lt;http://www.gnu.org/licenses/&gt;)&#10;&#10;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND&#10;ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED&#10;WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE&#10;DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR&#10;ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES&#10;(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;&#10;LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND&#10;ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT&#10;(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS&#10;SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&#10;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.ReadmeController" />

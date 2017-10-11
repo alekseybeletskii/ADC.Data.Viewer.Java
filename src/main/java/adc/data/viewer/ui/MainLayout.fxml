@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.BorderPane?>
+
+<!--
+  ~ ********************* BEGIN LICENSE BLOCK *********************************
+  ~
+  ~ ADCDataViewer
+  ~ Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
+  ~ All rights reserved
+  ~
+  ~ github: https://github.com/alekseybeletskii
+  ~
+  ~ The ADCDataViewer software serves for visualization and simple processing
+  ~ of any data recorded with Analog Digital Converters in binary or text form.
+  ~
+  ~ Commercial support is available. To find out more contact the author directly.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~     1. Redistributions of source code must retain the above copyright notice, this
+  ~          list of conditions and the following disclaimer.
+  ~     2. Redistributions in binary form must reproduce the above copyright notice,
+  ~         this list of conditions and the following disclaimer in the documentation
+  ~         and/or other materials provided with the distribution.
+  ~
+  ~ The software is distributed to You under terms of the GNU General Public
+  ~ License. This means it is "free software". However, any program, using
+  ~ ADCDataViewer _MUST_ be the "free software" as well.
+  ~ See the GNU General Public License for more details
+  ~ (file ./COPYING in the root of the distribution
+  ~ or website <http://www.gnu.org/licenses/>)
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ~ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  ~ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ~ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  ~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  ~ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ~ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  ~ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~
+  ~ ********************* END LICENSE BLOCK ***********************************
+  -->
+
+<BorderPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.MainLayoutController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#handleOpenAuto" text="Open Auto">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#handleClear" text="Clear">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="DataBase">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleReadFromDataBase" text="Read from database" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleWriteToDataBase" text="Write to database" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleConnectionSetup" text="Connection setup" />
+              </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Plot">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleExportDataToText" text="Export selected to txt" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleDrawPlots" text="Draw" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleDrawPlotsByOne" text="Draw by one" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleDrawPlotsByOneScroll" text="Draw by one &amp; scroll" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleHidePlots" text="Hide/Show Plots">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="H" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+               </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleReadme" text="How to..." />
+              <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>
