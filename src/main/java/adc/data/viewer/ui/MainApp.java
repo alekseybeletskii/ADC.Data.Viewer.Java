@@ -323,8 +323,9 @@ public  class MainApp extends Application {
     }
 
      void setPlotterSetting(PlotterController pc) {
-            PlotterSettingController plotterSettingController;
         try {
+            pc.setSettingsInProgress(true);
+            PlotterSettingController plotterSettingController;
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("PlotterSetting.fxml"));
             BorderPane plotterSetting = loader.load();

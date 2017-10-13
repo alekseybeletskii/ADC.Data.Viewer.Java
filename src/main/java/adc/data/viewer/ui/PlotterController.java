@@ -57,14 +57,22 @@ import javafx.scene.layout.FlowPane;
 public class PlotterController extends BaseController{
 
 
+
+    private  boolean settingsInProgress;
     private Plotter plotter;
     private ADCDataRecords signalAsFilter;
     public FlowPane getLegendPane() {
         return legendPane;
     }
-
     public void setLegendPane(FlowPane legendPane) {
         this.legendPane = legendPane;
+    }
+
+    public boolean isSettingsInProgress() {
+        return settingsInProgress;
+    }
+    public void setSettingsInProgress(boolean settingsInProgress) {
+        this.settingsInProgress = settingsInProgress;
     }
 
     @FXML
@@ -185,7 +193,9 @@ public class PlotterController extends BaseController{
 
     @FXML
     public void handlePlotterSettings(ActionEvent actionEvent) {
-        mainApp.setPlotterSetting(this);
+
+        if(!isSettingsInProgress()){mainApp.setPlotterSetting(this);
+        }
     }
 
     public void toggleButton(String toggleName){

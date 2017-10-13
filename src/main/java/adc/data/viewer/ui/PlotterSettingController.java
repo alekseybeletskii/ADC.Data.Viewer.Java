@@ -154,6 +154,7 @@ public class PlotterSettingController extends BaseController{
 
         if (ApplyNewSettings()) plotterSettingsStage.close();
         setDataStartTimeAndYMultiplier.getSelectionModel().clearSelection();
+        plotterController.setSettingsInProgress(false);
 
     }
 
@@ -316,6 +317,7 @@ public class PlotterSettingController extends BaseController{
 
     @FXML
     private void initialize() {
+
         plotStyle =appPreferencesRootNode.get("defaultPlotStyle","line");
         chooseLineOrScatter.setValue(plotStyle);
         lineOrScatter.clear();

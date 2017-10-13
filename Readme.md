@@ -1,3 +1,6 @@
+ADCDataViewer
+=============
+
 This application allows to visualize binary files created with analog digital converters,
 by default these are:
 
@@ -13,8 +16,22 @@ For now it should be a single file per one array of registered data:
  
 You will be prompted to enter some data parameters manually in this case
  (choose proper data and time columns, channel number, ADC channel rate...).
+ 
+An information about every signal will be extracted from an appropriate
+binary *.par file  in correspondence with a chosen binary *.dat file
+(or from the beginning of a chosen *.dat file in case of SATURN SDI-AD12-128H)
+This information will be shown in the right part of the program's main window,
+according to a selected  table row, when pressing ctrl+H
+(mouse-click on a plot to focus)
 
-You can select data from the table to show some data details
+ADC files examples are included in the "resources/sampledata/" subfolder.
+
+Executable Jar file with data examples are located in a zip file, "resources/executable/" subfolder
+
+Screenshots
+------------
+
+Select data from the table to show some data details
 
 ![controlWindow](resources/jpg/mainWindow.jpg)
 
@@ -32,19 +49,14 @@ You can view signals one under another
 
 ![plot](resources/jpg/drawingOneByOne.jpg)
 
-ADC files examples are included in the "resources/sampledata/" subfolder.
 
-Executable Jar file with data examples are located in "resources/executable/" subfolder.
+Run with Maven:
+----------
 
-An information about every signal will be extracted from an appropriate
-binary *.par file  in correspondence with a chosen binary *.dat file
-(or from the beginning of a chosen *.dat file in case of SATURN SDI-AD12-128H)
-This information will be shown in the right part of the program's main window,
-according to a selected  table row, when pressing ctrl+H
-(mouse-click on a plot to focus)
-
+mvn compile exec:java -Dexec.mainClass=adc.data.viewer.ui.MainApp
 
 How to use:
+----------
 
    - "File->Open"               shows a file chooser dialog, files with "dat", "csv" and "txt"
                                 extensions will be available;
@@ -87,6 +99,7 @@ NOTE: if there are a lot of points, complete drawing will take some time.
       Just use zoom to view all the details.
 
 LICENSING
+---------
 
 Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
 All rights reserved

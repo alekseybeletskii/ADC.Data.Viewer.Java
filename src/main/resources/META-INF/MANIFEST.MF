@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Specification-Title: Java Utility Classes
+Implementation-Title: ADCDataViewer
+Implementation-Vendor: BeletskiiAleksey
+Main-Class: adc.data.viewer.ui.MainApp
+
