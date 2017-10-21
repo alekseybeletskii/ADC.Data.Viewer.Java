@@ -44,7 +44,7 @@
 
 package adc.data.viewer.plotter;
 
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.processing.SavitzkyGolayFilter;
 import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.ui.MainApp;
@@ -83,11 +83,11 @@ public class CanvasDataDrawing extends Canvas {
 
     private double adcZeroShift;
 
-    public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
+    public void setNextSignalToDraw(ADCDataRecord nextSignalToDraw) {
         this.nextSignalToDraw = nextSignalToDraw;
     }
 
-    public ADCDataRecords getNextSignalToDraw() {
+    public ADCDataRecord getNextSignalToDraw() {
         return nextSignalToDraw;
     }
 
@@ -115,7 +115,7 @@ public class CanvasDataDrawing extends Canvas {
     private double xTheMIN,xTheMAX,yTheMIN,yTheMAX;
 
     private PlotterController plotterController;
-    private ADCDataRecords nextSignalToDraw;
+    private ADCDataRecord nextSignalToDraw;
     private final Axes axes;
     private final MainApp mainApp;
     private DoubleProperty dx = new SimpleDoubleProperty();
@@ -253,7 +253,7 @@ public class CanvasDataDrawing extends Canvas {
         switch (mainApp.getDefaultPlotsLayoutType()) {
 
             case "AllPlots":
-                for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
+                for (ADCDataRecord sigMarc : mainApp.getAdcDataRecords()) {
                     if (sigMarc.getSignalSelected()) {
                         nextSignalToDraw=sigMarc;
 
@@ -293,7 +293,7 @@ public class CanvasDataDrawing extends Canvas {
 
         switch (mainApp.getDefaultPlotsLayoutType()) {
             case "AllPlots":
-                for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
+                for (ADCDataRecord sigMarc : mainApp.getAdcDataRecords()) {
                     if (sigMarc.getSignalSelected()) {
                         Label curveLabel = new Label(sigMarc.getSignalLabel() + "=" + plotType);
                         curveLabel.setText(sigMarc.getSignalLabel() + "=" + plotType);
@@ -319,14 +319,15 @@ public class CanvasDataDrawing extends Canvas {
     }
 
 
-    void drawNextSignal(ADCDataRecords nextSignalToDraw) {
+    void drawNextSignal(ADCDataRecord nextSignalToDraw) {
         adcZeroShift = 0;
         int nextSignalLength =0;
         int nextSignalIndex = nextSignalToDraw.getSignalIndex();
         int ADCChannelNum = Integer.parseInt(nextSignalToDraw.getAdcChannelNumber());
         double [] nextYData = nextSignalToDraw.getSignalYData().clone();
         double [] nextXData = nextSignalToDraw.getSignalXData().clone();
-        signalColor = mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor();
+        signalColor = nextSignalToDraw.getSignalColor();
+//        signalColor = mainApp.getAdcDataRecords().get(nextSignalIndex).getSignalColor();
         String lineStyleSelected = MainApp.appPreferencesRootNode.get("defaultPlotStyle","line");
 
         if(MainApp.appPreferencesRootNode.getBoolean("defaultIsSubtractSignal",false)){
@@ -358,13 +359,15 @@ public class CanvasDataDrawing extends Canvas {
 //dt,dtCadre in milliseconds
 
 
-        double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileOrdinalNumber()]);
+        double dt = 1.0 / (nextSignalToDraw.getSignalRate_kHz());
+//        double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignalToDraw.getFileOrdinalNumber()]);
         nextSignalTimeShift.set(nextSignalToDraw.getSignalTimeShift_ms());
         xTheMIN=nextSignalTimeShift.get()<xTheMIN?nextSignalTimeShift.get():xTheMIN;
         xTheMAX=nextSignalToDraw.getSignalYData().length*dt+nextSignalTimeShift.get()>xTheMAX?nextSignalToDraw.getSignalYData().length*dt+nextSignalTimeShift.get():xTheMAX;
 
 
-        double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileOrdinalNumber()];
+        double dtCadre = nextSignalToDraw.getInterCadreDelay_ms();
+//        double dtCadre = mainApp.getDataParser().getDataParams().getInterCadreDelay()[nextSignalToDraw.getFileOrdinalNumber()];
 
         nextSignalLength = nextYData.length;
         xLeft = (int) round((axes.getXAxis().getLowerBound()-nextSignalTimeShift.get()) / dt)-10;
@@ -458,7 +461,8 @@ public class CanvasDataDrawing extends Canvas {
 
             if(MainApp.appPreferencesRootNode.getBoolean("defaultIsReplaceRawWithFilter", false)&&
                     dataYSubarray.length==nextYData.length){
-                mainApp.getAdcDataRecords().get(nextSignalIndex).setSignalYData(dataYSubarray);
+                nextSignalToDraw.setSignalYData(dataYSubarray);
+//                mainApp.getAdcDataRecords().get(nextSignalIndex).setSignalYData(dataYSubarray);
             }
         }
 

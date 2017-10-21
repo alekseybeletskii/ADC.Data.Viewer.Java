@@ -44,7 +44,7 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.processing.TestDataType;
 import adc.data.viewer.util.ApplicationPreferences;
 import javafx.collections.FXCollections;
@@ -216,11 +216,11 @@ public class PlotterSettingController extends BaseController{
 
             if(!setDataStartTimeAndYMultiplier.getSelectionModel().isEmpty()&&
                !setDataStartTimeAndYMultiplier.getSelectionModel().isSelected(0)){
-                ADCDataRecords adcr = mainApp.getAdcDataRecords().get(setDataStartTimeAndYMultiplier.getSelectionModel().getSelectedIndex()-1);
+                ADCDataRecord adcr = mainApp.getAdcDataRecords().get(setDataStartTimeAndYMultiplier.getSelectionModel().getSelectedIndex()-1);
                 updateSignalXData(adcr);
                 updateSignalYData(adcr);
             }else if(setDataStartTimeAndYMultiplier.getSelectionModel().isSelected(0)){
-                for(ADCDataRecords adcr : mainApp.getAdcDataRecords()) {
+                for(ADCDataRecord adcr : mainApp.getAdcDataRecords()) {
                 updateSignalXData(adcr);
                 updateSignalYData(adcr);
 
@@ -240,7 +240,7 @@ public class PlotterSettingController extends BaseController{
 
     }
 
-    private void updateSignalXData(ADCDataRecords adcr) {
+    private void updateSignalXData(ADCDataRecord adcr) {
         if (adcr.getSignalXData().length > 0) {
             double[] xtmp = new double[adcr.getSignalXData().length];
             double tStart = adcr.getSignalXData()[0];
@@ -255,7 +255,7 @@ public class PlotterSettingController extends BaseController{
     }
 
 
-    private void updateSignalYData(ADCDataRecords adcr) {
+    private void updateSignalYData(ADCDataRecord adcr) {
         if (adcr.getSignalYData().length > 0) {
             double[] ytmp = new double[adcr.getSignalYData().length];
             int i = 0;
@@ -330,7 +330,7 @@ public class PlotterSettingController extends BaseController{
         });
 
         allDataLabels.add("set for all data");
-        for(ADCDataRecords adcr : mainApp.getAdcDataRecords()){
+        for(ADCDataRecord adcr : mainApp.getAdcDataRecords()){
             allDataLabels.add(adcr.getSignalLabel());
         }
 

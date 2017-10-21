@@ -45,7 +45,7 @@
 package adc.data.viewer.parser;
 
 
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.ui.MainApp;
 import javafx.scene.paint.Color;
 
@@ -63,7 +63,7 @@ public class DataParser {
 
     private Path [] signalPath;
     private MainApp mainApp;
-    private List<ADCDataRecords> ADCDataRecordsList = new ArrayList<>();
+    private List<ADCDataRecord> ADCDataRecordList = new ArrayList<>();
     private Path[] dataFilePath;
     private Path[] parFilePath;
     private String[] fileNames;
@@ -72,8 +72,8 @@ public class DataParser {
     private Color[] signalColors;
     private ExportToTextAndSnapshot exportToTextAndSnapshot;
 
-    public List<ADCDataRecords> getADCDataRecordsList() {
-        return ADCDataRecordsList;
+    public List<ADCDataRecord> getADCDataRecordList() {
+        return ADCDataRecordList;
     }
     public String[] getFileNames() {
         return fileNames;
@@ -108,14 +108,14 @@ public class DataParser {
 
     public  void parseNewList(List<Path> dataPath) {
         signalIndex =-1;
-        ADCDataRecordsList.clear();
+        ADCDataRecordList.clear();
         totalFiles=dataPath.size();
         makePaths(dataPath);
         setParam();
         makeSignalColors();
         signalPath = new Path[totalSignals];
         setData();
-        mainApp.getAdcDataRecords().addAll(ADCDataRecordsList);
+        mainApp.getAdcDataRecords().addAll(ADCDataRecordList);
     }
 
 
@@ -194,9 +194,16 @@ public class DataParser {
         double dataMultiplier = 1.0;
         boolean drawThisSignal = false;
         double signalRate_kHz = dataParams.getChannelRate()[fileOrdinalNumber];
-        ADCDataRecords singleDataRecord =new ADCDataRecords(adcChannelNumberAsString ,signalIndex,  drawThisSignal, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,Xdata.clone(), Ydata.clone(), signalTimeShift, dataMultiplier,signalRate_kHz);
+        String signalDate = dataParams.getCreateDateTime()[fileOrdinalNumber];
+        String signalTime = dataParams.getCreateDateTime()[fileOrdinalNumber];
+        double interCadreDelay_ms = dataParams.getInterCadreDelay()[fileOrdinalNumber];
+        ADCDataRecord singleDataRecord =new ADCDataRecord(adcChannelNumberAsString ,signalIndex,  drawThisSignal, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,
+                Xdata.clone(), Ydata.clone(), signalTimeShift, dataMultiplier,signalRate_kHz,
+                "Uragan-3M", "LangmuirProbes" , "ADCVolts",signalDate,signalTime,interCadreDelay_ms, "portLabel");
 
-        ADCDataRecordsList.add(singleDataRecord);
+        ADCDataRecordList.add(singleDataRecord);
+
+//         System.out.println(singleDataRecord.getId());
     }
 
     private  void makeSignalColors() {

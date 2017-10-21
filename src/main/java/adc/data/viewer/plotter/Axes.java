@@ -46,7 +46,7 @@ package adc.data.viewer.plotter;
 
 
 //import adc.data.viewer.ui.PlotterSettingController;
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.processing.SimpleMath;
 import adc.data.viewer.ui.MainApp;
 import javafx.beans.binding.Bindings;
@@ -218,7 +218,7 @@ public class Axes extends Pane {
 
     }
 
-    public void obtainDataAndTimeMargins(ADCDataRecords nextSignalToDraw) {
+    public void obtainDataAndTimeMargins(ADCDataRecord nextSignalToDraw) {
 
 
 
@@ -226,11 +226,11 @@ public class Axes extends Pane {
 
         switch(mainApp.getDefaultPlotsLayoutType()){
             case "AllPlots":
-                if(nextSignalToDraw==null)for (ADCDataRecords adcDataRecords : mainApp.getAdcDataRecords()){
-                    if (adcDataRecords.getSignalSelected())
+                if(nextSignalToDraw==null)for (ADCDataRecord adcDataRecord : mainApp.getAdcDataRecords()){
+                    if (adcDataRecord.getSignalSelected())
                     {
                         isAnySelected =true;
-                        selectedSignalMargins(adcDataRecords);
+                        selectedSignalMargins(adcDataRecord);
                     }
                 }
                 else {selectedSignalMargins(nextSignalToDraw);
@@ -259,12 +259,14 @@ public class Axes extends Pane {
         }
     }
 
-    public void selectedSignalMargins(ADCDataRecords adcDataRecords) {
-        double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecords.getFileOrdinalNumber()]);
-        mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[adcDataRecords.getFileOrdinalNumber()];
-        xMinBasic=  adcDataRecords.getSignalTimeShift_ms()<xMinBasic?adcDataRecords.getSignalTimeShift_ms():xMinBasic;
-        xMaxBasic=mostSamples *dt+adcDataRecords.getSignalTimeShift_ms()>xMaxBasic?mostSamples *dt+adcDataRecords.getSignalTimeShift_ms():xMaxBasic;
-        double[] testSignal = adcDataRecords.getSignalYData();
+    public void selectedSignalMargins(ADCDataRecord adcDataRecord) {
+        double dt = 1.0/adcDataRecord.getSignalRate_kHz();
+//        double dt = 1.0/(mainApp.getDataParser().getDataParams().getChannelRate()[adcDataRecord.getFileOrdinalNumber()]);
+        mostSamples = adcDataRecord.getSignalYData().length;
+//        mostSamples = mainApp.getDataParser().getDataParams().getRealCadresQuantity()[adcDataRecord.getFileOrdinalNumber()];
+        xMinBasic=  adcDataRecord.getSignalTimeShift_ms()<xMinBasic? adcDataRecord.getSignalTimeShift_ms():xMinBasic;
+        xMaxBasic=mostSamples *dt+ adcDataRecord.getSignalTimeShift_ms()>xMaxBasic?mostSamples *dt+ adcDataRecord.getSignalTimeShift_ms():xMaxBasic;
+        double[] testSignal = adcDataRecord.getSignalYData();
         double maximum = SimpleMath.getMax(testSignal)- adcZeroShift;
         double minimum = SimpleMath.getMin(testSignal)- adcZeroShift;
         if (maximum> yMaxBasic) yMaxBasic =maximum;

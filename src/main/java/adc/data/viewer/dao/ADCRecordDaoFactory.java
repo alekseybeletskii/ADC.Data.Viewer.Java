@@ -42,11 +42,26 @@
  * ******************** END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ui;
+package adc.data.viewer.dao;
+
+import adc.data.viewer.dao.interfaces.Dao;
+import adc.data.viewer.model.ADCDataRecord;
+import adc.data.viewer.ui.MainApp;
+
+public class ADCRecordDaoFactory {
 
 
-public class DataBaseViewerController extends BaseController {
-
+        public static Dao <ADCDataRecord> getADCRecordDao() {
+            final String daoClass = MainApp.appPreferencesRootNode.get(
+                    "ADCRecordDaoClass", "adc.data.viewer.dao.ADCRecordDaoMongo");
+            try {
+                Class dao = Class.forName(daoClass);
+                return (Dao<ADCDataRecord>)dao.newInstance();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
 
 
 

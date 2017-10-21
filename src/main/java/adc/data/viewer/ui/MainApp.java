@@ -44,7 +44,7 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.parser.DataParser;
 import adc.data.viewer.plotter.Plotter;
 import javafx.application.Application;
@@ -78,13 +78,13 @@ public  class MainApp extends Application {
     private boolean newFileCreated;
     private  boolean redrawAllowed;
     private final Image logo = new Image("images/logo.png");
-    private ADCDataRecords nextSignalToDraw;
+    private ADCDataRecord nextSignalToDraw;
     private String defaultPlotsLayoutType;
     private Stage primaryStage;
     private BorderPane mainLayout;
     private DataParser dataParser;
-    public  static final Preferences appPreferencesRootNode = Preferences.userRoot().node("ADCDAtaViewer");
-    private ObservableList<ADCDataRecords> adcDataRecords = FXCollections.observableArrayList();
+    public  static final Preferences appPreferencesRootNode = Preferences.userRoot().node("ADCDataViewer");
+    private ObservableList<ADCDataRecord> adcDataRecords = FXCollections.observableArrayList();
     private TextFileParamController textFileParamController;
     private int nextSignalToDrawIndex;
     private int howManyPlots;
@@ -113,7 +113,7 @@ public  class MainApp extends Application {
         this.newFileCreated = newFileCreated;
     }
     private List<File> listOfFiles;
-    public void setNextSignalToDraw(ADCDataRecords nextSignalToDraw) {
+    public void setNextSignalToDraw(ADCDataRecord nextSignalToDraw) {
         this.nextSignalToDraw = nextSignalToDraw;
     }
     public double getSplitPaneDivisionPosition() {
@@ -134,7 +134,7 @@ public  class MainApp extends Application {
     public void setDefaultPlotsLayoutType(String defaultPlotsLayoutType) {
         this.defaultPlotsLayoutType = defaultPlotsLayoutType;
     }
-    public ADCDataRecords getNextSignalToDraw() {
+    public ADCDataRecord getNextSignalToDraw() {
         return nextSignalToDraw;
     }
     public SignalsOverviewController getSignalsOverviewController() {
@@ -143,7 +143,7 @@ public  class MainApp extends Application {
     public TextFileParamController getTextFileParamController() {
         return textFileParamController;
     }
-    public ObservableList<ADCDataRecords> getAdcDataRecords() {
+    public ObservableList<ADCDataRecord> getAdcDataRecords() {
         return adcDataRecords;
     }
     Stage getPrimaryStage() {
@@ -231,7 +231,7 @@ public  class MainApp extends Application {
                 break;
             case "AllPlotsByOne":
                 signalsOverviewController.getPlotsScrollPane().setFitToHeight(true);
-                for (ADCDataRecords sm: adcDataRecords) {
+                for (ADCDataRecord sm: adcDataRecords) {
                     if (sm.getSignalSelected()) {
                         nextSignalToDraw=sm;
                         layoutLoader();
@@ -243,7 +243,7 @@ public  class MainApp extends Application {
                 break;
             case "AllPlotsByOneScroll":
                 signalsOverviewController.getPlotsScrollPane().setFitToHeight(false);
-                for (ADCDataRecords sm: adcDataRecords) {
+                for (ADCDataRecord sm: adcDataRecords) {
                     if (sm.getSignalSelected()) {
                         nextSignalToDraw=sm;
                         layoutLoader();
@@ -397,7 +397,7 @@ public  class MainApp extends Application {
 
     public void signalMarkerAddListeners() {
 
-        for (ADCDataRecords sgmrk : adcDataRecords){
+        for (ADCDataRecord sgmrk : adcDataRecords){
             sgmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
                 redrawAllCanvas(sgmrk,newValue);
                     }
@@ -410,7 +410,7 @@ public  class MainApp extends Application {
     }
     }
 
-    private void redrawAllCanvas(ADCDataRecords sgmrk, boolean isChecked) {
+    private void redrawAllCanvas(ADCDataRecord sgmrk, boolean isChecked) {
         if (!plotterControllerlist.isEmpty() && redrawAllowed) {
             int i = 0;
             for (PlotterController pc: plotterControllerlist) {

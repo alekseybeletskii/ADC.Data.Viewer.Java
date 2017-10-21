@@ -42,12 +42,16 @@
  * ******************** END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ui;
+package adc.data.viewer.dao.interfaces;
+
+import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientException;
+
+import java.io.IOException;
 
 
-public class DataBaseViewerController extends BaseController {
-
-
-
-
+public interface  ConnectionBuilder<T>
+{
+    T getConnection() throws Exception;
 }

@@ -44,7 +44,7 @@
 
 package adc.data.viewer.parser;
 
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.ui.MainApp;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -72,7 +72,7 @@ public class ExportToTextAndSnapshot {
 
     private int linesWrittenWithSaveProfile =0;
     private MainApp mainApp;
-    private List<ADCDataRecords> ADCDataRecordsList = new ArrayList<>();
+    private List<ADCDataRecord> ADCDataRecordList = new ArrayList<>();
 
 
     public ExportToTextAndSnapshot(MainApp mainApp){
@@ -84,7 +84,7 @@ public class ExportToTextAndSnapshot {
      */
     public void saveAllToText() {
         byte[] stringBytes;
-        for (ADCDataRecords nextData : mainApp.getAdcDataRecords()){
+        for (ADCDataRecord nextData : mainApp.getAdcDataRecords()){
             if (nextData.getSignalSelected()) {
 
                 Path outTxtPath = mainApp.getDataParser().getSignalPath()[nextData.getFileOrdinalNumber()].resolve(Paths.get("txt"));
@@ -148,7 +148,7 @@ public class ExportToTextAndSnapshot {
 }
 
 
-                    for (ADCDataRecords nextSignal : mainApp.getAdcDataRecords()) {
+                    for (ADCDataRecord nextSignal : mainApp.getAdcDataRecords()) {
                         if (nextSignal.getSignalSelected()) {
                         String nextLabel = nextSignal.getSignalLabel().length()>30?nextSignal.getSignalLabel().substring(0,29):nextSignal.getSignalLabel();
                             double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignal.getFileOrdinalNumber()]);
@@ -185,7 +185,7 @@ public class ExportToTextAndSnapshot {
 
     private int howManySignalsIsSelected(){
             int i = 0;
-            for (ADCDataRecords nextSignal : mainApp.getAdcDataRecords()){
+            for (ADCDataRecord nextSignal : mainApp.getAdcDataRecords()){
               if(nextSignal.isSignalSelected())i++;
             }
             return i;

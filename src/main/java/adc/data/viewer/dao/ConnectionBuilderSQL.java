@@ -1,3 +1,4 @@
+
 /*
  * ******************** BEGIN LICENSE BLOCK *********************************
  *
@@ -42,12 +43,40 @@
  * ******************** END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ui;
+package adc.data.viewer.dao;
 
 
-public class DataBaseViewerController extends BaseController {
+import adc.data.viewer.dao.interfaces.ConnectionBuilder;
+import adc.data.viewer.ui.MainApp;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
+public class ConnectionBuilderSQL implements ConnectionBuilder
+{
+    private final String sqlURI;
+    private final String dblogin;
+    private final String dbpassword;
 
+    public ConnectionBuilderSQL() {
+        final String dbDriver = MainApp.appPreferencesRootNode.get("dbDriver","org.postgresql.Driver");
+        final String hostname = MainApp.appPreferencesRootNode.get("host", "localhost");
+        final String hostport = MainApp.appPreferencesRootNode.get("hostport", "5432");
+        dblogin = MainApp.appPreferencesRootNode.get("dblogin", "admin");
+        dbpassword = MainApp.appPreferencesRootNode.get("dbpassword", "admin");
+        final  String dbName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDataBase");
+        sqlURI = "jdbc:postgresql://"+ hostname +":"+ hostport +"/"+ dbName;
+//        sqlURI = "dbc:postgresql://"+ dblogin +":"+ dbpassword +"@"+ hostname +":"+ hostport +"/"+ dbName;
+        try {
+            Class.forName(dbDriver);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
 
+    @Override
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(sqlURI, dblogin, dbpassword);
+    }
 }

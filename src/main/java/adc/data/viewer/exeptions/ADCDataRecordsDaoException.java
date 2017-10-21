@@ -42,12 +42,22 @@
  * ******************** END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ui;
+package adc.data.viewer.exeptions;
 
+public class ADCDataRecordsDaoException extends Exception
+{
+    public ADCDataRecordsDaoException() {
+    }
 
-public class DataBaseViewerController extends BaseController {
+    public ADCDataRecordsDaoException(String message) {
+        super(message);
+    }
 
+    public ADCDataRecordsDaoException(Throwable cause) {
+        super(cause);
+    }
 
-
-
+    public ADCDataRecordsDaoException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

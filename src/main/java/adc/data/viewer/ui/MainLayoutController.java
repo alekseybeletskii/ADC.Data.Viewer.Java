@@ -44,6 +44,8 @@
 
 package adc.data.viewer.ui;
 
+import adc.data.viewer.dao.MongodbManager;
+import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.stage.DirectoryChooser;
@@ -171,7 +173,7 @@ public class MainLayoutController extends BaseController {
     @FXML
     private void handleClear() {
         mainApp.clearAll();
-        mainApp.getDataParser().getADCDataRecordsList().clear();
+        mainApp.getDataParser().getADCDataRecordList().clear();
         inpList.clear();
     }
 
@@ -216,11 +218,19 @@ private  void handleConnectionSetup(){
 
 }
 @FXML
-private  void handleReadFromDataBase(){
+private  void handleReadFromDataBase() throws ADCDataRecordsDaoException {
+    mainApp.getAdcDataRecords().clear();
+    mainApp.getAdcDataRecords().addAll(MongodbManager.findAllRecords());
+    mainApp.signalMarkerAddListeners();
+    mainApp.drawPlots();
+
+    }
         
-}
+
 @FXML
-private  void handleWriteToDataBase(){
+private  void handleWriteToDataBase() throws ADCDataRecordsDaoException{
+
+    MongodbManager.insertADCDataRecordsList(mainApp.getAdcDataRecords());
 
 }
 

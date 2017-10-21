@@ -42,12 +42,38 @@
  * ******************** END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ui;
+package adc.data.viewer.dao;
 
+import adc.data.viewer.dao.interfaces.Dao;
+import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
+import adc.data.viewer.model.ADCDataRecord;
 
-public class DataBaseViewerController extends BaseController {
+import java.util.List;
 
+public class MongodbManager {
 
+    private static final Dao<ADCDataRecord> dao = ADCRecordDaoFactory.getADCRecordDao();;
 
+//    public MongodbManager() {
+//        dao = ADCRecordDaoFactory.getADCRecordDao();
+//    }
 
+    public static void insertADCDataRecordsList (List<ADCDataRecord> records) throws ADCDataRecordsDaoException {
+        try{
+            if (dao != null) {
+                dao.insertMany(records) ;
+            }
+        }
+        catch (ADCDataRecordsDaoException e){
+            throw e;
+        }
+    }
+
+    public static List <ADCDataRecord> findAllRecords () throws ADCDataRecordsDaoException{
+        if (dao != null) {
+            return dao.findAll();
+        }
+
+        return null;
+    }
 }

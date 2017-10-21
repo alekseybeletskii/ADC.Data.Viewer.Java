@@ -44,7 +44,7 @@
 
 package adc.data.viewer.ui;
 
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
@@ -65,7 +65,7 @@ import javafx.scene.paint.Color;
 public class SignalsOverviewController extends BaseController{
 
     private boolean checkedFlag;
-    private FilteredList<ADCDataRecords> filteredListOfSignals;
+    private FilteredList<ADCDataRecord> filteredListOfSignals;
     public ScrollPane getPlotsScrollPane() {
         return plotsScrollPane;
     }
@@ -83,14 +83,14 @@ public class SignalsOverviewController extends BaseController{
     private GridPane signalFeaturesGrid;
 
     @FXML
-    private TableView<ADCDataRecords> signalsTable;
+    private TableView<ADCDataRecord> signalsTable;
 
     @FXML
-    private TableColumn<ADCDataRecords, Boolean> signalSelectedColumn;
+    private TableColumn<ADCDataRecord, Boolean> signalSelectedColumn;
     @FXML
-    private TableColumn<ADCDataRecords, Color> signalColorColumn;
+    private TableColumn<ADCDataRecord, Color> signalColorColumn;
     @FXML
-    private TableColumn<ADCDataRecords, String> signalLabelColumn;
+    private TableColumn<ADCDataRecord, String> signalLabelColumn;
     @FXML
     private Label deviceNameLabel;
     @FXML
@@ -119,7 +119,7 @@ public class SignalsOverviewController extends BaseController{
 
 
 
-    public TableView<ADCDataRecords> getSignalsTable() {
+    public TableView<ADCDataRecord> getSignalsTable() {
         return signalsTable;
     }
     public AnchorPane getSignalsOverviewRightPane() {
@@ -173,19 +173,21 @@ public class SignalsOverviewController extends BaseController{
 
 
 
-    private void showSignalDetails(ADCDataRecords signal) {
+    private void showSignalDetails(ADCDataRecord signal) {
         if (signal != null){
 
-            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileOrdinalNumber()]);
-            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileOrdinalNumber()]);
-            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileOrdinalNumber()]));
-            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileOrdinalNumber()]));
+            deviceNameLabel.setText(signal.getDeviceName());
+//            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileOrdinalNumber()]);
+            creationDateLabel.setText(signal.getCreationDate());
+//            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileOrdinalNumber()]);
+//            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileOrdinalNumber()]));
+            channelRateLabel.setText(String.valueOf(signal.getSignalRate_kHz()));
+//            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileOrdinalNumber()]));
             channelNumberLabel.setText(signal.getAdcChannelNumber());
 //            channelNumberLabel.setText(signal.getSignalLabel().substring(signal.getSignalLabel().lastIndexOf("#")+1));
-            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileOrdinalNumber()]));
-            channelDurationLabel.setText(String.format("%.2f",
-                    mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileOrdinalNumber()]
-                            /mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileOrdinalNumber()]));
+            channelSamplesLabel.setText(String.valueOf(signal.getSignalYData().length));
+//            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileOrdinalNumber()]));
+            channelDurationLabel.setText(String.format("%.2f",signal.getSignalYData().length / signal.getSignalRate_kHz()));
         }
         else{
             deviceNameLabel.setText("-----");
@@ -232,7 +234,7 @@ public class SignalsOverviewController extends BaseController{
     private void handleClickedOnTable(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount()==2){
 
-            for(ADCDataRecords sigM : filteredListOfSignals)
+            for(ADCDataRecord sigM : filteredListOfSignals)
             {
                 sigM.setSignalSelected(checkedFlag);
 

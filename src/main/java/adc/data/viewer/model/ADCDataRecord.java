@@ -46,47 +46,156 @@ package adc.data.viewer.model;
 
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
+import org.bson.types.ObjectId;
 
-/**
- * Model class for signals
- */
+import java.nio.ByteBuffer;
+import java.util.Date;
+import java.util.Objects;
 
 
-public class ADCDataRecords {
+public class ADCDataRecord {
 
+    private String id;
+    private String deviceName;
+    private String diagnosticsName;
+    private String creationDate;
+    private String creationTime;
+    private String unitOfMeasurement;
+    private  DoubleProperty signalRate_kHz;
+    private  double interCadreDelay_ms;
+    private  StringProperty adcChannelNumber;
+    private  StringProperty signalLabel;
     private  double [] signalYData;
-
     private  double [] signalXData;
+    private  DoubleProperty dataMultiplier;
+    private  DoubleProperty signalTimeShift_ms; // in milliseconds
+    private  IntegerProperty signalIndex;
+    private  BooleanProperty signalSelected;
+    private  ObjectProperty<Color> signalColor;
+    private  IntegerProperty fileOrdinalNumber;
+
+    private String portLabel;
+
+    public ADCDataRecord(){
+
+        this.dataMultiplier = new SimpleDoubleProperty(1);
+        this.signalIndex = new SimpleIntegerProperty(-1);
+        this.signalSelected = new SimpleBooleanProperty(false);
+        this.signalColor = new SimpleObjectProperty<>(Color.BLACK);
+        this.signalLabel = new SimpleStringProperty("unknown");
+        this.fileOrdinalNumber = new SimpleIntegerProperty(-1);
+        this.signalTimeShift_ms = new SimpleDoubleProperty(0);
+        this.signalYData = new double[0];
+        this.signalXData = new double[0];
+        this.adcChannelNumber = new SimpleStringProperty("-1");
+        this.signalRate_kHz = new SimpleDoubleProperty(-1);
+        this.deviceName = "unknown";
+        this.diagnosticsName = "unknown";
+        this.unitOfMeasurement = "ADCVolts";
+        this.creationDate = "dd.mm.yyyy";
+        this.creationTime = "hh.mm.ss";
+        this.id =null;
+        this.interCadreDelay_ms =0;
+        this.portLabel = "portLabel";
+
+    }
 
 
 
-    private final DoubleProperty signalTimeShift_ms; // in milliseconds
-    private final IntegerProperty signalIndex;
-    private final BooleanProperty signalSelected;
-    private final StringProperty signalLabel;
-    private final ObjectProperty<Color> signalColor;
-    private final IntegerProperty fileOrdinalNumber;
-    private final StringProperty adcChannelNumber;
-    private final DoubleProperty dataMultiplier;
-
-    private final DoubleProperty signalRate_kHz;
-
-    public ADCDataRecords(String adcChannelNumber, int signalIndex, Boolean signalSelected, Color signalColor, String signalLable, int fileOrdinalNumber, double [] signalXdata, double [] signalYdata, double signalTimeShift_ms, double dataMultiplier, double signalRate_kHz) {
+    public ADCDataRecord(String adcChannelNumber, int signalIndex, Boolean signalSelected,
+                         Color signalColor, String signalLable, int fileOrdinalNumber,
+                         double [] signalXdata, double [] signalYdata, double signalTimeShift_ms,
+                         double dataMultiplier, double signalRate_kHz,
+                         String deviceName, String diagnosticsName, String unitOfMeasurement, String creationDate,
+                         String creationTime, double interCadreDelay_ms, String portLabel) {
         this.dataMultiplier = new SimpleDoubleProperty(dataMultiplier);
         this.signalIndex = new SimpleIntegerProperty(signalIndex);
         this.signalSelected = new SimpleBooleanProperty(signalSelected);
         this.signalColor = new SimpleObjectProperty<>(signalColor);
         this.signalLabel = new SimpleStringProperty(signalLable);
         this.fileOrdinalNumber = new SimpleIntegerProperty(fileOrdinalNumber);
-
         this.signalTimeShift_ms = new SimpleDoubleProperty(signalTimeShift_ms);
-
         this.signalYData = signalYdata;
         this.signalXData = signalXdata;
         this.adcChannelNumber = new SimpleStringProperty(adcChannelNumber);
         this.signalRate_kHz = new SimpleDoubleProperty(signalRate_kHz);
+        this.deviceName = deviceName;
+        this.diagnosticsName = diagnosticsName;
+        this.unitOfMeasurement = unitOfMeasurement;
+        this.creationDate = creationDate;
+        this.creationTime = creationTime;
+        this.interCadreDelay_ms = interCadreDelay_ms;
+        this.portLabel = portLabel;
+
+        StringBuilder sb = new StringBuilder();
+        for (char c : (deviceName+diagnosticsName+portLabel+adcChannelNumber+creationDate+creationTime).toCharArray())
+            sb.append((int)c);
+        this.id = sb.toString();
     }
 
+    public String getPortLabel() {
+        return portLabel;
+    }
+
+    public void setPortLabel(String portLabel) {
+        this.portLabel = portLabel;
+    }
+
+    public double getInterCadreDelay_ms() {
+        return interCadreDelay_ms;
+    }
+
+    public void setInterCadreDelay_ms(double interCadreDelay_ms) {
+        this.interCadreDelay_ms = interCadreDelay_ms;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUnitOfMeasurement() {
+        return unitOfMeasurement;
+    }
+
+    public void setUnitOfMeasurement(String unitOfMeasurement) {
+        this.unitOfMeasurement = unitOfMeasurement;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    public String getDiagnosticsName() {
+        return diagnosticsName;
+    }
+
+    public void setDiagnosticsName(String diagnosticsName) {
+        this.diagnosticsName = diagnosticsName;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public double getSignalRate_kHz() {
         return signalRate_kHz.get();
@@ -212,6 +321,12 @@ public class ADCDataRecords {
 
     public void setSignalLabel(String signalLabel) {
         this.signalLabel.set(signalLabel);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ADCDataRecord{" + "signalLabel=" + signalLabel.get() + ", fileOrdinalNumber=" + fileOrdinalNumber.get() +", portLabel"+ portLabel + ", adcChannelNumber=" + adcChannelNumber.get() + '}';
     }
 
 }

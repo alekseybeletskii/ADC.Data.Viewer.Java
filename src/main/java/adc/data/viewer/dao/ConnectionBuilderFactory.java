@@ -42,12 +42,26 @@
  * ******************** END LICENSE BLOCK ***********************************
  */
 
-package adc.data.viewer.ui;
+package adc.data.viewer.dao;
 
+import adc.data.viewer.dao.interfaces.ConnectionBuilder;
+import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
+import adc.data.viewer.ui.MainApp;
 
-public class DataBaseViewerController extends BaseController {
+public class ConnectionBuilderFactory
+{
 
+    public static ConnectionBuilder getConnectionBuilder()  {
+        final String connectionBuilderClass = MainApp.appPreferencesRootNode.get(
+                "connectionBuilderClass", "adc.data.viewer.dao.ConnectionBuilderMongo");
 
+        try {
+            Class connectionBuilder = Class.forName(connectionBuilderClass);
+            return (ConnectionBuilder)connectionBuilder.newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+        return null;
 
-
+    }
 }

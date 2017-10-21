@@ -45,7 +45,7 @@
 package adc.data.viewer.ui;
 
 
-import adc.data.viewer.model.ADCDataRecords;
+import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.plotter.Plotter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,7 +60,7 @@ public class PlotterController extends BaseController{
 
     private  boolean settingsInProgress;
     private Plotter plotter;
-    private ADCDataRecords signalAsFilter;
+    private ADCDataRecord signalAsFilter;
     public FlowPane getLegendPane() {
         return legendPane;
     }
@@ -160,7 +160,7 @@ public class PlotterController extends BaseController{
 
             int i = 0;
             signalAsFilter = null;
-            for (ADCDataRecords sigMarc : mainApp.getAdcDataRecords()) {
+            for (ADCDataRecord sigMarc : mainApp.getAdcDataRecords()) {
                 if (sigMarc.getSignalSelected()) {
                     i++;
                     if(i>1) break;
