@@ -53,5 +53,5 @@ import java.io.IOException;
 
 public interface  ConnectionBuilder<T>
 {
-    T getConnection() throws Exception;
+    T getConnection();
 }

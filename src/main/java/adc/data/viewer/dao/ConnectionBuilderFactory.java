@@ -51,7 +51,7 @@ import adc.data.viewer.ui.MainApp;
 public class ConnectionBuilderFactory
 {
 
-    public static ConnectionBuilder getConnectionBuilder()  {
+     static ConnectionBuilder getConnectionBuilder()  {
         final String connectionBuilderClass = MainApp.appPreferencesRootNode.get(
                 "connectionBuilderClass", "adc.data.viewer.dao.ConnectionBuilderMongo");
 

@@ -47,24 +47,31 @@ package adc.data.viewer.dao;
 
 import adc.data.viewer.dao.interfaces.ConnectionBuilder;
 import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
+import adc.data.viewer.ui.BaseController;
 import adc.data.viewer.ui.MainApp;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientException;
 import com.mongodb.MongoClientURI;
+import com.mongodb.MongoException;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 
+import javax.naming.ldap.BasicControl;
 import java.io.IOException;
+import java.util.Map;
 
 public class ConnectionBuilderMongo implements ConnectionBuilder
 {
     private final String mongoURI;
 
-     ConnectionBuilderMongo() {
+
+    ConnectionBuilderMongo() {
 
         final String hostname = MainApp.appPreferencesRootNode.get("host", "localhost");
         final String hostport = MainApp.appPreferencesRootNode.get("hostport", "27017");
 //        final String dblogin = MainApp.appPreferencesRootNode.get("dblogin", "admin");
 //        final String dbpassword = MainApp.appPreferencesRootNode.get("dbpassword", "admin");
-        final String dbName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDB");
+//        final String dbName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDB");
         mongoURI = "mongodb://" +  hostname + ":" + hostport ;
 //        mongoURI = "mongodb://" + dblogin + ":" + dbpassword + "@" + hostname + ":" + hostport + "/" + dbName;
 
@@ -74,9 +81,16 @@ public class ConnectionBuilderMongo implements ConnectionBuilder
 //    mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
 //    mongodb://sysop:moon@localhost:27017/records
     @Override
-    public MongoClient getConnection() throws MongoClientException {
+    public MongoClient getConnection()  {
 
-            return new MongoClient(new MongoClientURI(mongoURI));
-
-    }
+        try  {
+            MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURI));
+                    mongoClient.getAddress();
+                    return mongoClient;
+                }
+        catch (MongoException me) {
+    System.out.println("Mongo is down");
+    return null;
+        }
+}
 }

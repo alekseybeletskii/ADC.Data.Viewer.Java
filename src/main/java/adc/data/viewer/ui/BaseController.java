@@ -48,37 +48,74 @@ package adc.data.viewer.ui;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 
+import javax.naming.ldap.BasicControl;
 import java.util.Optional;
 
 import static javafx.scene.control.Alert.AlertType.*;
 
- public class BaseController {
+public class BaseController {
 
-private Alert alertFilterIsApplied;
-private Alert alertInvalidSettingsParam;
-private Alert alertInvalidDataFormatDefinition;
-private Alert alertSourceDataReplaced;
-private Alert alertAboutThisProgram;
-private Alert alertOpenMoreFiles;
-private Alert alertNumberFormatExc;
-private Alert alertExport;
-private Alert alertSaveProfile;
-static MainApp mainApp;
+    private Alert alertFilterIsApplied;
+    private Alert alertInvalidSettingsParam;
+    private Alert alertInvalidDataFormatDefinition;
+    private Alert alertSourceDataReplaced;
+    private Alert alertAboutThisProgram;
+    private Alert alertOpenMoreFiles;
+    private Alert alertNumberFormatExc;
+    private Alert alertExport;
+    private Alert alertSaveProfile;
 
+    private static Alert alertMongoDBConnection;
+    private static Alert alertInvalidConfigurationFile;
+    private static Alert alertMongoDBConnectionError;
+    static MainApp mainApp;
 
-      void alertSourceDataReplaced(){
-          alertSourceDataReplaced=buildWarning(alertSourceDataReplaced,WARNING);
-          alertSourceDataReplaced.setTitle("Warning !");
-          alertSourceDataReplaced.setHeaderText("Source data replacing...");
-          alertSourceDataReplaced.setContentText("Source data being replacing\nwith ones processed by filtering applyed\n\n");
-          alertSourceDataReplaced.showAndWait();
+    static Alert getAlertMongoDBConnection() {
+        return alertMongoDBConnection;
     }
 
 
+    void alertSourceDataReplaced(){
+        alertSourceDataReplaced=buildWarning(alertSourceDataReplaced,WARNING);
+        alertSourceDataReplaced.setTitle("Warning !");
+        alertSourceDataReplaced.setHeaderText("Source data replacing...");
+        alertSourceDataReplaced.setContentText("Source data being replacing\nwith ones processed by filtering applyed\n\n");
+        alertSourceDataReplaced.showAndWait();
+    }
 
-     void alertFilterIsApplied(String amountOfSelectedCurves,String signalLable) {
+    public static void alertMongoDBConnectionError(){
+        alertMongoDBConnectionError=buildWarning(alertMongoDBConnectionError,WARNING);
+        alertMongoDBConnectionError.setTitle("Warning !");
+        alertMongoDBConnectionError.setHeaderText("MongoDB connection problem");
+        alertMongoDBConnectionError.setContentText("Check MongodB connection settings\n\nand whether data base is ampy\n\n");
+        alertMongoDBConnectionError.showAndWait();
 
-         alertFilterIsApplied=buildWarning(alertFilterIsApplied,WARNING);
+    }
+
+    static void alertMongoDBConnection(){
+        alertMongoDBConnection=buildWarning(alertMongoDBConnection,INFORMATION);
+        alertMongoDBConnection.setTitle("Waiting for database");
+        alertMongoDBConnection.setHeaderText("Waiting for database connection....");
+        alertMongoDBConnection.setContentText("Relax and dream\n\n");
+//        alertMongoDBConnection.getButtonTypes().removeAll();
+        alertMongoDBConnection.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
+        alertMongoDBConnection.showAndWait();
+
+    }
+
+    public static void alertInvalidConfigurationFile(){
+        alertInvalidConfigurationFile=buildWarning(alertInvalidConfigurationFile,WARNING);
+        alertInvalidConfigurationFile.setTitle("Invalid or absent file \"adcrecords.config\"");
+        alertInvalidConfigurationFile.setHeaderText("Invalid or absent file \"adcrecords.config\"");
+        alertInvalidConfigurationFile.setContentText("A proper file \"adcrecords.config\" should be provided\n\nDefaults will be used");
+        alertInvalidConfigurationFile.showAndWait();
+
+    }
+
+
+    void alertFilterIsApplied(String amountOfSelectedCurves,String signalLable) {
+
+        alertFilterIsApplied=buildWarning(alertFilterIsApplied,WARNING);
 
         switch (amountOfSelectedCurves) {
             case "non":
@@ -100,90 +137,90 @@ static MainApp mainApp;
         alertFilterIsApplied.showAndWait();
     }
 
-     void alertInvalidSettingsParam() {
-         alertInvalidSettingsParam= buildWarning(alertInvalidSettingsParam,WARNING);
-         alertInvalidSettingsParam.setTitle("Warning");
-         alertInvalidSettingsParam.setHeaderText("Invalid data format or axes ranges!");
-         alertInvalidSettingsParam.setContentText("all axes parameters should be of type float,\nother pframeters should be Integer\nand \"FFTWindowType\" of type String\n\n");
-         alertInvalidSettingsParam.showAndWait();
+    void alertInvalidSettingsParam() {
+        alertInvalidSettingsParam= buildWarning(alertInvalidSettingsParam,WARNING);
+        alertInvalidSettingsParam.setTitle("Warning");
+        alertInvalidSettingsParam.setHeaderText("Invalid data format or axes ranges!");
+        alertInvalidSettingsParam.setContentText("all axes parameters should be of type float,\nother pframeters should be Integer\nand \"FFTWindowType\" of type String\n\n");
+        alertInvalidSettingsParam.showAndWait();
     }
 
-     void alertInvalidDataFormatDefinition() {
-         alertInvalidDataFormatDefinition=buildWarning(alertInvalidDataFormatDefinition,WARNING);
-         alertInvalidDataFormatDefinition.setTitle("Warning");
-         alertInvalidDataFormatDefinition.setHeaderText("Invalid data format!");
-         alertInvalidDataFormatDefinition.setContentText("channel number: integer, >=0 \nchannel rate: float, >0 " +
+    void alertInvalidDataFormatDefinition() {
+        alertInvalidDataFormatDefinition=buildWarning(alertInvalidDataFormatDefinition,WARNING);
+        alertInvalidDataFormatDefinition.setTitle("Warning");
+        alertInvalidDataFormatDefinition.setHeaderText("Invalid data format!");
+        alertInvalidDataFormatDefinition.setContentText("channel number: integer, >=0 \nchannel rate: float, >0 " +
                 "\nX(Y) column number: int, >=0 \namount of header lines: integer, >=0\n\n");
-         alertInvalidDataFormatDefinition.showAndWait();
+        alertInvalidDataFormatDefinition.showAndWait();
     }
 
-     Optional<ButtonType>  alertOpenMoreFiles(){
-         alertOpenMoreFiles= buildWarning(alertOpenMoreFiles,CONFIRMATION);
-         alertOpenMoreFiles.setTitle("More files?");
-         alertOpenMoreFiles.setHeaderText("More files?");
-         alertOpenMoreFiles.setContentText("Would you like to open more files ? \n\n");
+    Optional<ButtonType>  alertOpenMoreFiles(){
+        alertOpenMoreFiles= buildWarning(alertOpenMoreFiles,CONFIRMATION);
+        alertOpenMoreFiles.setTitle("More files?");
+        alertOpenMoreFiles.setHeaderText("More files?");
+        alertOpenMoreFiles.setContentText("Would you like to open more files ? \n\n");
         return  alertOpenMoreFiles.showAndWait();
     }
 
-     void alertAboutThisProgram (){
-         alertAboutThisProgram=buildWarning(alertAboutThisProgram,INFORMATION);
-         alertAboutThisProgram.setTitle("ADC binary data viewer");
-         alertAboutThisProgram.setHeaderText("JavaFX8-based application for digital signals visualisation");
-         alertAboutThisProgram.setContentText("Author: \nAleksey Beletskii\n\nWebsite:\nhttps://ua.linkedin.com/in/beletskii-aleksey\n\n");
-         alertAboutThisProgram.showAndWait();
+    void alertAboutThisProgram (){
+        alertAboutThisProgram=buildWarning(alertAboutThisProgram,INFORMATION);
+        alertAboutThisProgram.setTitle("ADC binary data viewer");
+        alertAboutThisProgram.setHeaderText("JavaFX8-based application for digital signals visualisation");
+        alertAboutThisProgram.setContentText("Author: \nAleksey Beletskii\n\nWebsite:\nhttps://ua.linkedin.com/in/beletskii-aleksey\n\n");
+        alertAboutThisProgram.showAndWait();
     }
 
 
-      public void alertNumberFormatExc() {
-          alertNumberFormatExc=buildWarning(alertNumberFormatExc,Alert.AlertType.WARNING);
-          alertNumberFormatExc.setTitle("Warning");
-          alertNumberFormatExc.setHeaderText("Invalid data format!");
-          alertNumberFormatExc.setContentText("*.txt file should contain at least one column of float\nselect proper columns numbers, the first is #0\n\nCheck header lines amount!\n\nCheck columns separator!\n\n");
-          alertNumberFormatExc.showAndWait();
-     }
+    public void alertNumberFormatExc() {
+        alertNumberFormatExc=buildWarning(alertNumberFormatExc,Alert.AlertType.WARNING);
+        alertNumberFormatExc.setTitle("Warning");
+        alertNumberFormatExc.setHeaderText("Invalid data format!");
+        alertNumberFormatExc.setContentText("*.txt file should contain at least one column of float\nselect proper columns numbers, the first is #0\n\nCheck header lines amount!\n\nCheck columns separator!\n\n");
+        alertNumberFormatExc.showAndWait();
+    }
 
-     public void alertExport(String outPath){
-         alertExport=buildWarning(alertExport,Alert.AlertType.WARNING);
-         alertExport.setTitle("Warning");
-         alertExport.setHeaderText("Data export");
-         alertExport.setContentText("The data are exported to\n\n"+outPath+"\n\n");
-         alertExport.showAndWait();
-     }
+    public void alertExport(String outPath){
+        alertExport=buildWarning(alertExport,Alert.AlertType.WARNING);
+        alertExport.setTitle("Warning");
+        alertExport.setHeaderText("Data export");
+        alertExport.setContentText("The data are exported to\n\n"+outPath+"\n\n");
+        alertExport.showAndWait();
+    }
 
-     public void alertSaveProfile(String outPath){
-         alertSaveProfile=buildWarning(alertSaveProfile,Alert.AlertType.WARNING);
-         alertSaveProfile.setTitle("Warning");
-         alertSaveProfile.setHeaderText("Profile saving");
-         alertSaveProfile.setContentText("The profile is saved to\n\n"+outPath+"\n\n");
-         alertSaveProfile.showAndWait();
-     }
+    public void alertSaveProfile(String outPath){
+        alertSaveProfile=buildWarning(alertSaveProfile,Alert.AlertType.WARNING);
+        alertSaveProfile.setTitle("Warning");
+        alertSaveProfile.setHeaderText("Profile saving");
+        alertSaveProfile.setContentText("The profile is saved to\n\n"+outPath+"\n\n");
+        alertSaveProfile.showAndWait();
+    }
 
-     private Alert buildWarning(Alert alert,Alert.AlertType alertType) {
-         if(alert==null) {
-             alert = new Alert(alertType);
-             alert.initOwner(mainApp.getPrimaryStage());
+    public static Alert buildWarning(Alert alert,Alert.AlertType alertType) {
+        if(alert==null) {
+            alert = new Alert(alertType);
+            alert.initOwner(mainApp.getPrimaryStage());
 
-             if (alertType==Alert.AlertType.CONFIRMATION) {
-                 alert.getButtonTypes().clear();
-                 alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-                 Button yesButton = (Button) alert.getDialogPane().lookupButton( ButtonType.YES );
-                 yesButton.setDefaultButton( false );
-                 Button noButton = (Button) alert.getDialogPane().lookupButton( ButtonType.NO );
-                 noButton.setDefaultButton( true );
-             }
+            if (alertType==Alert.AlertType.CONFIRMATION) {
+                alert.getButtonTypes().clear();
+                alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+                Button yesButton = (Button) alert.getDialogPane().lookupButton( ButtonType.YES );
+                yesButton.setDefaultButton( false );
+                Button noButton = (Button) alert.getDialogPane().lookupButton( ButtonType.NO );
+                noButton.setDefaultButton( true );
+            }
 
 //            alert.initStyle(StageStyle.UTILITY);
 //             alert.getDialogPane().setPrefSize(250,120);
 //             alert.getDialogPane().setMinSize(250,120);
-             DialogPane dialogPane = alert.getDialogPane();
-             dialogPane.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
-             dialogPane.getStyleClass().add("myDialog");
-             dialogPane.setMinHeight(Region.USE_PREF_SIZE);
-             dialogPane.setMinWidth(Region.USE_PREF_SIZE);
-             dialogPane.toFront();
-         }
-         return alert;
-     }
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.getStylesheets().add(BasicControl.class.getResource("/css/dialog.css").toExternalForm());
+            dialogPane.getStyleClass().add("myDialog");
+            dialogPane.setMinHeight(Region.USE_PREF_SIZE);
+            dialogPane.setMinWidth(Region.USE_PREF_SIZE);
+            dialogPane.toFront();
+        }
+        return alert;
+    }
 
 
 

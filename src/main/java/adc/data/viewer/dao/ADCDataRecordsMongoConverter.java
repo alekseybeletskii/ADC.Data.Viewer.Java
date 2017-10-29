@@ -45,19 +45,13 @@
 package adc.data.viewer.dao;
 
 import adc.data.viewer.model.ADCDataRecord;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import javafx.scene.paint.Color;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
-import javax.xml.parsers.DocumentBuilder;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ADCDataRecordsMongoConverter {
 
@@ -72,14 +66,16 @@ double satur = adcRecord.getSignalColor().getSaturation();
 double bright = adcRecord.getSignalColor().getBrightness();
 
         Document doc = new Document()
-                .append("deviceName", adcRecord.getDeviceName())
-                .append("diagnosticsName", adcRecord.getDiagnosticsName())
+                .append("device", adcRecord.getDevice())
+                .append("diagnostics", adcRecord.getDiagnostics())
                 .append("creationDate", adcRecord.getCreationDate())
-                .append("creationTime", adcRecord.getCreationTime())
-                .append("unitOfMeasurement", adcRecord.getUnitOfMeasurement())
+                .append("creationDateTime", adcRecord.getCreationDateTime())
+                .append("unitOfMeasurements", adcRecord.getUnitOfMeasurement())
                 .append("signalRate_kHz", adcRecord.getSignalRate_kHz())
                 .append("adcChannelNumber", adcRecord.getAdcChannelNumber())
-                .append("recordLabel",adcRecord.getSignalLabel())
+                .append("recordLabel",adcRecord.getRecordLabel())
+                .append("portLabel",adcRecord.getPortLabel())
+                .append("nextShot",adcRecord.getNextShot())
                 .append ("signalYData", Ylist)
                 .append("signalColor",Arrays.asList(hue,satur,bright))
                 .append("_id", adcRecord.getId())
@@ -94,14 +90,15 @@ double bright = adcRecord.getSignalColor().getBrightness();
         Color color = Color.hsb(colorArray[0],colorArray[1],colorArray[2]);
         ADCDataRecord adcRecord = new ADCDataRecord();
         adcRecord.setId(doc.getString("_id"));
-        adcRecord.setDeviceName((String) doc.get("deviceName"));
-        adcRecord.setDiagnosticsName((String) doc.get("diagnosticsName"));
+        adcRecord.setDevice((String) doc.get("device"));
+        adcRecord.setDiagnostics((String) doc.get("diagnostics"));
         adcRecord.setCreationDate((String) doc.get("creationDate"));
-        adcRecord.setCreationTime((String) doc.get("creationTime"));
-        adcRecord.setUnitOfMeasurement((String) doc.get("unitOfMeasurement"));
+        adcRecord.setCreationDateTime((String) doc.get("creationDateTime"));
+        adcRecord.setUnitOfMeasurement((String) doc.get("unitOfMeasurements"));
         adcRecord.setSignalRate_kHz(doc.getDouble("signalRate_kHz"));
         adcRecord.setAdcChannelNumber((String) doc.get("adcChannelNumber"));
-        adcRecord.setSignalLabel((String)doc.get("recordLabel"));
+        adcRecord.setPortLabel((String)doc.get("portLabel"));
+        adcRecord.setRecordLabel((String)doc.get("recordLabel"));
         double[] Yarray = ((ArrayList<Double>)doc.get("signalYData")).stream().mapToDouble(Double::doubleValue).toArray();
         adcRecord.setSignalYData(Yarray);
         adcRecord.setSignalColor(color);

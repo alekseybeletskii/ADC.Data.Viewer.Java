@@ -48,34 +48,55 @@ import adc.data.viewer.dao.interfaces.ADCRecordDao;
 import adc.data.viewer.dao.interfaces.ConnectionBuilder;
 import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
 import adc.data.viewer.model.ADCDataRecord;
+import adc.data.viewer.ui.BaseController;
+import adc.data.viewer.ui.MainApp;
 import com.mongodb.*;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
+import static com.mongodb.client.model.Filters.*;
 
-import javax.xml.parsers.DocumentBuilder;
+import org.bson.BsonDocument;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.DoubleConsumer;
 
 
-public class ADCRecordDaoMongo implements ADCRecordDao {
-    public  ADCRecordDaoMongo() throws Exception {
+public class ADCRecordDaoMongo implements ADCRecordDao  {
+
+    private String dbName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDB");
+    private String collectionName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBaseCollection", "adcDataRecords");
+    private MongoClient mongoClient;
+    private  MongoCollection<Document> adcRecordsCollection ;
+
+    public ADCRecordDaoMongo() {
+        adcRecordsCollection= getMongoDBDataBaseCollection();
     }
-    private ConnectionBuilder connectionBuilder = ConnectionBuilderFactory.getConnectionBuilder();
-    private final MongoClient mongoClient = getMongoClient();
-    private final MongoDatabase ADCDataViewer =mongoClient.getDatabase("ADCDataViewerDB");
-    private final MongoCollection<Document> adcRecordsCollection=ADCDataViewer.getCollection("adcDataRecords");
 
-    private MongoClient getMongoClient () throws Exception {
-        return (MongoClient) connectionBuilder.getConnection();
+    private MongoCollection<Document> getMongoDBDataBaseCollection() {
+        MongoCollection<Document> collection=null;
+        ConnectionBuilder connectionBuilder = ConnectionBuilderFactory.getConnectionBuilder();
+        if(connectionBuilder!=null) {
+
+                if(mongoClient==null) mongoClient = (MongoClient) connectionBuilder.getConnection();
+
+                if(mongoClient!=null) {
+                    final MongoDatabase ADCDataViewer = mongoClient.getDatabase(dbName);
+                    collection= ADCDataViewer.getCollection(collectionName);
+                }
+        }
+        return  collection;
     }
 
     @Override
     public List<ADCDataRecord> findAll() throws ADCDataRecordsDaoException {
-
-        List<ADCDataRecord> adcRecords = new ArrayList<ADCDataRecord>();
+        List<ADCDataRecord> adcRecords = new ArrayList<>();
 
         try (MongoCursor<Document> cursor = adcRecordsCollection.find().iterator()) {
             while (cursor.hasNext()) {
@@ -88,54 +109,143 @@ public class ADCRecordDaoMongo implements ADCRecordDao {
     }
 
     @Override
-    public void insertOne(ADCDataRecord entity)throws ADCDataRecordsDaoException  {
+    public boolean insertOne(ADCDataRecord entity)throws ADCDataRecordsDaoException  {
+        return false;
 
     }
 
     @Override
-    public void deleteOne(ADCDataRecord entity)throws ADCDataRecordsDaoException  {
-
+    public boolean deleteOne(ADCDataRecord entity)throws ADCDataRecordsDaoException  {
+        return  false;
     }
 
     @Override
-    public void  updateOne(ADCDataRecord entity)throws ADCDataRecordsDaoException  {
-
+    public boolean  updateOne(ADCDataRecord entity)throws ADCDataRecordsDaoException  {
+        return  false;
     }
 
     @Override
-    public void  insertMany(List<ADCDataRecord> entityList)throws ADCDataRecordsDaoException  {
+    public boolean  insertMany(List<ADCDataRecord> entityList)throws ADCDataRecordsDaoException  {
+
+
         for (ADCDataRecord nextRecord:entityList ) {
-//        ADCDataRecord nextRecord=entityList.get(0);
             Document doc = ADCDataRecordsMongoConverter.toDocument(nextRecord);
-//            adcRecordsCollection.insertOne(new Document().append("test","test"));
-            if(adcRecordsCollection.find(new Document().append("_id",(String)doc.get("_id"))).first()==null){
-            adcRecordsCollection.insertOne(doc);}
+            if(adcRecordsCollection!=null&&adcRecordsCollection.find(new Document().append("_id",(String)doc.get("_id"))).first()==null)
+            {
+            adcRecordsCollection.insertOne(doc);
+                return true;
+            }
         }
-
+        return false;
     }
 
     @Override
     public List<String> findAllDevicesNames() throws ADCDataRecordsDaoException {
-        return null;
+
+
+
+        if(adcRecordsCollection==null){
+//            BaseController.alertMongoDBConnection();
+            return null;
+        }
+
+        List<String> out=new ArrayList<>();
+
+            AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
+//                new Document("$unwind", "$views"),
+//                new Document("$match", new Document("views.isActive", true)),
+//                new Document("$limit", 200),
+//                        .append("date", "$views.date"))
+                    new Document("$group", new Document("_id","$device")),
+                    new Document("$project", new Document("_id", 1)),
+                    new Document("$sort", new Document("_id", 1))
+             ));
+
+            for (Document dbObject : output)
+
+            {
+                out.add(dbObject.getString("_id"));
+//                System.out.println(out);
+            }
+            return out;
+
     }
 
     @Override
     public List<String> findAllDiagnosticsNames(String deviceName) throws ADCDataRecordsDaoException {
-        return null;
+        List<String> out=new ArrayList<>();
+        AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
+                new Document("$group", new Document("_id","$diagnostics")),
+                new Document("$project", new Document("_id", 1)),
+                new Document("$sort", new Document("_id", 1))
+        ));
+
+        for (Document dbObject : output)
+
+        {
+            out.add(dbObject.getString("_id"));
+//            System.out.println(out);
+        }
+        return out;
     }
 
     @Override
-    public List<String> findAllRecordsDates(String diagnosticsName) throws ADCDataRecordsDaoException  {
-        return null;
+    public List<String> findAllDates(String diagnostics) throws ADCDataRecordsDaoException  {
+        List<String> out=new ArrayList<>();
+        AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
+                new Document("$group", new Document("_id","$creationDate")),
+                new Document("$project", new Document("_id", 1)),
+                new Document("$sort", new Document("_id", 1))
+        ));
+
+        for (Document dbObject : output)
+
+        {
+            out.add(dbObject.getString("_id"));
+//            System.out.println(out);
+        }
+        return out;
     }
 
     @Override
-    public List<String> findAllRecordsShots(String recordsDate) throws ADCDataRecordsDaoException  {
-        return null;
-    }
+    public List<String> findAllShots(String date) throws ADCDataRecordsDaoException  {
+        List<String> out=new ArrayList<>();
+        AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
+                new Document("$group", new Document("_id","$nextShot")),
+                new Document("$project", new Document("_id", 1)),
+                new Document("$sort", new Document("_id", 1))
+        ));
 
+        for (Document dbObject : output)
+
+        {
+            out.add(dbObject.getString("_id"));
+//            System.out.println(out);
+        }
+        return out;
+    }
     @Override
-    public List<ADCDataRecord> findADCRecordsByCriterion (String ...args) throws  ADCDataRecordsDaoException {
-        return null;
+    public List<ADCDataRecord> findADCRecordsByCriterion(List<String> finalQueryBasic, List<String> finalQueryShots) throws  ADCDataRecordsDaoException {
+        List<ADCDataRecord> out=new ArrayList<>();
+
+        List<Bson> filters = new ArrayList<>();
+        Bson filterBasic =  and(
+                        eq("device",finalQueryBasic.get(0)),
+                eq("diagnostics",finalQueryBasic.get(1)),
+                eq("creationDate",finalQueryBasic.get(2))
+                );
+
+        Bson filterShots;
+        for (String str : finalQueryShots){
+            filters.add(filterShots = eq("nextShot",str));
+        }
+
+        try (MongoCursor<Document> cursor = adcRecordsCollection.find(or(filters)).iterator()) {
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                out.add(ADCDataRecordsMongoConverter.toADCDataRecord(doc));
+            }
+        }
+        return out;
     }
 }

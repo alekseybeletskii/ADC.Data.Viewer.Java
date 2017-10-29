@@ -76,7 +76,12 @@ public class ConnectionBuilderSQL implements ConnectionBuilder
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(sqlURI, dblogin, dbpassword);
+    public Connection getConnection()  {
+        try {
+            return DriverManager.getConnection(sqlURI, dblogin, dbpassword);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

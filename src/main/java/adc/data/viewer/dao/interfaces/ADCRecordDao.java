@@ -54,7 +54,7 @@ public interface ADCRecordDao extends Dao<ADCDataRecord>{
 
 	public List<String> findAllDevicesNames() throws ADCDataRecordsDaoException ;
 	public List<String> findAllDiagnosticsNames(String deviceName) throws ADCDataRecordsDaoException ;
-	public List<String> findAllRecordsDates(String diagnosticsName) throws ADCDataRecordsDaoException ;
-	public List<String> findAllRecordsShots(String recordsDate) throws ADCDataRecordsDaoException ;
-	public List<ADCDataRecord> findADCRecordsByCriterion (String ...args) throws  ADCDataRecordsDaoException;
+	public List<String> findAllDates(String diagnosticsName) throws ADCDataRecordsDaoException ;
+	public List<String> findAllShots(String recordsDate) throws ADCDataRecordsDaoException ;
+	public List<ADCDataRecord> findADCRecordsByCriterion(List<String> args, List<String> finalQueryShots) throws  ADCDataRecordsDaoException;
 }

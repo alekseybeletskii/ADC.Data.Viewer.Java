@@ -170,16 +170,16 @@ public class PlotterController extends BaseController{
             if(i==1){
                 MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",-1);
                 mainApp.setSignalUsedAsFilter(signalAsFilter.getSignalYData().clone());
-                mainApp.getBaseController().alertFilterIsApplied("one",signalAsFilter.getSignalLabel());
+                mainApp.getBaseController().alertFilterIsApplied("one",signalAsFilter.getRecordLabel());
             }else if (i>1) {
                 int numberOfADCChannelAsFilter =Integer.parseInt(signalAsFilter != null ? signalAsFilter.getAdcChannelNumber() : "-1");
                 MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",numberOfADCChannelAsFilter);
-                mainApp.getBaseController().alertFilterIsApplied("multy",signalAsFilter.getSignalLabel());
+                mainApp.getBaseController().alertFilterIsApplied("multy",signalAsFilter.getRecordLabel());
             }else {
                 SubtractSignal.setSelected(false);
                 MainApp.appPreferencesRootNode.putInt("defaultADCChannelUsedAsFilter",-1);
                 MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal", false);
-                mainApp.getBaseController().alertFilterIsApplied("non",signalAsFilter.getSignalLabel());            }
+                mainApp.getBaseController().alertFilterIsApplied("non",signalAsFilter.getRecordLabel());            }
 
         }
         else{

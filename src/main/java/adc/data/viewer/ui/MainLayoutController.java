@@ -219,8 +219,10 @@ private  void handleConnectionSetup(){
 }
 @FXML
 private  void handleReadFromDataBase() throws ADCDataRecordsDaoException {
+    MongodbManager.setUpDao();
     mainApp.getAdcDataRecords().clear();
-    mainApp.getAdcDataRecords().addAll(MongodbManager.findAllRecords());
+//    mainApp.getAdcDataRecords().addAll(MongodbManager.findAllRecords());
+    mainApp.showDataBaseQueryPanel();
     mainApp.signalMarkerAddListeners();
     mainApp.drawPlots();
 
@@ -228,9 +230,13 @@ private  void handleReadFromDataBase() throws ADCDataRecordsDaoException {
         
 
 @FXML
-private  void handleWriteToDataBase() throws ADCDataRecordsDaoException{
-
-    MongodbManager.insertADCDataRecordsList(mainApp.getAdcDataRecords());
+private  boolean handleWriteToDataBase() throws ADCDataRecordsDaoException{
+    MongodbManager.setUpDao();
+    if (MongodbManager.insertADCDataRecordsList(mainApp.getAdcDataRecords())) return true;
+    else {
+        BaseController.alertMongoDBConnectionError();
+        return false;
+    }
 
 }
 

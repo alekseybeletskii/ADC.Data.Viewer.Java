@@ -44,29 +44,30 @@
 
 package adc.data.viewer.dao;
 
+import adc.data.viewer.dao.interfaces.ADCRecordDao;
 import adc.data.viewer.dao.interfaces.Dao;
 import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
 import adc.data.viewer.model.ADCDataRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MongodbManager {
 
-    private static final Dao<ADCDataRecord> dao = ADCRecordDaoFactory.getADCRecordDao();;
+
+    private static ADCRecordDao dao;
 
 //    public MongodbManager() {
-//        dao = ADCRecordDaoFactory.getADCRecordDao();
+//         dao = ADCRecordDaoFactory.getADCRecordDao();
+//
 //    }
+    public static void setUpDao(){
+        dao =ADCRecordDaoFactory.getADCRecordDao();
+    }
 
-    public static void insertADCDataRecordsList (List<ADCDataRecord> records) throws ADCDataRecordsDaoException {
-        try{
-            if (dao != null) {
-                dao.insertMany(records) ;
-            }
-        }
-        catch (ADCDataRecordsDaoException e){
-            throw e;
-        }
+    public static boolean  insertADCDataRecordsList (List<ADCDataRecord> records) throws ADCDataRecordsDaoException {
+
+        return dao != null && dao.insertMany(records);
     }
 
     public static List <ADCDataRecord> findAllRecords () throws ADCDataRecordsDaoException{
@@ -74,6 +75,43 @@ public class MongodbManager {
             return dao.findAll();
         }
 
+        return new ArrayList<>();
+
+    }
+
+    public  static  List <String> findAllDevicesNames() throws ADCDataRecordsDaoException {
+        if (dao != null) {
+            return dao.findAllDevicesNames();
+        }
         return null;
+    }
+    public  static  List <String> findAllDiagnosticsNames(String devicename) throws ADCDataRecordsDaoException {
+        if (dao != null) {
+            return dao.findAllDiagnosticsNames( devicename);
+        }
+        return new ArrayList<>();
+    }
+
+    public  static  List <String> findAllDates(String diagnostics) throws ADCDataRecordsDaoException {
+        if (dao != null) {
+            return dao.findAllDates( diagnostics);
+        }
+        return new ArrayList<>();
+    }
+
+    public  static  List <String> findAllShots(String date) throws ADCDataRecordsDaoException {
+        if (dao != null) {
+            return dao.findAllShots( date);
+        }
+        return new ArrayList<>();
+    }
+
+
+
+    public  static  List <ADCDataRecord> findADCRecordsByCriterion(List<String> finalQueryBasic, List<String> finalQueryShots) throws ADCDataRecordsDaoException {
+        if (dao != null) {
+            return dao.findADCRecordsByCriterion( finalQueryBasic,finalQueryShots);
+        }
+        return new ArrayList<>();
     }
 }

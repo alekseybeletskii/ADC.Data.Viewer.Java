@@ -52,6 +52,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 
 /**
  * This is the class that defines ADC binary data format used in the freeware program L-Graph I before 2008 year
@@ -131,7 +133,10 @@ class LGraph1 implements DataTypes {
     }
 
     public void setData(int fileIndex, int signalIndex) {
+        Path configPath = dataParser.getDataFilePath()[fileIndex].getParent().resolve("adcrecords.config");
+        Map<String,String> config = dataParser.readAdcRecordsConfiguration(configPath);
         MappedByteBuffer dataBuf;
+
         double [] signalY = new double [(int) dataParams.getRealCadresQuantity()[fileIndex]];
         int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
         int [] chanAdcGain = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
@@ -168,7 +173,7 @@ class LGraph1 implements DataTypes {
                 }
                 signalIndex++;
 
-                dataParser.PutADCDataRecords(new double[0], signalY,signalIndex, fileIndex,chanAdcNum[jj],0);
+                dataParser.PutADCDataRecords(new double[0], signalY,signalIndex, fileIndex,chanAdcNum[jj],0,  config);
 
                 jj++;
             }

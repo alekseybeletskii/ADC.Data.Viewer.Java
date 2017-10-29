@@ -51,8 +51,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static adc.data.viewer.ui.TextFileParamController.*;
 import static javafx.scene.control.Alert.AlertType.WARNING;
@@ -100,7 +102,8 @@ class UnknownADC implements DataTypes {
 
 
    public void setData( int fileIndex, int signalIndex) {
-
+       Path configPath = dataParser.getDataFilePath()[fileIndex].getParent().resolve("adcrecords.config");
+       Map<String,String> config = dataParser.readAdcRecordsConfiguration(configPath);
       String line;
       List<Double> allYLines = new ArrayList<>();
       List<Double> allXLines = new ArrayList<>();
@@ -149,7 +152,7 @@ class UnknownADC implements DataTypes {
 
             signalIndex++;
 
-            dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum, signalTimeShift);
+            dataParser.PutADCDataRecords(Xdata, Ydata, signalIndex, fileIndex, channelNum, signalTimeShift,config);
 
          }
          catch (NumberFormatException e){

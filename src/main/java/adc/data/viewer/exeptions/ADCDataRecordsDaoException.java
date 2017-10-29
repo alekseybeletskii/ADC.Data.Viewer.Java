@@ -47,6 +47,7 @@ package adc.data.viewer.exeptions;
 public class ADCDataRecordsDaoException extends Exception
 {
     public ADCDataRecordsDaoException() {
+
     }
 
     public ADCDataRecordsDaoException(String message) {

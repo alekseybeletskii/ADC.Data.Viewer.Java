@@ -44,6 +44,7 @@
 
 package adc.data.viewer.dao;
 
+import adc.data.viewer.dao.interfaces.ADCRecordDao;
 import adc.data.viewer.dao.interfaces.Dao;
 import adc.data.viewer.model.ADCDataRecord;
 import adc.data.viewer.ui.MainApp;
@@ -51,12 +52,12 @@ import adc.data.viewer.ui.MainApp;
 public class ADCRecordDaoFactory {
 
 
-        public static Dao <ADCDataRecord> getADCRecordDao() {
+        public static ADCRecordDao getADCRecordDao() {
             final String daoClass = MainApp.appPreferencesRootNode.get(
                     "ADCRecordDaoClass", "adc.data.viewer.dao.ADCRecordDaoMongo");
             try {
                 Class dao = Class.forName(daoClass);
-                return (Dao<ADCDataRecord>)dao.newInstance();
+                return (ADCRecordDao)dao.newInstance();
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
                 ex.printStackTrace();
             }

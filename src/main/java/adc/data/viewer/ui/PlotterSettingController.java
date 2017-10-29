@@ -331,7 +331,7 @@ public class PlotterSettingController extends BaseController{
 
         allDataLabels.add("set for all data");
         for(ADCDataRecord adcr : mainApp.getAdcDataRecords()){
-            allDataLabels.add(adcr.getSignalLabel());
+            allDataLabels.add(adcr.getRecordLabel());
         }
 
         setDataStartTimeAndYMultiplier.itemsProperty().setValue(allDataLabels);

@@ -52,6 +52,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.util.Map;
 
 
 /**
@@ -60,21 +61,21 @@ import java.nio.file.Path;
  */
 class LGraph1_2008 implements DataTypes {
 
-//    LGraph1_2008 (DataParser dataData){}
+//    LGraph1_2008 (DataParser dataParser){}
 
 
-    private DataParser dataData;
+    private DataParser dataParser;
     private DataParams dataParams;
     private Path[] dataFilePath;
     private Path[] parFilePath;
 
 
-    public void setDataParser(DataParser dataData) {
+    public void setDataParser(DataParser dataParser) {
 
-        this.dataData = dataData;
-        this.dataParams = dataData.getDataParams();
-        this.dataFilePath = dataData.getDataFilePath();
-        this.parFilePath = dataData.getParFilePath();
+        this.dataParser = dataParser;
+        this.dataParams = dataParser.getDataParams();
+        this.dataFilePath = dataParser.getDataFilePath();
+        this.parFilePath = dataParser.getParFilePath();
     }
 
     public void setParam(int fileIndex) {
@@ -136,6 +137,8 @@ class LGraph1_2008 implements DataTypes {
     }
 
     public void setData(int fileIndex, int signalIndex) {
+        Path configPath = dataParser.getDataFilePath()[fileIndex].getParent().resolve("adcrecords.config");
+        Map<String,String> config = dataParser.readAdcRecordsConfiguration(configPath);
         MappedByteBuffer dataBuf;
         double [] oneSignal = new double [(int) dataParams.getRealCadresQuantity()[fileIndex]];
         int [] chanAdcNum = new int [dataParams.getRealChannelsQuantity()[fileIndex]];
@@ -159,7 +162,7 @@ class LGraph1_2008 implements DataTypes {
                 activeCh++;}
             allCh++;
         }
-        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataData.getDataFilePath()[fileIndex])) {
+        try (FileChannel fChan = (FileChannel) Files.newByteChannel(dataParser.getDataFilePath()[fileIndex])) {
             long fSize = fChan.size();
             dataBuf = fChan.map(FileChannel.MapMode.READ_ONLY, 0, fSize);
             dataBuf.order(ByteOrder.LITTLE_ENDIAN);
@@ -173,7 +176,7 @@ class LGraph1_2008 implements DataTypes {
                 }
                 signalIndex++;
 
-                dataData.PutADCDataRecords(new double[0],oneSignal,signalIndex, fileIndex,chanAdcNum[jj],0);
+                dataParser.PutADCDataRecords(new double[0],oneSignal,signalIndex, fileIndex,chanAdcNum[jj],0,config);
 
                 jj++;
             }

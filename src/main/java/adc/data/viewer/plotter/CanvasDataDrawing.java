@@ -295,8 +295,8 @@ public class CanvasDataDrawing extends Canvas {
             case "AllPlots":
                 for (ADCDataRecord sigMarc : mainApp.getAdcDataRecords()) {
                     if (sigMarc.getSignalSelected()) {
-                        Label curveLabel = new Label(sigMarc.getSignalLabel() + "=" + plotType);
-                        curveLabel.setText(sigMarc.getSignalLabel() + "=" + plotType);
+                        Label curveLabel = new Label(sigMarc.getRecordLabel() + "=" + plotType);
+                        curveLabel.setText(sigMarc.getRecordLabel() + "=" + plotType);
                         curveLabel.setStyle("-fx-background-color: transparent");
                         curveLabel.setTextFill(sigMarc.getSignalColor());
                         plotterController.getLegendPane().getChildren().add(curveLabel);
@@ -307,8 +307,8 @@ public class CanvasDataDrawing extends Canvas {
 
                 break;
             default:
-                Label curveLabel = new Label(nextSignalToDraw.getSignalLabel() + "=" + plotType);
-                curveLabel.setText(nextSignalToDraw.getSignalLabel() + "=" + plotType);
+                Label curveLabel = new Label(nextSignalToDraw.getRecordLabel() + "=" + plotType);
+                curveLabel.setText(nextSignalToDraw.getRecordLabel() + "=" + plotType);
                 curveLabel.setStyle("-fx-background-color: transparent");
                 curveLabel.setTextFill(nextSignalToDraw.getSignalColor());
                 plotterController.getLegendPane().getChildren().add(curveLabel);

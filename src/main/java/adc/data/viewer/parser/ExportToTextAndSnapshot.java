@@ -95,7 +95,7 @@ public class ExportToTextAndSnapshot {
                     e.printStackTrace();
                 }
 
-                try (FileChannel fWrite = (FileChannel) Files.newByteChannel(outTxtPath.resolve(nextData.getSignalLabel() + ".txt"), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE)) {
+                try (FileChannel fWrite = (FileChannel) Files.newByteChannel(outTxtPath.resolve(nextData.getRecordLabel() + ".txt"), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE)) {
 
                     MappedByteBuffer wrBuf = fWrite.map(FileChannel.MapMode.READ_WRITE, 0, nextData.getSignalYData().length * 16 * 2);
                     int j = 0;
@@ -150,7 +150,7 @@ public class ExportToTextAndSnapshot {
 
                     for (ADCDataRecord nextSignal : mainApp.getAdcDataRecords()) {
                         if (nextSignal.getSignalSelected()) {
-                        String nextLabel = nextSignal.getSignalLabel().length()>30?nextSignal.getSignalLabel().substring(0,29):nextSignal.getSignalLabel();
+                        String nextLabel = nextSignal.getRecordLabel().length()>30?nextSignal.getRecordLabel().substring(0,29):nextSignal.getRecordLabel();
                             double dt = 1.0 / (mainApp.getDataParser().getDataParams().getChannelRate()[nextSignal.getFileOrdinalNumber()]);
                             int profileIndex = (int) round(profileTime / dt);
                             double profileDataPoint = nextSignal.getSignalYData()[profileIndex];

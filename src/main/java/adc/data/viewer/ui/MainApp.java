@@ -92,6 +92,7 @@ public  class MainApp extends Application {
     private SignalsOverviewController signalsOverviewController;
     private double [] signalUsedAsFilter;
     private double splitPaneDivisionPosition;
+    private DataBaseQueryPanelController dataBaseQueryPanelController;
 
     public BaseController getBaseController() {
         return baseController;
@@ -182,6 +183,32 @@ public  class MainApp extends Application {
 
 
     }
+
+
+     void showDataBaseQueryPanel() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("DataBaseQueryPanel.fxml"));
+            BorderPane dataBaseQuery = loader.load();
+            dataBaseQueryPanelController = loader.getController();
+            Stage dataBaseQueryStage = new Stage();
+            dataBaseQueryStage.getIcons().add(logo);
+            dataBaseQueryStage.initOwner(primaryStage);
+            dataBaseQueryStage.setResizable(true);
+            dataBaseQueryStage.setAlwaysOnTop(true);
+//            plotterSettingController.initializeSettings();
+            dataBaseQueryPanelController.setPlotterSettingStage(dataBaseQueryStage);
+            dataBaseQueryStage.setTitle("Data Base Query");
+            Scene scene = new Scene(dataBaseQuery);
+            dataBaseQueryStage.setScene(scene);
+            dataBaseQueryStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void initMainLayout() {
         try {

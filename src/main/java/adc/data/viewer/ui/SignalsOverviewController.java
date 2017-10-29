@@ -136,7 +136,7 @@ public class SignalsOverviewController extends BaseController{
         signalsTable.setPlaceholder(new Label("Check \"Help->How to use\" for instructions"));
         signalSelectedColumn.setCellValueFactory(cellData -> cellData.getValue().signalSelectedProperty() );
         signalColorColumn.setCellValueFactory(cellData -> cellData.getValue().signalColorProperty());
-        signalLabelColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSignalLabel()));
+        signalLabelColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRecordLabel()));
 
         signalColorColumn.setCellFactory(c->new TableCellColoredView<>(signalColorColumn));
 //        signalSelectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(signalSelectedColumn));
@@ -149,8 +149,7 @@ public class SignalsOverviewController extends BaseController{
 //        Listen for selection changes and show the signal details when changed.
         signalsTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) ->
-                {   showSignalDetails(newValue);
-                }
+                   showSignalDetails(newValue)
                 );
 
         plotsScrollPane.getContent().setOnScroll(new EventHandler<ScrollEvent>() {
@@ -176,15 +175,15 @@ public class SignalsOverviewController extends BaseController{
     private void showSignalDetails(ADCDataRecord signal) {
         if (signal != null){
 
-            deviceNameLabel.setText(signal.getDeviceName());
-//            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDeviceName()[signal.getFileOrdinalNumber()]);
+            deviceNameLabel.setText(signal.getDevice());
+//            deviceNameLabel.setText(mainApp.getDataParser().getDataParams().getDevice()[signal.getFileOrdinalNumber()]);
             creationDateLabel.setText(signal.getCreationDate());
 //            creationDateLabel.setText(mainApp.getDataParser().getDataParams().getCreateDateTime()[signal.getFileOrdinalNumber()]);
 //            adcRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getAdcRate()[signal.getFileOrdinalNumber()]));
             channelRateLabel.setText(String.valueOf(signal.getSignalRate_kHz()));
 //            channelRateLabel.setText(String.format("%.3f",mainApp.getDataParser().getDataParams().getChannelRate()[signal.getFileOrdinalNumber()]));
             channelNumberLabel.setText(signal.getAdcChannelNumber());
-//            channelNumberLabel.setText(signal.getSignalLabel().substring(signal.getSignalLabel().lastIndexOf("#")+1));
+//            channelNumberLabel.setText(signal.getRecordLabel().substring(signal.getRecordLabel().lastIndexOf("#")+1));
             channelSamplesLabel.setText(String.valueOf(signal.getSignalYData().length));
 //            channelSamplesLabel.setText(String.format("%d",mainApp.getDataParser().getDataParams().getRealCadresQuantity()[signal.getFileOrdinalNumber()]));
             channelDurationLabel.setText(String.format("%.2f",signal.getSignalYData().length / signal.getSignalRate_kHz()));
@@ -209,7 +208,7 @@ public class SignalsOverviewController extends BaseController{
             if (k.getCode() == KeyCode.ENTER){
                 filteredListOfSignals.setPredicate(n -> {
 
-                    boolean isContains = n.getSignalLabel().contains(signalsListFilter.getText());
+                    boolean isContains = n.getRecordLabel().contains(signalsListFilter.getText());
                     if (signalsListFilter.getText() == null || signalsListFilter.getText().isEmpty()) {
                         n.setSignalSelected(false);
                         return true;

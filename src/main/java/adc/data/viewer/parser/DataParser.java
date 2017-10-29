@@ -46,12 +46,15 @@ package adc.data.viewer.parser;
 
 
 import adc.data.viewer.model.ADCDataRecord;
+import adc.data.viewer.ui.BaseController;
 import adc.data.viewer.ui.MainApp;
 import javafx.scene.paint.Color;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 
@@ -118,6 +121,29 @@ public class DataParser {
         mainApp.getAdcDataRecords().addAll(ADCDataRecordList);
     }
 
+     Map<String,String> readAdcRecordsConfiguration(Path configPath) {
+
+        String line;
+        Map<String,String> adcRecordsConfig =new HashMap<>();
+
+        try (BufferedReader signalDataFromText = Files.newBufferedReader(configPath, Charset.forName("UTF-8"))) {
+            while ((line = signalDataFromText.readLine()) != null) {
+                adcRecordsConfig.put(line.split("=")[0],line.split("=")[1]);
+            }
+            return adcRecordsConfig;
+        }
+        catch (IOException x) {
+            BaseController.alertInvalidConfigurationFile();
+            System.err.format("IOException: %s%n", x);
+
+        }
+         adcRecordsConfig.put("device","unknown");
+         adcRecordsConfig.put("diagnostics","unknown");
+         adcRecordsConfig.put("creationDate","unknown");
+         adcRecordsConfig.put("portLabel","unknown");
+         adcRecordsConfig.put("unitOfMeasurements","unknown");
+        return adcRecordsConfig;
+    }
 
 
     private void makePaths(List<Path> pathes) {
@@ -184,22 +210,22 @@ public class DataParser {
      */
 
 
-     void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileOrdinalNumber, int adcChannelNumber, double signalTimeShift) {
+     void PutADCDataRecords(double [] Xdata, double [] Ydata, int signalIndex, int fileOrdinalNumber, int adcChannelNumber, double signalTimeShift, Map<String,String> config) {
 
         String adcChannelNumberAsString = String.format("%02d", adcChannelNumber);
         String nextSignalLabel = adcChannelNumberAsString+"\u0040"+ fileNames[fileOrdinalNumber];
+        String nextShot = fileNames[fileOrdinalNumber];
         Path nextSignalPath = dataFilePath[fileOrdinalNumber].getParent();
         this.signalPath[signalIndex] = nextSignalPath;
         this.signalIndex = signalIndex;
         double dataMultiplier = 1.0;
         boolean drawThisSignal = false;
         double signalRate_kHz = dataParams.getChannelRate()[fileOrdinalNumber];
-        String signalDate = dataParams.getCreateDateTime()[fileOrdinalNumber];
-        String signalTime = dataParams.getCreateDateTime()[fileOrdinalNumber];
+        String creationDateTime = dataParams.getCreateDateTime()[fileOrdinalNumber];
         double interCadreDelay_ms = dataParams.getInterCadreDelay()[fileOrdinalNumber];
         ADCDataRecord singleDataRecord =new ADCDataRecord(adcChannelNumberAsString ,signalIndex,  drawThisSignal, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,
                 Xdata.clone(), Ydata.clone(), signalTimeShift, dataMultiplier,signalRate_kHz,
-                "Uragan-3M", "LangmuirProbes" , "ADCVolts",signalDate,signalTime,interCadreDelay_ms, "portLabel");
+                creationDateTime,interCadreDelay_ms,config, nextShot);
 
         ADCDataRecordList.add(singleDataRecord);
 
@@ -219,12 +245,6 @@ public class DataParser {
         this.signalColors = signalColors;
     }
 
-
-    private void setYDataMultiplier(){
-
-
-
-    }
 
 
 

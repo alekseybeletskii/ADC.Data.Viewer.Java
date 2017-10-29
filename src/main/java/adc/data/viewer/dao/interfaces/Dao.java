@@ -52,12 +52,12 @@ public interface Dao<T> {
 
 	public List<T> findAll()  throws ADCDataRecordsDaoException;
 	
-	public void insertOne (T entity)  throws ADCDataRecordsDaoException;
+	public boolean insertOne (T entity)  throws ADCDataRecordsDaoException;
 	
-	public void deleteOne (T entity)  throws ADCDataRecordsDaoException;
+	public boolean deleteOne (T entity)  throws ADCDataRecordsDaoException;
 
-	public void updateOne (T entity)  throws ADCDataRecordsDaoException;
+	public boolean updateOne (T entity)  throws ADCDataRecordsDaoException;
 
-	public void insertMany (List<T> entityList)  throws ADCDataRecordsDaoException;
+	public boolean insertMany (List<T> entityList)  throws ADCDataRecordsDaoException;
 
 }
