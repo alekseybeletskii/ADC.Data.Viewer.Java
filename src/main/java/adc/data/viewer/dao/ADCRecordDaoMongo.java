@@ -133,10 +133,10 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
             if(adcRecordsCollection!=null&&adcRecordsCollection.find(new Document().append("_id",(String)doc.get("_id"))).first()==null)
             {
             adcRecordsCollection.insertOne(doc);
-                return true;
+//                return true;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -172,9 +172,10 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
     }
 
     @Override
-    public List<String> findAllDiagnosticsNames(String deviceName) throws ADCDataRecordsDaoException {
+    public List<String> findAllDiagnosticsNames(String device) throws ADCDataRecordsDaoException {
         List<String> out=new ArrayList<>();
         AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
+                new Document("$match", new Document("device", device)),
                 new Document("$group", new Document("_id","$diagnostics")),
                 new Document("$project", new Document("_id", 1)),
                 new Document("$sort", new Document("_id", 1))
@@ -193,6 +194,7 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
     public List<String> findAllDates(String diagnostics) throws ADCDataRecordsDaoException  {
         List<String> out=new ArrayList<>();
         AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
+                new Document("$match", new Document("diagnostics", diagnostics)),
                 new Document("$group", new Document("_id","$creationDate")),
                 new Document("$project", new Document("_id", 1)),
                 new Document("$sort", new Document("_id", 1))
@@ -208,9 +210,10 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
     }
 
     @Override
-    public List<String> findAllShots(String date) throws ADCDataRecordsDaoException  {
+    public List<String> findAllShots(String creationDate) throws ADCDataRecordsDaoException  {
         List<String> out=new ArrayList<>();
         AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
+                new Document("$match", new Document("creationDate", creationDate)),
                 new Document("$group", new Document("_id","$nextShot")),
                 new Document("$project", new Document("_id", 1)),
                 new Document("$sort", new Document("_id", 1))
@@ -234,7 +237,7 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
                 eq("diagnostics",finalQueryBasic.get(1)),
                 eq("creationDate",finalQueryBasic.get(2))
                 );
-
+        filters.add(filterBasic);
         Bson filterShots;
         for (String str : finalQueryShots){
             filters.add(filterShots = eq("nextShot",str));

@@ -129,6 +129,7 @@ public class ADCDataRecord {
         for (char c : (device + diagnostics +portLabel+adcChannelNumber+creationDate+ creationDateTime).toCharArray())
             sb.append((int)c);
         this.id = sb.toString();
+//        System.out.println(id);
     }
 
     public String getNextShot() {
