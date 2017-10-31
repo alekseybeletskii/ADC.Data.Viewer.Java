@@ -107,7 +107,13 @@ public class BaseController {
         alertInvalidConfigurationFile=buildWarning(alertInvalidConfigurationFile,WARNING);
         alertInvalidConfigurationFile.setTitle("Invalid or absent file \"adcrecords.config\"");
         alertInvalidConfigurationFile.setHeaderText("Invalid or absent file \"adcrecords.config\"");
-        alertInvalidConfigurationFile.setContentText("A proper file \"adcrecords.config\" should be provided\n\nDefaults will be used");
+        alertInvalidConfigurationFile.setContentText("A proper text file \"adcrecords.config\" should be provided inside fo a data directory with contents:\n\n" +
+                "device=?\n" +
+                "diagnostics=?\n" +
+                "creationDate=?\n" +
+                "portLabel=?\n" +
+                "unitOfMeasurements=?\n" +
+                "\n\notherwise \"unknown\" will be substituted and used\n\n");
         alertInvalidConfigurationFile.showAndWait();
 
     }

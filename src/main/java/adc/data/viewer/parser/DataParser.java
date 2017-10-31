@@ -74,7 +74,8 @@ public class DataParser {
     private  int totalSignals;
     private Color[] signalColors;
     private ExportToTextAndSnapshot exportToTextAndSnapshot;
-
+    private Path configPath;
+    private Map<String,String> adcRecordsConfig;
     public List<ADCDataRecord> getADCDataRecordList() {
         return ADCDataRecordList;
     }
@@ -122,9 +123,12 @@ public class DataParser {
     }
 
      Map<String,String> readAdcRecordsConfiguration(Path configPath) {
-
+        if(configPath.equals(this.configPath)) {
+            return adcRecordsConfig;
+        }
+        this.configPath=configPath;
         String line;
-        Map<String,String> adcRecordsConfig =new HashMap<>();
+         adcRecordsConfig =new HashMap<>();
 
         try (BufferedReader signalDataFromText = Files.newBufferedReader(configPath, Charset.forName("UTF-8"))) {
             while ((line = signalDataFromText.readLine()) != null) {
@@ -222,6 +226,7 @@ public class DataParser {
         boolean drawThisSignal = false;
         double signalRate_kHz = dataParams.getChannelRate()[fileOrdinalNumber];
         String creationDateTime = dataParams.getCreateDateTime()[fileOrdinalNumber];
+        config.put("creationDate",config.get("creationDate").equals("unknown")?creationDateTime:config.get("creationDate"));
         double interCadreDelay_ms = dataParams.getInterCadreDelay()[fileOrdinalNumber];
         ADCDataRecord singleDataRecord =new ADCDataRecord(adcChannelNumberAsString ,signalIndex,  drawThisSignal, signalColors[signalIndex], nextSignalLabel, fileOrdinalNumber,
                 Xdata.clone(), Ydata.clone(), signalTimeShift, dataMultiplier,signalRate_kHz,
