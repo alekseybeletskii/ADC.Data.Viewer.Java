@@ -129,23 +129,28 @@ public class DataParser {
         this.configPath=configPath;
         String line;
          adcRecordsConfig =new HashMap<>();
-
-        try (BufferedReader signalDataFromText = Files.newBufferedReader(configPath, Charset.forName("UTF-8"))) {
-            while ((line = signalDataFromText.readLine()) != null) {
-                adcRecordsConfig.put(line.split("=")[0],line.split("=")[1]);
-            }
-            return adcRecordsConfig;
-        }
-        catch (IOException x) {
-            BaseController.alertInvalidConfigurationFile();
-            System.err.format("IOException: %s%n", x);
-
-        }
          adcRecordsConfig.put("device","unknown");
          adcRecordsConfig.put("diagnostics","unknown");
          adcRecordsConfig.put("creationDate","unknown");
          adcRecordsConfig.put("portLabel","unknown");
          adcRecordsConfig.put("unitOfMeasurements","unknown");
+
+        try (BufferedReader signalDataFromText = Files.newBufferedReader(configPath, Charset.forName("UTF-8"))) {
+            Map<String,String> tmpConfig= new HashMap<>();
+            while ((line = signalDataFromText.readLine()) != null) {
+                tmpConfig.put(line.split("=")[0],line.split("=")[1]);
+            }
+            for (String str:adcRecordsConfig.keySet()){
+                tmpConfig.get(str).length();
+            }
+            adcRecordsConfig=tmpConfig;
+        }
+        catch (IOException | NullPointerException x) {
+            BaseController.alertInvalidConfigurationFile();
+            System.err.format("IOException: %s%n", x);
+
+        }
+
         return adcRecordsConfig;
     }
 

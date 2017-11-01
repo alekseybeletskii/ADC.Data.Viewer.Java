@@ -65,7 +65,7 @@ double hue = adcRecord.getSignalColor().getHue();
 double satur = adcRecord.getSignalColor().getSaturation();
 double bright = adcRecord.getSignalColor().getBrightness();
 
-        Document doc = new Document()
+        return new Document()
                 .append("device", adcRecord.getDevice())
                 .append("diagnostics", adcRecord.getDiagnostics())
                 .append("creationDate", adcRecord.getCreationDate())
@@ -81,7 +81,6 @@ double bright = adcRecord.getSignalColor().getBrightness();
                 .append("_id", adcRecord.getId())
                 ;
 
-        return doc;
     }
 
 //     convert DBObject Object to ADCDataRecord

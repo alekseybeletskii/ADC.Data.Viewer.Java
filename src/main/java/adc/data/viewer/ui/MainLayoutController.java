@@ -220,7 +220,7 @@ private  void handleConnectionSetup(){
 @FXML
 private  void handleReadFromDataBase() throws ADCDataRecordsDaoException {
     MongodbManager.setUpDao();
-    mainApp.getAdcDataRecords().clear();
+//    mainApp.getAdcDataRecords().clear();
 //    mainApp.getAdcDataRecords().addAll(MongodbManager.findAllRecords());
     mainApp.showDataBaseQueryPanel();
     mainApp.signalMarkerAddListeners();

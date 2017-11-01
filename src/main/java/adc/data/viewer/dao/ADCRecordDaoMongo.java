@@ -223,7 +223,6 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
 
         {
             out.add(dbObject.getString("_id"));
-//            System.out.println(out);
         }
         return out;
     }
@@ -232,14 +231,6 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
         List<ADCDataRecord> out=new ArrayList<>();
 
         List<Bson> filters = new ArrayList<>();
-
-//        Bson filterBasic =  and(
-//                        eq("device",finalQueryBasic.get(0)),
-//                eq("diagnostics",finalQueryBasic.get(1)),
-//                eq("creationDate",finalQueryBasic.get(2)),
-//                eq("nextShot",str)
-//                );
-//        filters.add(filterBasic);
 
         Bson filterShots= in("nextShot",finalQueryShots);
 
@@ -251,23 +242,6 @@ public class ADCRecordDaoMongo implements ADCRecordDao  {
                             eq("nextShot",str)
                     ));
         }
-
-
-//        AggregateIterable<Document> output = adcRecordsCollection.aggregate(Arrays.asList(
-//                new Document("$match", filterBasic),
-//                new Document("$match", filterShots)
-//
-//        ));
-//
-//        for (Document dbObject : output)
-//
-//        {
-//
-//                out.add(ADCDataRecordsMongoConverter.toADCDataRecord(dbObject));
-//
-//        }
-//        return out;
-
 
         try (MongoCursor<Document> cursor = adcRecordsCollection.find(or(filters)).iterator()) {
             while (cursor.hasNext()) {
