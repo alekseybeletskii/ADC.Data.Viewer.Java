@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<!--
+  ~ ********************* BEGIN LICENSE BLOCK *********************************
+  ~
+  ~ ADCDataViewer
+  ~ Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
+  ~ All rights reserved
+  ~
+  ~ github: https://github.com/alekseybeletskii
+  ~
+  ~ The ADCDataViewer software serves for visualization and simple processing
+  ~ of any data recorded with Analog Digital Converters in binary or text form.
+  ~
+  ~ Commercial support is available. To find out more contact the author directly.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~     1. Redistributions of source code must retain the above copyright notice, this
+  ~          list of conditions and the following disclaimer.
+  ~     2. Redistributions in binary form must reproduce the above copyright notice,
+  ~         this list of conditions and the following disclaimer in the documentation
+  ~         and/or other materials provided with the distribution.
+  ~
+  ~ The software is distributed to You under terms of the GNU General Public
+  ~ License. This means it is "free software". However, any program, using
+  ~ ADCDataViewer _MUST_ be the "free software" as well.
+  ~ See the GNU General Public License for more details
+  ~ (file ./COPYING in the root of the distribution
+  ~ or website <http://www.gnu.org/licenses/>)
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ~ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  ~ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ~ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  ~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  ~ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ~ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  ~ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~
+  ~ ********************* END LICENSE BLOCK ***********************************
+  -->
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.DataBaseConnectionController">
+   <top>
+      <Label text="DataBase configuration" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="20.0" />
+         </BorderPane.margin>
+      </Label>
+   </top>
+   <center>
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="databaseHost" promptText="127.0.0.1" GridPane.columnIndex="1" />
+            <TextField fx:id="databasePort" promptText="27017" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="host" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Label text="port" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Label text="login" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Label text="password" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <TextField disable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+              <buttons>
+                <Button mnemonicParsing="false" onAction="#handleApply" text="Apply" />
+                  <Button mnemonicParsing="false" onAction="#handleDefault" text="Default" />
+              </buttons>
+            </ButtonBar>
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>

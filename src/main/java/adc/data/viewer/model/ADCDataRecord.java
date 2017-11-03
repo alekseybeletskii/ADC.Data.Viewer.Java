@@ -87,14 +87,14 @@ public class ADCDataRecord {
         this.signalRate_kHz = new SimpleDoubleProperty(-1);
         this.device = "unknown";
         this.diagnostics = "unknown";
-        this.unitOfMeasurement = "ADCVolts";
-        this.creationDate = "dd.mm.yyyy";
-        this.creationDateTime = "dd.mm.yyyy_hh.mm.ss";
+        this.unitOfMeasurement = "unknown";
+        this.creationDate = "unknown";
+        this.creationDateTime = "unknown";
         this.id =null;
         this.interCadreDelay_ms =0;
-        this.recordLabel = new SimpleStringProperty("nextRecord");
-        this.portLabel = "portLabel";
-        this.nextShot = "nextShot";
+        this.recordLabel = new SimpleStringProperty("unknown");
+        this.portLabel = "unknown";
+        this.nextShot = "unknown";
 
     }
 
@@ -126,10 +126,10 @@ public class ADCDataRecord {
         this.nextShot = nextShot;
 
         StringBuilder sb = new StringBuilder();
-        for (char c : (device + diagnostics +portLabel+adcChannelNumber+creationDate+ creationDateTime).toCharArray())
-            sb.append((int)c);
+        for (char c : (device + diagnostics +portLabel+adcChannelNumber+creationDate+ creationDateTime).toCharArray()) {
+            sb.append((int) c);
+        }
         this.id = sb.toString();
-//        System.out.println(id);
     }
 
     public String getNextShot() {

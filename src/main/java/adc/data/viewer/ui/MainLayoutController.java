@@ -215,7 +215,7 @@ public class MainLayoutController extends BaseController {
 
 @FXML
 private  void handleConnectionSetup(){
-
+        mainApp.setDataBaseConnect();
 }
 @FXML
 private  void handleReadFromDataBase() throws ADCDataRecordsDaoException {

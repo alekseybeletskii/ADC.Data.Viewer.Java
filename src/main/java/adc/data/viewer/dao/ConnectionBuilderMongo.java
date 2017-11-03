@@ -58,6 +58,7 @@ import org.bson.Document;
 
 import javax.naming.ldap.BasicControl;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 public class ConnectionBuilderMongo implements ConnectionBuilder
@@ -83,13 +84,16 @@ public class ConnectionBuilderMongo implements ConnectionBuilder
     @Override
     public MongoClient getConnection()  {
 
+
         try  {
+
             MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURI));
                     mongoClient.getAddress();
                     return mongoClient;
                 }
-        catch (MongoException me) {
-    System.out.println("Mongo is down");
+        catch (MongoException | IllegalArgumentException me) {
+    System.out.println("Connection to MongoDB failed");
+//    BaseController.alertMongoDBConnectionError();
     return null;
         }
 }

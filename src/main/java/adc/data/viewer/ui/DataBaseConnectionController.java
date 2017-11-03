@@ -45,7 +45,47 @@
 package adc.data.viewer.ui;
 
 
-public class DataBaseConfigurationController {
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+public class DataBaseConnectionController extends BaseController {
+
+    @FXML
+    private TextField databaseHost;
+    @FXML
+    private TextField databasePort;
+
+    private Stage dbConnectStage;
+
+     void setdbConnectStage(Stage dbConnectStage) {
+        this.dbConnectStage = dbConnectStage;
+    }
+
+    @FXML
+    private void  handleApply(ActionEvent actionEven){
+        MainApp.appPreferencesRootNode.put("host", databaseHost.getText());
+        MainApp.appPreferencesRootNode.put("hostport", databasePort.getText());
+        dbConnectStage.close();
 
 
 }
+    @FXML
+    private void handleDefault(ActionEvent actionEvent) {
+        MainApp.appPreferencesRootNode.put("host", "localhost");
+        MainApp.appPreferencesRootNode.put("hostport", "27017");
+        dbConnectStage.close();
+    }
+
+
+
+    @FXML
+    private void initialize() {
+        databaseHost.setText(MainApp.appPreferencesRootNode.get("host", "localhost"));
+        databasePort.setText(MainApp.appPreferencesRootNode.get("hostport", "27017"));
+
+    }
+
+}
+

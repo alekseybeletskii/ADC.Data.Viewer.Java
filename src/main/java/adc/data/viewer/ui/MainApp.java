@@ -349,6 +349,30 @@ public  class MainApp extends Application {
         }
     }
 
+
+    public void setDataBaseConnect() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("DataBaseConnection.fxml"));
+            BorderPane dbConnect = loader.load();
+            DataBaseConnectionController dbConnectController = loader.getController();
+            Stage dbConnectStage = new Stage();
+            dbConnectStage.initStyle(StageStyle.UNDECORATED);
+            dbConnectStage.getIcons().add(logo);
+            dbConnectStage.initOwner(primaryStage);
+            dbConnectStage.setResizable(false);
+            dbConnectStage.toFront();
+            dbConnectController.setdbConnectStage(dbConnectStage);
+            dbConnectStage.setTitle("Setup DataBase connection");
+            Scene scene = new Scene(dbConnect);
+            dbConnectStage.setScene(scene);
+            dbConnectStage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
      void setPlotterSetting(PlotterController pc) {
         try {
             pc.setSettingsInProgress(true);
