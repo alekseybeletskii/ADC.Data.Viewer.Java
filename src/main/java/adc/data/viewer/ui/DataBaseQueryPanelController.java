@@ -46,7 +46,9 @@ package adc.data.viewer.ui;
 
 
 import adc.data.viewer.dao.MongodbManager;
+import adc.data.viewer.dao.interfaces.ADCRecordDao;
 import adc.data.viewer.exeptions.ADCDataRecordsDaoException;
+import adc.data.viewer.model.ADCDataRecord;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -97,7 +99,6 @@ public class DataBaseQueryPanelController extends BaseController {
          alldevices.addAll(allDevises);}
          if(allDevises==null)
              BaseController.alertMongoDBConnectionError();
-
          shotNumbers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 //        shotNumbers.setCellFactory(CheckBoxListCell.forListView(item -> {
@@ -159,6 +160,7 @@ public class DataBaseQueryPanelController extends BaseController {
         shotNumbers.getSelectionModel().selectedItemProperty().addListener(observable  -> {
             finalQueryShots.addAll(shotNumbers.getSelectionModel().getSelectedItems());
         });
+
     }
 
 
@@ -173,9 +175,13 @@ public class DataBaseQueryPanelController extends BaseController {
     @FXML
     private void handleFetch(ActionEvent actionEvent) {
         try {
+            List<ADCDataRecord> dbOutput=mainApp.getAdcDataRecords();
             if(!finalQueryBasic.isEmpty()&&!finalQueryShots.isEmpty())
-            mainApp.getAdcDataRecords().addAll(
-                    MongodbManager.findADCRecordsByCriterion(finalQueryBasic,finalQueryShots));
+            dbOutput.addAll(MongodbManager.findADCRecordsByCriterion(finalQueryBasic,finalQueryShots));
+            int i=-1;
+            for(ADCDataRecord nextRecord:dbOutput){
+                nextRecord.setSignalIndex(i+=1);
+            }
         } catch (ADCDataRecordsDaoException e) {
             e.printStackTrace();
         }

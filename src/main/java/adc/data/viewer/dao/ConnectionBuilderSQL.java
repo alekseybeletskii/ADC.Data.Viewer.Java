@@ -63,8 +63,8 @@ public class ConnectionBuilderSQL implements ConnectionBuilder
         final String dbDriver = MainApp.appPreferencesRootNode.get("dbDriver","org.postgresql.Driver");
         final String hostname = MainApp.appPreferencesRootNode.get("host", "localhost");
         final String hostport = MainApp.appPreferencesRootNode.get("hostport", "5432");
-        dblogin = MainApp.appPreferencesRootNode.get("dblogin", "admin");
-        dbpassword = MainApp.appPreferencesRootNode.get("dbpassword", "admin");
+        dblogin = MainApp.appPreferencesRootNode.get("dbLogin", "admin");
+        dbpassword = MainApp.appPreferencesRootNode.get("dbPassword", "admin");
         final  String dbName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDataBase");
         sqlURI = "jdbc:postgresql://"+ hostname +":"+ hostport +"/"+ dbName;
 //        sqlURI = "dbc:postgresql://"+ dblogin +":"+ dbpassword +"@"+ hostname +":"+ hostport +"/"+ dbName;

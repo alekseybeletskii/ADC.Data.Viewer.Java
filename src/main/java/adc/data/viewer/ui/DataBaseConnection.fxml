@@ -54,11 +54,11 @@
   ~ ********************* END LICENSE BLOCK ***********************************
   -->
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.DataBaseConnectionController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.DataBaseConnectionController">
    <top>
-      <Label text="DataBase configuration" BorderPane.alignment="CENTER">
+      <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="DataBase configuration" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets top="20.0" />
+            <Insets top="10.0" />
          </BorderPane.margin>
       </Label>
    </top>
@@ -71,26 +71,60 @@
         <rowConstraints>
           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <TextField fx:id="databaseHost" promptText="127.0.0.1" GridPane.columnIndex="1" />
             <TextField fx:id="databasePort" promptText="27017" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="host" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-            <Label text="port" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Label text="login" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Label text="password" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <TextField disable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-              <buttons>
-                <Button mnemonicParsing="false" onAction="#handleApply" text="Apply" />
-                  <Button mnemonicParsing="false" onAction="#handleDefault" text="Default" />
-              </buttons>
-            </ButtonBar>
+            <TextField fx:id="databaseLogin" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="host" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <Label text="port" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <Label text="login" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <Label text="password" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <TextField fx:id="databasePassword" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="DataBase name" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="DataBase Collection name" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="DataBaseName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="DataBaseCollectionName" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+         </BorderPane.margin>
       </GridPane>
    </center>
+   <bottom>
+      <ButtonBar buttonMinWidth="0.0" BorderPane.alignment="CENTER">
+        <buttons>
+          <Button mnemonicParsing="false" onAction="#handleApply" text="Apply" />
+            <Button mnemonicParsing="false" onAction="#handleDefault" text="Default" />
+            <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+        </buttons>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" />
+         </padding>
+      </ButtonBar>
+   </bottom>
 </BorderPane>

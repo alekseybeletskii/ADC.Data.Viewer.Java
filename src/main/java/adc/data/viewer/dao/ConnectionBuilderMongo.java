@@ -70,11 +70,15 @@ public class ConnectionBuilderMongo implements ConnectionBuilder
 
         final String hostname = MainApp.appPreferencesRootNode.get("host", "localhost");
         final String hostport = MainApp.appPreferencesRootNode.get("hostport", "27017");
+        final String dblogin = MainApp.appPreferencesRootNode.get("dbLogin", "");
+        final String dbpassword = MainApp.appPreferencesRootNode.get("dbPassword", "");
+        final String dbName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDB");
 //        final String dblogin = MainApp.appPreferencesRootNode.get("dblogin", "admin");
 //        final String dbpassword = MainApp.appPreferencesRootNode.get("dbpassword", "admin");
-//        final String dbName = MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDB");
-        mongoURI = "mongodb://" +  hostname + ":" + hostport ;
-//        mongoURI = "mongodb://" + dblogin + ":" + dbpassword + "@" + hostname + ":" + hostport + "/" + dbName;
+        String uriLogPas ="mongodb://" + dblogin + ":" + dbpassword + "@" + hostname + ":" + hostport + "/" + dbName;;
+        String uriNoLogPas ="mongodb://" +  hostname + ":" + hostport ;
+        mongoURI = dblogin.equals("")&&dbpassword.equals("")?uriNoLogPas:uriLogPas;
+//      mongoURI = "mongodb://" + dblogin + ":" + dbpassword + "@" + hostname + ":" + hostport + "/" + dbName;
 
     }
 

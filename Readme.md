@@ -50,6 +50,17 @@ You can view signals one under another
 ![plot](resources/jpg/drawingOneByOne.jpg)
 
 
+Data base interaction
+-------------
+
+Persist your data with MongoDB data base.
+You should setup a MongoDB server and make sure that a data base
+with appropriate name, collection and authorized user name is available 
+
+
+![plot](resources/jpg/dataBaseInteraction.jpg)
+
+
 Run with Maven:
 ----------
 
@@ -71,7 +82,9 @@ How to use:
                                     arrow UP,DOWN - list by one; ctrl+HOME - show all in one;
    - "Plot->Draw by one"            shows selected signals inside one drawing, one under another;
    - "Plot->Draw by one and scroll" shows selected signals one by one inside a scrolling pane;
-
+   - "DataBase->..." setup data base connection, persist and fetch your data;
+   
+   
    - When plots are shown, Savitsky-Golay filter can be applied.
    - double click on table will check/uncheck all signals
    - individual color can be set for every signal

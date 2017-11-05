@@ -53,6 +53,14 @@ import javafx.stage.Stage;
 public class DataBaseConnectionController extends BaseController {
 
     @FXML
+    private TextField DataBaseName;
+    @FXML
+    private TextField DataBaseCollectionName;
+    @FXML
+    private TextField databaseLogin;
+    @FXML
+    private TextField databasePassword;
+    @FXML
     private TextField databaseHost;
     @FXML
     private TextField databasePort;
@@ -67,6 +75,10 @@ public class DataBaseConnectionController extends BaseController {
     private void  handleApply(ActionEvent actionEven){
         MainApp.appPreferencesRootNode.put("host", databaseHost.getText());
         MainApp.appPreferencesRootNode.put("hostport", databasePort.getText());
+        MainApp.appPreferencesRootNode.put("dbLogin", databaseLogin.getText());
+        MainApp.appPreferencesRootNode.put("dbPassword", databasePassword.getText());
+        MainApp.appPreferencesRootNode.put("ADCDataViewerDataBaseCollection", DataBaseCollectionName.getText());
+        MainApp.appPreferencesRootNode.put("ADCDataViewerDataBase", DataBaseName.getText());
         dbConnectStage.close();
 
 
@@ -75,6 +87,15 @@ public class DataBaseConnectionController extends BaseController {
     private void handleDefault(ActionEvent actionEvent) {
         MainApp.appPreferencesRootNode.put("host", "localhost");
         MainApp.appPreferencesRootNode.put("hostport", "27017");
+        MainApp.appPreferencesRootNode.put("dbLogin", "");
+        MainApp.appPreferencesRootNode.put("dbPassword", "");
+        MainApp.appPreferencesRootNode.put("ADCDataViewerDataBaseCollection", "adcDataRecords");
+        MainApp.appPreferencesRootNode.put("ADCDataViewerDataBase", "ADCDataViewerDB");
+        dbConnectStage.close();
+    }
+
+    @FXML
+    private void handleCancel(ActionEvent actionEvent){
         dbConnectStage.close();
     }
 
@@ -84,6 +105,11 @@ public class DataBaseConnectionController extends BaseController {
     private void initialize() {
         databaseHost.setText(MainApp.appPreferencesRootNode.get("host", "localhost"));
         databasePort.setText(MainApp.appPreferencesRootNode.get("hostport", "27017"));
+        databaseLogin.setText(MainApp.appPreferencesRootNode.get("dbLogin", ""));
+        databasePassword.setText(MainApp.appPreferencesRootNode.get("dbPassword", ""));
+        DataBaseCollectionName.setText(MainApp.appPreferencesRootNode.get("ADCDataViewerDataBaseCollection", "adcDataRecords"));
+        DataBaseName.setText(MainApp.appPreferencesRootNode.get("ADCDataViewerDataBase", "ADCDataViewerDB"));
+
 
     }
 

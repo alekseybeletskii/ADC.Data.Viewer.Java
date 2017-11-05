@@ -329,7 +329,7 @@ public  class MainApp extends Application {
             textFileParamController = loader.getController();
             textFileParamController.getTxtNextFileName().setText(dataParser.getFileNames()[fileIndex]);
             Stage textFileParamsStage = new Stage();
-            textFileParamsStage.initStyle(StageStyle.UNDECORATED);
+//            textFileParamsStage.initStyle(StageStyle.UNDECORATED);
             textFileParamsStage.getIcons().add(logo);
             textFileParamsStage.initOwner(primaryStage);
             textFileParamsStage.setResizable(false);
@@ -357,7 +357,7 @@ public  class MainApp extends Application {
             BorderPane dbConnect = loader.load();
             DataBaseConnectionController dbConnectController = loader.getController();
             Stage dbConnectStage = new Stage();
-            dbConnectStage.initStyle(StageStyle.UNDECORATED);
+//            dbConnectStage.initStyle(StageStyle.UNDECORATED);
             dbConnectStage.getIcons().add(logo);
             dbConnectStage.initOwner(primaryStage);
             dbConnectStage.setResizable(false);

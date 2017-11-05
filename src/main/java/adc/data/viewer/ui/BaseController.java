@@ -79,7 +79,7 @@ public class BaseController {
         alertSourceDataReplaced=buildWarning(alertSourceDataReplaced,WARNING);
         alertSourceDataReplaced.setTitle("Warning !");
         alertSourceDataReplaced.setHeaderText("Source data replacing...");
-        alertSourceDataReplaced.setContentText("Source data being replacing\nwith ones processed by filtering applyed\n\n");
+        alertSourceDataReplaced.setContentText("Source data being replacing\nwith ones processed by filtering applied\n\n");
         alertSourceDataReplaced.showAndWait();
     }
 
@@ -87,7 +87,7 @@ public class BaseController {
         alertMongoDBConnectionError=buildWarning(alertMongoDBConnectionError,WARNING);
         alertMongoDBConnectionError.setTitle("Warning !");
         alertMongoDBConnectionError.setHeaderText("MongoDB connection problem");
-        alertMongoDBConnectionError.setContentText("Check MongodB connection settings\n\nand whether data base is ampy\n\n");
+        alertMongoDBConnectionError.setContentText("Check MongodB connection settings\n\nand whether data base is ampty\n\n");
         alertMongoDBConnectionError.showAndWait();
 
     }
