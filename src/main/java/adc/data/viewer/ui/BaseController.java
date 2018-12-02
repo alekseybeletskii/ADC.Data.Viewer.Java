@@ -219,7 +219,10 @@ public class BaseController {
 //             alert.getDialogPane().setPrefSize(250,120);
 //             alert.getDialogPane().setMinSize(250,120);
             DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.getStylesheets().add(BasicControl.class.getResource("/css/dialog.css").toExternalForm());
+//            dialogPane.getStylesheets().add(BasicControl.class.getResource("/css/dialog.css").toExternalForm());
+            dialogPane.getStylesheets().add(BaseController.class.getResource("/css/dialog.css").toExternalForm());
+
+
             dialogPane.getStyleClass().add("myDialog");
             dialogPane.setMinHeight(Region.USE_PREF_SIZE);
             dialogPane.setMinWidth(Region.USE_PREF_SIZE);
