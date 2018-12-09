@@ -46,15 +46,19 @@ package adc.data.viewer.parser;
 
 
 import adc.data.viewer.model.ADCDataRecord;
-import adc.data.viewer.ui.BaseController;
 import adc.data.viewer.ui.MainApp;
 import javafx.scene.paint.Color;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 
@@ -180,6 +184,7 @@ public class DataParser {
         dataParams = new DataParams(totalFiles);
         for ( DataTypesList frmt : DataTypesList.values()) frmt.getDataType().setDataParser(this);
         dataFormatsDetect.detectFormat();
+        if (!dataParams.isDataParamsValid()) return;
 
         String formatName;
         int fileOrdinalNumber=0;

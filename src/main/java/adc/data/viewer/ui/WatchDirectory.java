@@ -127,6 +127,7 @@ public class WatchDirectory implements Runnable {
                     if (watchEventKind == ENTRY_MODIFY&&newPath.toFile().length()!=0) {
                         List<Path> inpList = new ArrayList<>();
                         inpList.add(newPath);
+                        System.out.println("newPath: " + newPath);
                         suspendFlag=true;
                         Platform.runLater(() -> {
                             mainApp.parse(inpList);
@@ -137,7 +138,7 @@ public class WatchDirectory implements Runnable {
                         Thread.sleep(1000);
                         synchronized(this) {
                             while (suspendFlag) {
-//                                System.out.println("waiting...");
+                                System.out.println("waiting...");
                                 wait();
                             }
                         }

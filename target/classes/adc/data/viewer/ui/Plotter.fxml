@@ -54,7 +54,7 @@
   ~ ********************* END LICENSE BLOCK ***********************************
   -->
 
-<AnchorPane fx:id="plotsLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterController">
+<AnchorPane fx:id="plotsLayout" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="AnchorPane" stylesheets="/css/plotter.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adc.data.viewer.ui.PlotterController">
    <children>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -74,40 +74,40 @@
                <children>
                   <Button fx:id="Settings" focusTraversable="false" mnemonicParsing="false" onAction="#handlePlotterSettings" text="Settings">
                      <font>
-                        <Font size="10.0" />
+                        <Font size="8.0" />
                      </font>
                   </Button>
                   <ToggleButton fx:id="SubtractSignal" focusTraversable="false" mnemonicParsing="false" onAction="#handleSubtractSignal" text="- Signal">
                      <font>
-                        <Font size="10.0" />
+                        <Font size="8.0" />
                      </font>
                   </ToggleButton>
                     <ToggleButton fx:id="Raw" focusTraversable="false" onAction="#handleRaw" text="Raw">
       
                            <font>
-                        <Font size="10.0" />
+                        <Font size="8.0" />
                      </font>
                     </ToggleButton>
                     <ToggleButton fx:id="RawAndSGFilter" focusTraversable="false" onAction="#handleRawAndSGFilter" text="Raw&amp;Filter">
       
                            <font>
-                        <Font size="10.0" />
+                        <Font size="8.0" />
                      </font>
                     </ToggleButton>
                     <ToggleButton fx:id="SGFilter" focusTraversable="false" onAction="#handleSGFilter" text="Filter">
       >
                            <font>
-                        <Font size="10.0" />
+                        <Font size="8.0" />
                      </font>
                     </ToggleButton>
                   <ToggleButton fx:id="subtractSGFilter" focusTraversable="false" onAction="#handleSGFiltered" text="Raw-Filter">
                      <font>
-                        <Font size="10.0" />
+                        <Font size="8.0" />
                      </font>
                   </ToggleButton>
                   <Label minHeight="0.0" minWidth="0.0" text="x=......; y=......" fx:id="xyLabel">
                      <font>
-                        <Font name="System Italic" size="12.0" />
+                        <Font name="System Italic" size="10.0" />
                      </font>
                      <opaqueInsets>
                         <Insets />

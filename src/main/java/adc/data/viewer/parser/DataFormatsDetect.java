@@ -46,11 +46,14 @@ package adc.data.viewer.parser;
 
 import adc.data.viewer.ui.MainApp;
 
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
+import java.io.IOException;
+import java.nio.ByteOrder;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 
 
 /**
@@ -83,6 +86,7 @@ class DataFormatsDetect {
                 parBuf.order(ByteOrder.LITTLE_ENDIAN);
                 byte[] adcTypeByte = new byte[adcSignatureLength];
                 parBuf.get(adcTypeByte);
+
                 String dataFormat = new String(adcTypeByte, Charset.forName("UTF-8")).trim();
                 parBuf.rewind();
                 if (dataFormat.equals("2571090,1618190")) {
@@ -104,7 +108,11 @@ class DataFormatsDetect {
             } catch (IOException e) {
                 System.out.println("I/O Error " + e);
                 dataParams.setDataParamsValid(false);
+            } catch (java.nio.BufferUnderflowException e) {
+                System.out.println("Buffer Error " + e);
+                dataParams.setDataParamsValid(false);
             }
+
             fileIndex++;
         }
 

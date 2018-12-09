@@ -120,7 +120,7 @@ public class Axes extends Pane {
         xAxis.setMinorTickVisible(true);
         xAxis.setMinorTickCount(1);
         xAxis.setAnimated(false);
-        xAxis.setTickLabelFont(new Font(16));
+        xAxis.setTickLabelFont(new Font(12));
 
         yAxis = new StableTicksAxis(yMinBasic, yMaxBasic);
 
@@ -129,7 +129,7 @@ public class Axes extends Pane {
         yAxis.setMinorTickVisible(true);
         yAxis.setMinorTickCount(1);
         yAxis.setAnimated(false);
-        yAxis.setTickLabelFont(new Font(16));
+        yAxis.setTickLabelFont(new Font(12));
 
 
         xAxis.layoutYProperty().bind(heightProperty());
