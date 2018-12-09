@@ -146,7 +146,7 @@ public class DataParser {
             adcRecordsConfig=tmpConfig;
         }
         catch (IOException | NullPointerException x) {
-            BaseController.alertInvalidConfigurationFile();
+//            BaseController.alertInvalidConfigurationFile();
             System.err.format("IOException: %s%n", x);
 
         }

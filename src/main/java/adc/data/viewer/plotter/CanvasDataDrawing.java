@@ -57,7 +57,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
@@ -115,7 +117,19 @@ public class CanvasDataDrawing extends Canvas {
     private double xTheMIN,xTheMAX,yTheMIN,yTheMAX;
 
     private PlotterController plotterController;
+
     private ADCDataRecord nextSignalToDraw;
+
+    public List<ADCDataRecord> getSignalsToDrawList() {
+        return signalsToDrawList;
+    }
+
+    public void setSignalsToDrawList(List<ADCDataRecord> signalsToDrawList) {
+        this.signalsToDrawList = signalsToDrawList;
+    }
+
+    private List<ADCDataRecord> signalsToDrawList;
+
     private final Axes axes;
     private final MainApp mainApp;
     private DoubleProperty dx = new SimpleDoubleProperty();
@@ -184,6 +198,8 @@ public class CanvasDataDrawing extends Canvas {
         shiftYZero.bind(Bindings.multiply(axes.getYAxis().upperBoundProperty(), dy));
         graphicContext = getGraphicsContext2D();
         maxZeroShift=0;
+
+        signalsToDrawList = new ArrayList<>();
 
     }
 
@@ -265,7 +281,14 @@ public class CanvasDataDrawing extends Canvas {
                 break;
             case "AllPlotsByOne":
 
-                if(nextSignalToDraw.isSignalSelected())drawNextSignal(nextSignalToDraw);
+
+                    drawNextSignal(nextSignalToDraw);
+
+//                for (ADCDataRecord nextSig : signalsToDrawList) {
+//                    nextSignalToDraw = nextSig;
+//                    drawNextSignal(nextSignalToDraw);
+//                }
+
                 break;
             case "AllPlotsByOneScroll":
 

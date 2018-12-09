@@ -180,6 +180,7 @@ public class MainLayoutController extends BaseController {
     @FXML
     private void handleDrawPlots() {
         mainApp.setDefaultPlotsLayoutType("AllPlots");
+        appPreferencesRootNode.put("defaultPlotsLayoutType","AllPlots");
         if (!mainApp.getAdcDataRecords().isEmpty()) {
             mainApp.drawPlots();
         }
@@ -187,6 +188,7 @@ public class MainLayoutController extends BaseController {
     @FXML
     private void handleDrawPlotsByOne(){
         mainApp.setDefaultPlotsLayoutType("AllPlotsByOne");
+        appPreferencesRootNode.put("defaultPlotsLayoutType","AllPlotsByOne");
         if (!mainApp.getAdcDataRecords().isEmpty()) {
             mainApp.drawPlots();
         }
@@ -194,6 +196,8 @@ public class MainLayoutController extends BaseController {
     @FXML
     private void handleDrawPlotsByOneScroll(){
         mainApp.setDefaultPlotsLayoutType("AllPlotsByOneScroll");
+        appPreferencesRootNode.put("defaultPlotsLayoutType","AllPlotsByOneScroll");
+
         if (!mainApp.getAdcDataRecords().isEmpty()) {
             mainApp.drawPlots();
         }

@@ -73,7 +73,7 @@ import static java.lang.Math.round;
 
 public  class MainApp extends Application {
 
-
+    private List<Integer> tablePositionsChecked;
     private final BaseController baseController = new BaseController();
     private boolean newFileCreated;
     private  boolean redrawAllowed;
@@ -172,13 +172,17 @@ public  class MainApp extends Application {
          System.exit(0);});
         splitPaneDivisionPosition =0.12;
         nextSignalToDrawIndex =-1;
+        tablePositionsChecked = new ArrayList<>();
         this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ADC Signal Viewer");
         this.primaryStage.getIcons().add(logo);
         initMainLayout();
         showSignalsOverview();
-        defaultPlotsLayoutType = appPreferencesRootNode.get("defaultPlotsLayoutType","AllPlots");
+//        defaultPlotsLayoutType = appPreferencesRootNode.get("defaultPlotsLayoutType","AllPlots");
+        appPreferencesRootNode.put("defaultPlotsLayoutType","AllPlots");
+        defaultPlotsLayoutType = "AllPlots";
+
         MainApp.appPreferencesRootNode.putBoolean("defaultIsSubtractSignal",false);
 
 
@@ -261,10 +265,27 @@ public  class MainApp extends Application {
                 for (ADCDataRecord sm: adcDataRecords) {
                     if (sm.getSignalSelected()) {
                         nextSignalToDraw=sm;
-                        layoutLoader();
-                        plotterControllerlist.get(plotterControllerlist.size()-1)
-                                .getPlotsLayout().prefHeightProperty()
-                                .bind(signalsOverviewController.getPlotsVBox().heightProperty());
+
+                            layoutLoader();
+                            plotterControllerlist.get(plotterControllerlist.size() - 1)
+                                    .getPlotsLayout().prefHeightProperty()
+                                    .bind(signalsOverviewController.getPlotsVBox().heightProperty());
+
+
+//
+//                        if (sigCount==0) {
+//                            layoutLoader();
+//                            plotterControllerlist.get(plotterControllerlist.size() - 1)
+//                                    .getPlotsLayout().prefHeightProperty()
+//                                    .bind(signalsOverviewController.getPlotsVBox().heightProperty());
+//                            sigCount+=1;
+//
+//                        }
+//                        else if (sigCount<=3){
+//                            plotterControllerlist.get(plotterControllerlist.size() - 1).getPlotter().getCanvasData().getSignalsToDrawList().add(nextSignalToDraw);
+//                            sigCount+=1;
+//                        }
+//                        else sigCount =0;
                     }
                 }
                 break;
@@ -449,7 +470,17 @@ public  class MainApp extends Application {
     public void signalMarkerAddListeners() {
 
         for (ADCDataRecord sgmrk : adcDataRecords){
+
+            sgmrk.setSignalSelected(tablePositionsChecked.contains(sgmrk.getSignalIndex()));
+
             sgmrk.signalSelectedProperty().addListener((observable, oldValue, newValue) -> {
+
+                if(newValue)tablePositionsChecked.add(sgmrk.getSignalIndex());
+                else tablePositionsChecked.remove(tablePositionsChecked.indexOf(sgmrk.getSignalIndex()));
+
+//                System.out.println("tablePositionsChecked: " + tablePositionsChecked);
+
+
                 redrawAllCanvas(sgmrk,newValue);
                     }
             );
@@ -595,7 +626,7 @@ public  class MainApp extends Application {
         if ((fileExtension.equalsIgnoreCase("dat") || fileExtension.equalsIgnoreCase("txt")
         || fileExtension.equalsIgnoreCase("csv")) && inpList.get(0).toFile().length() > 0) {
             clearAll();
-            setDefaultPlotsLayoutType("AllPlots");
+//            setDefaultPlotsLayoutType("AllPlots");
             redrawAllowed=true;
             dataParser.parseNewList(inpList);
             signalMarkerAddListeners();
