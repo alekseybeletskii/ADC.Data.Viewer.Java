@@ -13,9 +13,8 @@
 hs_err_pid*
 
 # Intellij IDEA
-/.idea
-/out
+.idea/
+out/
 *.iml
 # Maven
-/target
-
+target/
