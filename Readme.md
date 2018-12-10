@@ -63,8 +63,10 @@ with appropriate name, collection and authorized user name is available
 
 Run with Maven:
 ----------
-
+Java 8:
 mvn compile exec:java -Dexec.mainClass=adc.data.viewer.ui.MainApp
+Java 11:
+mvn compile exec:java -Dexec.mainClass=adc.data.viewer.ui.MainAppJDK11Launcher
 
 How to use:
 ----------
@@ -95,8 +97,9 @@ How to use:
      at a given X coordinate from every data that are plotted
    - keys "Shift+F" when pressed will substitute source Y data with filtered ones
    - keys "Shift+P" when pressed will save a snapshot of plots
+   - When using "Plot->Draw" view with all curves on single plot, data curves can be listed with keyboard arrows; "Ctrl+Home" will draw all selected 
 
-In order to hot keys were enabled, your drawing should be in focus, just mouse-click on it      
+In order to hot keys were enabled, the plot should be in focus, just mouse-click on it      
 
 Zoom and pan plots with mouse:
    - zoom: left click + drag from a top left to a bottom right
