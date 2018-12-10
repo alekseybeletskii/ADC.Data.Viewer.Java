@@ -8,11 +8,11 @@ by default these are:
 2. L-Card e20-10, http://www.lcard.ru/products/external/e20-10
 3. SATURN SDI-AD12-128H, http://www.saturn-data.com
 
-It is possible to visualize data presented in a text file.
+It is possible to visualize data presented in a text file as well.
 For now it should be a single file per one array of registered data:
 
- -(a) single data column inside
- -(b) X column in milliseconds, Y data column
+- (a) single data column inside
+- (b) X column in milliseconds, Y data column
  
 You will be prompted to enter some data parameters manually in this case
  (choose proper data and time columns, channel number, ADC channel rate...).
