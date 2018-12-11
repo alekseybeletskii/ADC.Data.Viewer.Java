@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ ********************* BEGIN LICENSE BLOCK *********************************
+  ~
+  ~ ADCDataViewer
+  ~ Copyright (c) 2016 onward, Aleksey Beletskii  <beletskiial@gmail.com>
+  ~ All rights reserved
+  ~
+  ~ github: https://github.com/alekseybeletskii
+  ~
+  ~ The ADCDataViewer software serves for visualization and simple processing
+  ~ of any data recorded with Analog Digital Converters in binary or text form.
+  ~
+  ~ Commercial support is available. To find out more contact the author directly.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~     1. Redistributions of source code must retain the above copyright notice, this
+  ~          list of conditions and the following disclaimer.
+  ~     2. Redistributions in binary form must reproduce the above copyright notice,
+  ~         this list of conditions and the following disclaimer in the documentation
+  ~         and/or other materials provided with the distribution.
+  ~
+  ~ The software is distributed to You under terms of the GNU General Public
+  ~ License. This means it is "free software". However, any program, using
+  ~ ADCDataViewer _MUST_ be the "free software" as well.
+  ~ See the GNU General Public License for more details
+  ~ (file ./COPYING in the root of the distribution
+  ~ or website <http://www.gnu.org/licenses/>)
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ~ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  ~ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ~ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  ~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  ~ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ~ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  ~ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~
+  ~ ********************* END LICENSE BLOCK ***********************************
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>adc.data.viewer</groupId>
+    <artifactId>ADCDataViewer</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-controls</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>win</classifier>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-controls</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>linux</classifier>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-swing</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>win</classifier>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-swing</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>linux</classifier>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-fxml</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>win</classifier>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-fxml</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>linux</classifier>-->
+        <!--</dependency>-->
+		<!---->
+		<!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-graphics</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>win</classifier>-->
+        <!--</dependency>-->
+		<!---->
+				<!--<dependency>-->
+            <!--<groupId>org.openjfx</groupId>-->
+            <!--<artifactId>javafx-graphics</artifactId>-->
+            <!--<version>11</version>-->
+            <!--<classifier>linux</classifier>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>gov.nist.math</groupId>
+            <artifactId>jama</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <finalName>ADCDataViewer</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+
+        </resources>
+
+        <plugins>
+            <!--<plugin>-->
+                <!--<artifactId>maven-jar-plugin</artifactId>-->
+                <!--<version>3.0.2</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>default-jar</id>-->
+                        <!--&lt;!&ndash; put the default-jar in the none phase to skip it from being created &ndash;&gt;-->
+                        <!--<phase>none</phase>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--<executable>executable/ADCDataViewerJ</executable>-->
+                    <!--<mainClass>adc.data.viewer.ui.MainAppJDK11Launcher</mainClass>-->
+                    <mainClass>adc.data.viewer.ui.MainApp</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+
+
+
+                            <!--<filters>-->
+                                <!--&lt;!&ndash;an explicit filter to include all openjfx dependencies, including javafx-graphics&ndash;&gt;-->
+                                <!--<filter>-->
+                                    <!--<artifact>org.openjfx</artifact>-->
+                                    <!--<includes>-->
+                                        <!--<include>**</include>-->
+                                    <!--</includes>-->
+                                <!--</filter>-->
+                            <!--</filters>-->
+
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>adc.data.viewer.ui.MainApp</mainClass>
+                                </transformer>
+                            </transformers>
+
+                            <finalName>ADCDataViewerJ</finalName>
+                            <outputDirectory>executable</outputDirectory>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--<plugin>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<configuration>-->
+
+                    <!--<archive>-->
+                        <!--&lt;!&ndash;<manifest>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<mainClass>adc.data.viewer.ui.MainApp</mainClass>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</manifest>&ndash;&gt;-->
+                        <!--<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>-->
+                    <!--</archive>-->
+
+                    <!--<descriptorRefs>-->
+                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+                    <!--</descriptorRefs>-->
+                    <!--<finalName>ADCDataViewer</finalName>-->
+                    <!--<descriptors>-->
+                        <!--<descriptor>-->
+                            <!--src/assembly/bin.xml-->
+                        <!--</descriptor>-->
+                    <!--</descriptors>-->
+                    <!--<appendAssemblyId>false</appendAssemblyId>-->
+                    <!--<finalName>ADCDataViewer</finalName>-->
+                    <!--<outputDirectory>executable</outputDirectory>-->
+                <!--</configuration>-->
+
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>make-assembly</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>single</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+
+        </plugins>
+    </build>
+
+
+
+
+
+
+</project>
