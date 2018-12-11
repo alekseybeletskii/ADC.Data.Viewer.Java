@@ -119,6 +119,10 @@ public class WatchDirectory implements Runnable {
                     @SuppressWarnings("unchecked")
                     WatchEvent<Path> pathEvent = (WatchEvent<Path>) watchEvent;
                     Path newPath = directoryToWatch.resolve(pathEvent.context());
+
+//                    int fullStopIndex = newPath.getFileName().toString().lastIndexOf(".");
+//                    String fileExtension = newPath.getFileName().toString().substring(fullStopIndex + 1).toLowerCase();
+
                     if (watchEventKind == OVERFLOW) {
                         Thread.yield();
                         return;
