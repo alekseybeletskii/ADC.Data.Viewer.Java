@@ -68,6 +68,10 @@ mvn compile exec:java -Dexec.mainClass=adc.data.viewer.ui.MainApp
 Java 11:
 mvn compile exec:java -Dexec.mainClass=adc.data.viewer.ui.MainAppJDK11Launcher
 
+Build executable jar with maven
+--------
+mvn clean package
+
 How to use:
 ----------
 

@@ -175,7 +175,7 @@ public  class MainApp extends Application {
         tablePositionsChecked = new ArrayList<>();
         this.dataParser =new DataParser(this);
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("ADC Signal Viewer");
+        this.primaryStage.setTitle("ADC Data Viewer");
         this.primaryStage.getIcons().add(logo);
         initMainLayout();
         showSignalsOverview();
@@ -625,6 +625,11 @@ public  class MainApp extends Application {
 
         if ((fileExtension.equalsIgnoreCase("dat") || fileExtension.equalsIgnoreCase("txt")
         || fileExtension.equalsIgnoreCase("csv")) && inpList.get(0).toFile().length() > 0) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             clearAll();
 //            setDefaultPlotsLayoutType("AllPlots");
             redrawAllowed=true;
